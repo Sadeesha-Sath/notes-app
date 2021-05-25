@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'Notes App',
-      initialRoute: "/home",
+      initialRoute: "/",
       getPages: [
         GetPage(name: '/', page: () => StartScreen()),
         GetPage(name: "/login", page: () => LoginScreen()),

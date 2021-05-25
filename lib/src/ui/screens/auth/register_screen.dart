@@ -1,17 +1,19 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:notes_app/src/controllers/register_controller.dart';
+import 'package:notes_app/src/ui/screens/app/home_screen.dart';
 import 'package:notes_app/src/ui/screens/auth/login_screen.dart';
 import 'package:notes_app/src/ui/ui_constants.dart';
 
 class RegisterScreen extends StatelessWidget {
   static final String id = "/register";
-  var _email = "";
-  var _password = "";
+  final RegisterController _registerController = RegisterController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: Get.size.width / 50, vertical: Get.size.height / 45),
@@ -55,41 +57,68 @@ class RegisterScreen extends StatelessWidget {
                   keyboardType: TextInputType.emailAddress,
                   textAlign: TextAlign.left,
                   onChanged: (value) {
-                    _email = value;
+                    _registerController.email = value;
                     //Do something with the user input.
                   },
                   decoration: textFieldDecoration.copyWith(
+                    prefixIcon: Icon(Icons.person),
                     hintText: "Enter your email",
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-                child: TextField(
-                  obscureText: true,
-                  style: TextStyle(fontSize: 16),
-                  textAlign: TextAlign.left,
-                  onChanged: (value) {
-                    _password = value;
-                    //Do something with the user input.
-                  },
-                  decoration: textFieldDecoration.copyWith(
-                    hintText: "Enter a password",
+              Obx(
+                () => Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+                  child: TextField(
+                    obscureText: _registerController.hidePassword1.value,
+                    style: TextStyle(fontSize: 16),
+                    textAlign: TextAlign.left,
+                    onChanged: (value) {
+                      _registerController.password1 = value;
+                      //Do something with the user input.
+                    },
+                    decoration: textFieldDecoration.copyWith(
+                      prefixIcon: Icon(Icons.password),
+                      suffixIcon: IconButton(
+                        splashRadius: 20,
+                        onPressed: () {
+                          print("Changing Visibility");
+                          _registerController.toggleHidePassword1();
+                        },
+                        icon: Icon(_registerController.hidePassword1.value
+                            ? Icons.visibility_rounded
+                            : Icons.visibility_off_rounded),
+                      ),
+                      hintText: "Enter a password",
+                    ),
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-                child: TextField(
-                  obscureText: true,
-                  style: TextStyle(fontSize: 16),
-                  textAlign: TextAlign.left,
-                  onChanged: (value) {
-                    _password = value;
-                    //Do something with the user input.
-                  },
-                  decoration: textFieldDecoration.copyWith(
-                    hintText: "Retype the password",
+              Obx(
+                () => Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+                  child: TextField(
+                    obscureText: _registerController.hidePassword2.value,
+                    style: TextStyle(fontSize: 16),
+                    textAlign: TextAlign.left,
+                    onChanged: (value) {
+                      _registerController.password2 = value;
+                      //Do something with the user input.
+                    },
+                    decoration: textFieldDecoration.copyWith(
+                      prefixIcon: Icon(Icons.password),
+                      suffixIcon: IconButton(
+                        splashRadius: 20,
+                        onPressed: () {
+                          print("Changing Visibility");
+                          _registerController.toggleHidePassword2();
+                        },
+                        icon: Icon(_registerController.hidePassword2.value
+                            ? Icons.visibility_rounded
+                            : Icons.visibility_off_rounded),
+                      ),
+                      hintText: "Retype the password",
+                    ),
                   ),
                 ),
               ),
@@ -101,7 +130,10 @@ class RegisterScreen extends StatelessWidget {
                     padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 14)),
                     shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    // TODO Make this offAll before deploying
+                    Get.toNamed(HomeScreen.id);
+                  },
                   child: Center(
                     child: Text(
                       "Register",
@@ -125,6 +157,7 @@ class RegisterScreen extends StatelessWidget {
                     ),
                   ],
                 ),
+                style: TextStyle(fontSize: 15.5),
               ),
             ],
           ),

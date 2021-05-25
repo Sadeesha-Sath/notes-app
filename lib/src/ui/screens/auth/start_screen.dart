@@ -148,6 +148,7 @@ class StartScreen extends StatelessWidget {
                     ),
                   ],
                 ),
+                style: TextStyle(fontSize: 15.5),
               ),
             ],
           ),
