@@ -131,8 +131,7 @@ class RegisterScreen extends StatelessWidget {
                     shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
                   ),
                   onPressed: () {
-                    // TODO Make this offAll before deploying
-                    Get.toNamed(HomeScreen.id);
+                    Get.offAllNamed(HomeScreen.id);
                   },
                   child: Center(
                     child: Text(
