@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:notes_app/src/controllers/archives_auth_controller.dart';
 import 'package:notes_app/src/controllers/drag_controller.dart';
-import 'package:notes_app/src/controllers/theme_controller.dart';
 import 'package:notes_app/src/ui/screens/app/archives_screen.dart';
 import 'package:notes_app/src/ui/screens/app/profile_screen.dart';
 
@@ -10,9 +9,7 @@ class HomeScreen extends StatelessWidget {
   static final String id = "/home";
   final DragController _dragController = Get.put(DragController());
   // TODO Save and retrieve from the datebase
-  final ThemeController _themeController = Get.put(ThemeController());
   final ArchivesAuthController _archivesAuthController = Get.put(ArchivesAuthController());
-
   @override
   Widget build(BuildContext context) {
     int? draggedId = -1;
@@ -96,7 +93,7 @@ class HomeScreen extends StatelessWidget {
             SliverGrid.count(
               crossAxisCount: 2,
               children: List.generate(
-                8,
+                15,
                 (index) => Container(
                   margin: EdgeInsets.all(7.5),
                   child: AnimatedBuilder(

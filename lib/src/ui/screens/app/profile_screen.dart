@@ -2,12 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:notes_app/src/controllers/archives_auth_controller.dart';
-import 'package:notes_app/src/controllers/theme_controller.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends GetView<ArchivesAuthController> {
   static final id = '/profile';
-  final ThemeController _themeController = Get.find<ThemeController>();
-  final ArchivesAuthController _archivesAuthController = Get.find<ArchivesAuthController>();
+  // final ArchivesAuthController _archivesAuthController = Get.find<ArchivesAuthController>();
   // TODO Refractor this
   @override
   Widget build(BuildContext context) {
@@ -181,20 +179,18 @@ class ProfileScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       Container(
-                        child: Obx(
-                          () => SwitchListTile.adaptive(
-                            value: _themeController.isDarkMode.value,
-                            contentPadding: EdgeInsets.symmetric(horizontal: Get.width / 11),
-                            onChanged: (bool value) => _themeController.changeTheme(value),
-                            secondary: Icon(
-                              CupertinoIcons.moon_fill,
-                              color: Color(0xFF656565),
-                            ),
-                            title: Text(
-                              "Night Mode",
-                              style: TextStyle(
-                                color: Color(0xFF070707),
-                              ),
+                        child: SwitchListTile.adaptive(
+                          value: Get.isDarkMode,
+                          contentPadding: EdgeInsets.symmetric(horizontal: Get.width / 11),
+                          onChanged: (bool value) => Get.changeTheme(value ? ThemeData.dark() : ThemeData.light()),
+                          secondary: Icon(
+                            CupertinoIcons.moon_fill,
+                            color: Color(0xFF656565),
+                          ),
+                          title: Text(
+                            "Night Mode",
+                            style: TextStyle(
+                              color: Color(0xFF070707),
                             ),
                           ),
                         ),
@@ -222,9 +218,9 @@ class ProfileScreen extends StatelessWidget {
                       Container(
                         child: Obx(
                           () => SwitchListTile.adaptive(
-                            value: _archivesAuthController.isBiometActive.value,
+                            value: controller.isBiometActive.value,
                             contentPadding: EdgeInsets.symmetric(horizontal: Get.width / 11),
-                            onChanged: (bool value) => _archivesAuthController.toggleBiometricsActiveState(value),
+                            onChanged: (bool value) => controller.toggleBiometricsActiveState(value),
                             secondary: Icon(
                               Icons.fingerprint_rounded,
                               color: Color(0xFF656565),

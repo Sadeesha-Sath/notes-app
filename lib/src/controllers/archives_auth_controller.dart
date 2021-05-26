@@ -28,4 +28,12 @@ class ArchivesAuthController extends GetxController {
     }
     return false;
   }
+
+  bool setPin(int pin) {
+    if (_archivePin == null) {
+      _archivePin = pin.hashCode;
+      return true;
+    }
+    return false;
+  }
 }
