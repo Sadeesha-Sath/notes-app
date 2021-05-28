@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:notes_app/src/ui/screens/app/archives_screen.dart';
 import 'package:notes_app/src/ui/screens/app/home_screen.dart';
+import 'package:notes_app/src/ui/screens/app/note_screen.dart';
 import 'package:notes_app/src/ui/screens/app/pin_set_screen.dart';
 import 'package:notes_app/src/ui/screens/app/profile_screen.dart';
 import 'package:notes_app/src/ui/screens/auth/login_screen.dart';
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
         GetPage(name: ProfileScreen.id, page: () => ProfileScreen()),
         GetPage(name: ArchivesScreen.id, page: () => ArchivesScreen()),
         GetPage(name: PinSetScreen.id, page: () => PinSetScreen()),
+        GetPage(name: NoteScreen.id, page: () => NoteScreen()),
       ],
       theme: ThemeData(
         primarySwatch: Colors.blue,

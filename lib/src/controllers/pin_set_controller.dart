@@ -1,33 +1,38 @@
-
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:notes_app/src/controllers/archives_auth_controller.dart';
 
 class PinSetController extends GetxController {
-  String pin1 = "";
-  String pin2 = "";
+  TextEditingController pin1 = TextEditingController();
+  TextEditingController pin2 = TextEditingController();
+  var stage = 1.obs;
   var hidePin = true.obs;
-  bool invalidInput = false;
-  String errorMessage = "Invalid Input. Only Numbers are allowed. Please try again";
+  var invalidInput = false.obs;
+  var errorMessage = "Invalid Input. Only Numbers are allowed. Please try again".obs;
 
   void isInt(String value) {
     if (int.tryParse(value) != null) {
-      invalidInput = false;
+      invalidInput.value = false;
+      if (stage.value == 1)
+        ++stage;
+      else
+        checkPin();
     } else {
-      errorMessage = "Invalid Input. Only Numbers are allowed. Please try again";
-      invalidInput = true;
+      errorMessage.value = "Invalid Input. Only Numbers are allowed. Please try again.";
+      invalidInput.value = true;
+      pin1.clear();
     }
-    update();
   }
 
   void pinVisibilityToggle() => hidePin.toggle();
 
   void checkPin() {
-    if (pin1 == pin2) {
-      Get.find<ArchivesAuthController>().setPin(int.tryParse(pin1)!);
+    if (pin1.text == pin2.text) {
+      Get.find<ArchivesAuthController>().setPin(int.tryParse(pin1.text)!);
+      ++stage;
     } else {
-      errorMessage = "Pins Don't match. Please check and try again.";
-      invalidInput = true;
-      update();
+      errorMessage.value = "Pins Don't match. Please check and try again.";
+      invalidInput.value = true;
     }
   }
 }
