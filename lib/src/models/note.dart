@@ -11,6 +11,7 @@ class Note {
     var monthName = getMonthName(dateModified.month);
     return "$weekDayName, ${dateModified.day} $monthName ${dateModified.year}";
   }
+  // TODO USe weekday only for notes that are less than two weeks old
 
   String getWeekDay(int weekDay) {
     if (weekDay == 1)

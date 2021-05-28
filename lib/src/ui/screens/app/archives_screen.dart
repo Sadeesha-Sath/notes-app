@@ -4,6 +4,7 @@ import 'package:notes_app/src/controllers/archives_auth_controller.dart';
 import 'package:notes_app/src/ui/screens/app/pin_set_screen.dart';
 import 'package:notes_app/src/ui/widgets/biometric_box.dart';
 import 'package:notes_app/src/ui/widgets/continue_button.dart';
+import 'package:notes_app/src/ui/widgets/custom_back_button.dart';
 
 class ArchivesScreen extends GetView<ArchivesAuthController> {
   static final String id = "/archives";
@@ -34,11 +35,7 @@ class FirstTime extends StatelessWidget {
           children: [
             Container(
               alignment: Alignment.topLeft,
-              child: IconButton(
-                splashRadius: 25,
-                icon: Icon(Icons.arrow_back_ios_new_rounded),
-                onPressed: () => Get.back(),
-              ),
+              child: CustomBackButton(),
             ),
             CircleAvatar(
               radius: 120,

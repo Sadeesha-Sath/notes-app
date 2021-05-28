@@ -17,6 +17,7 @@ class HomeScreen extends StatelessWidget {
     int? draggedId = -1;
     return Scaffold(
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Color(0xFF303030),
         onPressed: () {},
         child: Icon(
           Icons.add,
@@ -36,6 +37,10 @@ class HomeScreen extends StatelessWidget {
               expandedHeight: 170,
               backgroundColor: Color(0xFFFAFAFA),
               actions: [
+                AppbarButton(
+                  onTap: () {},
+                  icon: Icons.search_rounded,
+                ),
                 AppbarButton(
                   onTap: () => Get.toNamed(ArchivesScreen.id),
                   icon: Icons.archive_rounded,
@@ -67,35 +72,32 @@ class HomeScreen extends StatelessWidget {
                 15,
                 (index) => Container(
                   margin: EdgeInsets.all(7.5),
-                  child: AnimatedBuilder(
-                    animation: _dragController.animationController,
-                    builder: (context, child) {
-                      return Transform.translate(
-                        offset: Offset(index == draggedId ? _dragController.animationController.value : 0, 0),
-                        child: GestureDetector(
-                          onTap: () {
-                            Get.toNamed(NoteScreen.id);
-                          },
-                          onHorizontalDragUpdate: (details) {
-                            if (details.primaryDelta != null) {
-                              _dragController.animationController.value += details.primaryDelta!;
-                            }
-                          },
-                          onHorizontalDragStart: (details) => draggedId = index,
-                          onHorizontalDragEnd: (details) {
-                            if (_dragController.animationController.value > Get.width / 4)
-                              print("Archived $index");
-                            else if (_dragController.animationController.value < 0 &&
-                                _dragController.animationController.value < -1 * (Get.width / 4))
-                              print("Deleted $index");
-                            _dragController.animationController.value = 0;
-                          },
-                          child: Material(
-                            // TODO Make Drag Behaviour
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                            color: Colors.blue,
-                            elevation: 1,
-                            child: Padding(
+                  child: GestureDetector(
+                      onTap: () {
+                        Get.toNamed(NoteScreen.id);
+                      },
+                      onHorizontalDragUpdate: (details) {
+                        if (details.primaryDelta != null) {
+                          _dragController.animationController.value += details.primaryDelta!;
+                        }
+                      },
+                      onHorizontalDragStart: (details) => draggedId = index,
+                      onHorizontalDragEnd: (details) {
+                        if (_dragController.animationController.value > Get.width / 4)
+                          print("Archived $index");
+                        else if (_dragController.animationController.value < 0 &&
+                            _dragController.animationController.value < -1 * (Get.width / 4)) print("Deleted $index");
+                        _dragController.animationController.value = 0;
+                      },
+                      child: Material(
+                        // TODO Make Drag Behaviour
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                        clipBehavior: Clip.hardEdge,
+                        color: Colors.blue,
+                        elevation: 1,
+                        child: Stack(
+                          children: [
+                            Padding(
                               padding: EdgeInsets.all(15),
                               child: Column(
                                 children: [
@@ -118,11 +120,24 @@ class HomeScreen extends StatelessWidget {
                                 ],
                               ),
                             ),
-                          ),
+                            // TODO Refine this and make it responsive
+                            AnimatedBuilder(
+                                animation: _dragController.animationController,
+                                builder: (context, child) {
+                                  return Transform.translate(
+                                    offset: Offset(
+                                        index == draggedId
+                                            ? _dragController.animationController.value - 2.1 * Get.width / 5
+                                            : -2.1 * Get.width / 5,
+                                        0),
+                                    child: Container(
+                                      color: Colors.green,
+                                    ),
+                                  );
+                                }),
+                          ],
                         ),
-                      );
-                    },
-                  ),
+                      )),
                 ),
               ),
               childAspectRatio: 1,

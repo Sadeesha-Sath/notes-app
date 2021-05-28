@@ -5,6 +5,7 @@ import 'package:notes_app/src/controllers/register_controller.dart';
 import 'package:notes_app/src/ui/screens/app/home_screen.dart';
 import 'package:notes_app/src/ui/screens/auth/login_screen.dart';
 import 'package:notes_app/src/ui/ui_constants.dart';
+import 'package:notes_app/src/ui/widgets/custom_back_button.dart';
 
 class RegisterScreen extends StatelessWidget {
   static final String id = "/register";
@@ -21,13 +22,7 @@ class RegisterScreen extends StatelessWidget {
             children: [
               Container(
                 alignment: Alignment.topLeft,
-                child: IconButton(
-                  splashRadius: 27,
-                  icon: Icon(Icons.arrow_back_ios_new_sharp),
-                  onPressed: () {
-                    Get.back();
-                  },
-                ),
+                child: CustomBackButton()
               ),
               Container(
                 padding: EdgeInsets.all(20),

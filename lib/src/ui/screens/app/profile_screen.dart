@@ -2,10 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:notes_app/src/controllers/archives_auth_controller.dart';
+import 'package:notes_app/src/ui/screens/app/archives_screen.dart';
+import 'package:notes_app/src/ui/widgets/custom_back_button.dart';
 
 class ProfileScreen extends GetView<ArchivesAuthController> {
   static final id = '/profile';
-  // final ArchivesAuthController _archivesAuthController = Get.find<ArchivesAuthController>();
   // TODO Refractor this
   @override
   Widget build(BuildContext context) {
@@ -19,10 +20,7 @@ class ProfileScreen extends GetView<ArchivesAuthController> {
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 12),
                   alignment: Alignment.topLeft,
-                  child: IconButton(
-                    icon: Icon(Icons.arrow_back_ios_new_rounded),
-                    onPressed: () => Get.back(),
-                  ),
+                  child: CustomBackButton(),
                 ),
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: Get.width / 20),
@@ -83,9 +81,7 @@ class ProfileScreen extends GetView<ArchivesAuthController> {
                     ],
                   ),
                 ),
-                SizedBox(
-                  height: 22,
-                ),
+                SizedBox(height: 22),
                 Container(
                   padding: EdgeInsets.symmetric(vertical: 10, horizontal: Get.width / 22),
                   color: Color(0xFFF6F6F6),
@@ -123,14 +119,17 @@ class ProfileScreen extends GetView<ArchivesAuthController> {
                       Container(
                         child: ListTile(
                           contentPadding: EdgeInsets.symmetric(horizontal: Get.width / 11),
-                          onTap: () {},
+                          onTap: () => Get.toNamed(ArchivesScreen.id),
                           title: Text(
                             "Archives",
                             style: TextStyle(
                               color: Color(0xFF070707),
                             ),
                           ),
-                          leading: Icon(Icons.archive_rounded),
+                          leading: Icon(
+                            Icons.archive_rounded,
+                            color: Color(0xFF656565),
+                          ),
                           trailing: Icon(
                             Icons.arrow_forward_ios_rounded,
                             size: 22,
@@ -147,7 +146,10 @@ class ProfileScreen extends GetView<ArchivesAuthController> {
                               color: Color(0xFF070707),
                             ),
                           ),
-                          leading: Icon(Icons.delete_rounded),
+                          leading: Icon(
+                            Icons.delete_rounded,
+                            color: Color(0xFF656565),
+                          ),
                           trailing: Icon(
                             Icons.arrow_forward_ios_rounded,
                             size: 22,
@@ -157,9 +159,7 @@ class ProfileScreen extends GetView<ArchivesAuthController> {
                     ],
                   ),
                 ),
-                SizedBox(
-                  height: 15,
-                ),
+                SizedBox(height: 15),
                 Container(
                   padding: EdgeInsets.symmetric(vertical: 10, horizontal: Get.width / 22),
                   color: Color(0xFFF6F6F6),
@@ -237,9 +237,7 @@ class ProfileScreen extends GetView<ArchivesAuthController> {
                     ],
                   ),
                 ),
-                SizedBox(
-                  height: 15,
-                ),
+                SizedBox(height: 15),
                 Container(
                   padding: EdgeInsets.symmetric(vertical: 10, horizontal: Get.width / 22),
                   color: Color(0xFFF6F6F6),
@@ -304,7 +302,9 @@ class ProfileScreen extends GetView<ArchivesAuthController> {
                       Container(
                         child: ListTile(
                           contentPadding: EdgeInsets.symmetric(horizontal: Get.width / 11),
-                          onTap: () {},
+                          onTap: () {
+                            showLicensePage(context: context);
+                          },
                           leading: Icon(
                             Icons.document_scanner_rounded,
                             color: Color(0xFF656565),
@@ -323,7 +323,41 @@ class ProfileScreen extends GetView<ArchivesAuthController> {
                       ),
                     ],
                   ),
-                )
+                ),
+                SizedBox(height: 15),
+                Container(
+                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: Get.width / 22),
+                  color: Color(0xFFF6F6F6),
+                  width: double.infinity,
+                  child: Text(
+                    "ACCOUNT",
+                    style: TextStyle(
+                      color: Color(0xFF9A9A9A),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 1.3,
+                    ),
+                  ),
+                  alignment: Alignment.centerLeft,
+                ),
+                Container(
+                  child: ListTile(
+                    contentPadding: EdgeInsets.symmetric(horizontal: Get.width / 11),
+                    onTap: () {
+                      // Sign Out
+                    },
+                    leading: Icon(
+                      Icons.exit_to_app_rounded,
+                      color: Colors.redAccent,
+                    ),
+                    title: Text(
+                      "Sign Out",
+                      style: TextStyle(
+                        color: Colors.redAccent,
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),

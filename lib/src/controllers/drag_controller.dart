@@ -6,7 +6,7 @@ class DragController extends GetxController with SingleGetTickerProviderMixin {
 
   @override
   void onInit() {
-    animationController = AnimationController.unbounded(vsync: this);
+    animationController = AnimationController.unbounded(vsync: this, value: -1 * Get.width / 4);
     super.onInit();
   }
 

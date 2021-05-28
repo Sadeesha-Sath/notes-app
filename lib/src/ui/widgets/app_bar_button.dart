@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
 class AppbarButton extends StatelessWidget {
-  final IconData icon;
+  final IconData? icon;
   final onTap;
+  final PopupMenuButton? popupMenuButton;
 
-  AppbarButton({required this.icon, required this.onTap});
+  AppbarButton({this.icon, this.onTap, this.popupMenuButton});
 
   @override
   Widget build(BuildContext context) {
@@ -12,15 +13,17 @@ class AppbarButton extends StatelessWidget {
       margin: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
       width: 45,
       child: Material(
-        color: Colors.grey.shade600,
+        //TODO Find a good Color
+        color: Colors.grey.shade800,
         clipBehavior: Clip.hardEdge,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-        child: InkWell(
-          onTap: onTap,
-          child: Center(
-            child: Icon(icon),
-          ),
-        ),
+        child: popupMenuButton ??
+            InkWell(
+              onTap: onTap,
+              child: Center(
+                child: Icon(icon),
+              ),
+            ),
       ),
     );
   }

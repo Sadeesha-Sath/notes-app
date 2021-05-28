@@ -6,6 +6,7 @@ import 'package:notes_app/src/ui/screens/app/home_screen.dart';
 import 'package:notes_app/src/ui/ui_constants.dart';
 import 'package:notes_app/src/ui/widgets/biometric_box.dart';
 import 'package:notes_app/src/ui/widgets/continue_button.dart';
+import 'package:notes_app/src/ui/widgets/custom_back_button.dart';
 
 class PinSetScreen extends StatelessWidget {
   static final String id = "/archives/pin_set";
@@ -18,14 +19,7 @@ class PinSetScreen extends StatelessWidget {
         leading: Container(
           padding: EdgeInsets.only(left: 20),
           alignment: Alignment.centerLeft,
-          child: IconButton(
-            splashRadius: 25,
-            icon: Icon(
-              Icons.arrow_back_ios_new_rounded,
-              color: Colors.black,
-            ),
-            onPressed: () => Get.back(),
-          ),
+          child: CustomBackButton(),
         ),
         centerTitle: true,
         title: Text(
@@ -73,7 +67,7 @@ class PinSetScreen extends StatelessWidget {
                     ),
                   ),
                 )
-              : FirstTwoTimes(pinSetController: _pinSetController),
+              : FirstTwoTimes(),
         ),
       ),
     );
@@ -81,13 +75,7 @@ class PinSetScreen extends StatelessWidget {
 }
 
 class FirstTwoTimes extends StatelessWidget {
-  const FirstTwoTimes({
-    Key? key,
-    required PinSetController pinSetController,
-  })  : _pinSetController = pinSetController,
-        super(key: key);
-
-  final PinSetController _pinSetController;
+  final PinSetController _pinSetController = Get.find<PinSetController>();
 
   @override
   Widget build(BuildContext context) {
