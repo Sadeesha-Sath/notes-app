@@ -6,7 +6,7 @@ import 'package:notes_app/src/ui/screens/auth/register_screen.dart';
 import 'package:notes_app/src/ui/widgets/social_media_login_bottomsheet.dart';
 
 class StartScreen extends StatelessWidget {
-  static final id = "/";
+  static final id = "/start";
   @override
   Widget build(BuildContext context) {
     return Scaffold(

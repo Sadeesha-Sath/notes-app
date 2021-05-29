@@ -2,7 +2,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:notes_app/src/controllers/login_controller.dart';
-import 'package:notes_app/src/ui/screens/app/home_screen.dart';
 import 'package:notes_app/src/ui/screens/auth/register_screen.dart';
 import 'package:notes_app/src/ui/ui_constants.dart';
 import 'package:notes_app/src/ui/widgets/custom_back_button.dart';
@@ -10,6 +9,8 @@ import 'package:notes_app/src/ui/widgets/custom_back_button.dart';
 class LoginScreen extends StatelessWidget {
   static final String id = '/login';
   final LoginController _loginController = LoginController();
+  final TextEditingController _emailField = TextEditingController();
+  final TextEditingController _passwordField = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -58,10 +59,7 @@ class LoginScreen extends StatelessWidget {
                   style: TextStyle(fontSize: 16),
                   keyboardType: TextInputType.emailAddress,
                   textAlign: TextAlign.left,
-                  onChanged: (value) {
-                    _loginController.email = value;
-                    //Do something with the user input.
-                  },
+                  controller: _emailField,
                   decoration: textFieldDecoration.copyWith(
                     prefixIcon: Icon(Icons.person),
                     hintText: "Enter your email / username",
@@ -75,10 +73,7 @@ class LoginScreen extends StatelessWidget {
                     obscureText: _loginController.showPassword.value,
                     style: TextStyle(fontSize: 16),
                     textAlign: TextAlign.left,
-                    onChanged: (value) {
-                      _loginController.password = value;
-                      //Do something with the user input.
-                    },
+                    controller: _passwordField,
                     decoration: textFieldDecoration.copyWith(
                       prefixIcon: Icon(Icons.password),
                       suffixIcon: IconButton(
@@ -122,7 +117,7 @@ class LoginScreen extends StatelessWidget {
                     shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
                   ),
                   onPressed: () {
-                    Get.offAllNamed(HomeScreen.id);
+                    _loginController.validateForm(_emailField.text, _passwordField.text);
                   },
                   child: Center(
                     child: Text(

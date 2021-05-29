@@ -10,6 +10,9 @@ import 'package:notes_app/src/ui/widgets/custom_back_button.dart';
 class RegisterScreen extends StatelessWidget {
   static final String id = "/register";
   final RegisterController _registerController = RegisterController();
+  final TextEditingController _emailField = TextEditingController();
+  final TextEditingController _password1Field = TextEditingController();
+  final TextEditingController _password2Field = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +23,7 @@ class RegisterScreen extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: Get.size.width / 50, vertical: Get.size.height / 45),
           child: Column(
             children: [
-              Container(
-                alignment: Alignment.topLeft,
-                child: CustomBackButton()
-              ),
+              Container(alignment: Alignment.topLeft, child: CustomBackButton()),
               Container(
                 padding: EdgeInsets.all(20),
                 alignment: Alignment.centerLeft,
@@ -51,10 +51,7 @@ class RegisterScreen extends StatelessWidget {
                   style: TextStyle(fontSize: 16),
                   keyboardType: TextInputType.emailAddress,
                   textAlign: TextAlign.left,
-                  onChanged: (value) {
-                    _registerController.email = value;
-                    //Do something with the user input.
-                  },
+                  controller: _emailField,
                   decoration: textFieldDecoration.copyWith(
                     prefixIcon: Icon(Icons.person),
                     hintText: "Enter your email",
@@ -68,10 +65,7 @@ class RegisterScreen extends StatelessWidget {
                     obscureText: _registerController.hidePassword1.value,
                     style: TextStyle(fontSize: 16),
                     textAlign: TextAlign.left,
-                    onChanged: (value) {
-                      _registerController.password1 = value;
-                      //Do something with the user input.
-                    },
+                    controller: _password1Field,
                     decoration: textFieldDecoration.copyWith(
                       prefixIcon: Icon(Icons.password),
                       suffixIcon: IconButton(
@@ -96,10 +90,7 @@ class RegisterScreen extends StatelessWidget {
                     obscureText: _registerController.hidePassword2.value,
                     style: TextStyle(fontSize: 16),
                     textAlign: TextAlign.left,
-                    onChanged: (value) {
-                      _registerController.password2 = value;
-                      //Do something with the user input.
-                    },
+                    controller: _password2Field,
                     decoration: textFieldDecoration.copyWith(
                       prefixIcon: Icon(Icons.password),
                       suffixIcon: IconButton(
@@ -126,7 +117,7 @@ class RegisterScreen extends StatelessWidget {
                     shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
                   ),
                   onPressed: () {
-                    Get.offAllNamed(HomeScreen.id);
+                    _registerController.validateForm(_emailField.text, _password1Field.text, _password2Field.text);
                   },
                   child: Center(
                     child: Text(

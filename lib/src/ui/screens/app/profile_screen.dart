@@ -2,11 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:notes_app/src/controllers/archives_auth_controller.dart';
+import 'package:notes_app/src/controllers/firebase_auth_controller.dart';
 import 'package:notes_app/src/ui/screens/app/archives_screen.dart';
 import 'package:notes_app/src/ui/widgets/custom_back_button.dart';
 
 class ProfileScreen extends GetView<ArchivesAuthController> {
   static final id = '/profile';
+  // final FirebaseAuthController _authController = Get.put(FirebaseAuthController());
+  final FirebaseAuthController _authController = Get.find<FirebaseAuthController>();
   // TODO Refractor this
   @override
   Widget build(BuildContext context) {
@@ -345,6 +348,7 @@ class ProfileScreen extends GetView<ArchivesAuthController> {
                     contentPadding: EdgeInsets.symmetric(horizontal: Get.width / 11),
                     onTap: () {
                       // Sign Out
+                      _authController.signOutUser();
                     },
                     leading: Icon(
                       Icons.exit_to_app_rounded,
