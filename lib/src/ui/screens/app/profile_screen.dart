@@ -221,7 +221,7 @@ class ProfileScreen extends GetView<ArchivesAuthController> {
                       Container(
                         child: Obx(
                           () => SwitchListTile.adaptive(
-                            value: controller.isBiometActive.value,
+                            value: controller.isBiometricEnabled.value,
                             contentPadding: EdgeInsets.symmetric(horizontal: Get.width / 11),
                             onChanged: (bool value) => controller.toggleBiometricsActiveState(value),
                             secondary: Icon(
@@ -370,3 +370,5 @@ class ProfileScreen extends GetView<ArchivesAuthController> {
     );
   }
 }
+
+// TODO Save nightMode and BiometricEnabling preference into the local storage

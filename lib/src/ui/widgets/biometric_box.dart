@@ -34,7 +34,7 @@ class BiometricBox extends StatelessWidget {
                   ),
                   Obx(
                     () => Switch.adaptive(
-                      value: _archivesAuthController.isBiometActive.value,
+                      value: _archivesAuthController.isBiometricEnabled.value,
                       onChanged: (bool value) => _archivesAuthController.toggleBiometricsActiveState(value),
                     ),
                   ),

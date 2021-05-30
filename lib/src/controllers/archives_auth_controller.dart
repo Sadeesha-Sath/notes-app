@@ -1,14 +1,14 @@
 import 'package:get/get.dart';
 
 class ArchivesAuthController extends GetxController {
-  RxBool isBiometActive = false.obs;
+  RxBool isBiometricEnabled = false.obs;
   int? _archivePin;
 
   void toggleBiometricsActiveState([bool? value]) {
     if (value != null)
-      isBiometActive.value = value;
+      isBiometricEnabled.value = value;
     else
-      isBiometActive.toggle();
+      isBiometricEnabled.toggle();
   }
 
   bool isPinSet() {
