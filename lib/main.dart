@@ -54,7 +54,6 @@ class _AppState extends State<App> {
                 GetPage(name: ProfileScreen.id, page: () => ProfileScreen()),
                 GetPage(name: ArchivesScreen.id, page: () => ArchivesScreen()),
                 GetPage(name: PinSetScreen.id, page: () => PinSetScreen()),
-                GetPage(name: NoteScreen.id, page: () => NoteScreen()),
               ],
               theme: ThemeData(
                 primarySwatch: Colors.blue,

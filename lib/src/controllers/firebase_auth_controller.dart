@@ -39,15 +39,17 @@ class FirebaseAuthController extends GetxController {
         userData: UserData(
           email: email.trim(),
           name: email.trim().split("@")[0],
-          profileUrl: _authResult.user!.photoURL!,
         ),
         uid: _authResult.user!.uid,
       );
+      print("Created User model");
       if (await Database().createNewUser(_user)) {
-        Get.find<UserController>().user = _user;
+        Get.put(UserController()).setUser = _user;
         Get.offAllNamed(HomeScreen.id);
       }
+      print("Upload Completed");
     } catch (e) {
+      print(e);
       Get.snackbar("Creating User Account was Unsuccessful", e.toString(), snackPosition: SnackPosition.BOTTOM);
     }
   }
@@ -55,11 +57,12 @@ class FirebaseAuthController extends GetxController {
   void loginUser(String email, String password) async {
     try {
       var _authResult = await _auth.signInWithEmailAndPassword(email: email.trim(), password: password);
-      Get.find<UserController>().user =
-          await Database().getUser(_authResult.user!.uid);
+      print(_authResult.user?.uid);
+      Get.put(UserController()).setUser = await Database().getUser(_authResult.user!.uid);
       print("logged User $email");
       Get.offAllNamed(HomeScreen.id);
     } catch (e) {
+      print(e);
       Get.snackbar("Logging In was Unsuccessful", "$e", snackPosition: SnackPosition.BOTTOM);
     }
   }
@@ -72,6 +75,7 @@ class FirebaseAuthController extends GetxController {
       print("Signed out user");
       Get.offAllNamed(StartScreen.id);
     } catch (e) {
+      print(e);
       Get.snackbar("Unable to Sign Out", "$e", snackPosition: SnackPosition.BOTTOM);
     }
   }

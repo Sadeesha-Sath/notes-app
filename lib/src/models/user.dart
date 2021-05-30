@@ -6,13 +6,12 @@ class UserModel {
   UserData userData;
   String uid;
 
-  UserModel(
-      {this.archivesPin,
-      required this.userData,
-      required this.uid});
+  UserModel({this.archivesPin, required this.userData, required this.uid});
 
   UserModel.fromDocumentSnapshot({required DocumentSnapshot documentSnapshot})
       : uid = documentSnapshot.id,
         archivesPin = documentSnapshot['archivesPin'],
-        userData = UserData.fromDocumentSnapshot(documentSnapshot['profileData']);
+        userData = UserData.fromDocumentSnapshot(documentSnapshot['profileData']) {
+    print("successful");
+  }
 }

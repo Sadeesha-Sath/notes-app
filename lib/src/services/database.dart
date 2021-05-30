@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get.dart';
 import 'package:notes_app/src/models/note_model.dart';
 import 'package:notes_app/src/models/user.dart';
 
@@ -7,11 +8,13 @@ class Database {
 
   Future<bool> createNewUser(UserModel user) async {
     try {
+      print("Creating database model");
       await _firestore.collection("users").doc(user.uid).set({
         "archivesPin": user.archivesPin,
-        "profileData": user.userData,
+        "profileData": user.userData.toMap(),
         "uid": user.uid,
       });
+      print("uploaded to firestore");
       return true;
     } catch (e) {
       print(e);
@@ -65,6 +68,11 @@ class Database {
       _firestore.collection("users").doc(uid).collection(collectionName).doc(oldModel.noteId).update(updateFields);
     } catch (e) {
       print(e);
+      Get.snackbar(
+        "Updating the note content failed",
+        e.toString(),
+        snackPosition: SnackPosition.BOTTOM,
+      );
       rethrow;
     }
   }

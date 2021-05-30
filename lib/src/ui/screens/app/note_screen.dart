@@ -1,10 +1,26 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:notes_app/src/models/note_model.dart';
 import 'package:notes_app/src/ui/widgets/app_bar_button.dart';
 import 'package:notes_app/src/ui/widgets/custom_back_button.dart';
 
-class NoteScreen extends StatelessWidget {
-  static final String id = "/home/note";
+class NoteScreen extends StatefulWidget {
+  final NoteModel noteModel;
+  final bool isArchived;
+
+  NoteScreen({required this.noteModel, this.isArchived = false});
+
+  @override
+  _NoteScreenState createState() => _NoteScreenState(noteModel: noteModel, isArchived: isArchived);
+}
+
+class _NoteScreenState extends State<NoteScreen> {
+  _NoteScreenState({this.isArchived = false, required this.noteModel});
+
+  NoteModel noteModel;
+  bool isArchived;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -14,23 +30,22 @@ class NoteScreen extends StatelessWidget {
         actions: [
           AppbarButton(icon: Icons.edit, onTap: () {}),
           AppbarButton(icon: Icons.search_rounded, onTap: () {}),
-          AppbarButton(icon: Icons.favorite_outline_rounded, onTap: () {}),
-          // TODO Make this Add/Remove from archive depending on the original note being in the archive or not
+          isArchived ? Container() :AppbarButton(icon: Icons.favorite_outline_rounded, onTap: () {}),
           AppbarButton(
-                      popupMenuButton: PopupMenuButton(
+            popupMenuButton: PopupMenuButton(
               onSelected: (value) {
                 switch (value) {
                   case "Add to Archive":
-                  // Add to Archive
+                    // Add to Archive
                     break;
                   case "Send to Trash":
-                  // Add to Trash
+                    // Add to Trash
                     break;
                 }
               },
               itemBuilder: (BuildContext context) {
                 return {
-                  {'text': 'Add to Archive', 'iconData': Icons.archive_rounded, "color": Colors.grey.shade800},
+                  {'text': isArchived ? 'Remove from Archive':'Add to Archive', 'iconData': isArchived ? Icons.remove_circle_outline  :Icons.archive_rounded, "color": Colors.grey.shade800},
                   {'text': 'Send to Trash', 'iconData': Icons.delete_rounded, 'color': Colors.redAccent}
                 }.map((Map<String, dynamic> choice) {
                   return PopupMenuItem<String>(
@@ -53,7 +68,6 @@ class NoteScreen extends StatelessWidget {
               },
             ),
           ),
-          // AppbarButton(icon: Icons.more_vert_rounded, onTap: () {}),
         ],
       ),
       body: Container(
