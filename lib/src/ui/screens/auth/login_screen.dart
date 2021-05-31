@@ -1,14 +1,14 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:notes_app/src/controllers/login_controller.dart';
+import 'package:notes_app/src/controllers/firebase_auth_controller.dart';
 import 'package:notes_app/src/ui/screens/auth/register_screen.dart';
 import 'package:notes_app/src/ui/ui_constants.dart';
 import 'package:notes_app/src/ui/widgets/custom_back_button.dart';
+import 'package:notes_app/src/ui/widgets/password_field.dart';
 
 class LoginScreen extends StatelessWidget {
   static final String id = '/login';
-  final LoginController _loginController = LoginController();
   final TextEditingController _emailField = TextEditingController();
   final TextEditingController _passwordField = TextEditingController();
 
@@ -66,30 +66,10 @@ class LoginScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              Obx(
-                () => Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-                  child: TextField(
-                    obscureText: _loginController.showPassword.value,
-                    style: TextStyle(fontSize: 16),
-                    textAlign: TextAlign.left,
-                    controller: _passwordField,
-                    decoration: textFieldDecoration.copyWith(
-                      prefixIcon: Icon(Icons.password),
-                      suffixIcon: IconButton(
-                        splashRadius: 20,
-                        onPressed: () {
-                          print("Changing Visibility");
-                          _loginController.changeVisibility();
-                        },
-                        icon: Icon(_loginController.showPassword.value
-                            ? Icons.visibility_rounded
-                            : Icons.visibility_off_rounded),
-                      ),
-                      hintText: "Enter your password",
-                    ),
-                  ),
-                ),
+              PasswordTextField(
+                controller: _passwordField,
+                hintText: "Enter Your Password",
+                key: ValueKey(3),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10),
@@ -117,7 +97,11 @@ class LoginScreen extends StatelessWidget {
                     shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
                   ),
                   onPressed: () {
-                    _loginController.validateForm(_emailField.text, _passwordField.text);
+                    if (_passwordField.text.length > 8)
+                      Get.find<FirebaseAuthController>().loginUser(_emailField.text, _passwordField.text);
+                    else {
+                      Get.snackbar("Password is too short", "The password must be at least 8 characters long.");
+                    }
                   },
                   child: Center(
                     child: Text(

@@ -76,4 +76,39 @@ class Database {
       rethrow;
     }
   }
+
+  Future<void> updateFavourite(
+      {required String uid, required String collectionName, required String noteId, required bool isFavourite}) async {
+    try {
+      _firestore
+          .collection('users')
+          .doc(uid)
+          .collection(collectionName)
+          .doc(noteId)
+          .update({"isFavourite": isFavourite});
+    } catch (e) {
+      print(e);
+      Get.snackbar(
+        "Updating the note failed",
+        e.toString(),
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      rethrow;
+    }
+  }
+
+  Future<void> updatePin({required String uid, required int newPin}) async {
+    try {
+      _firestore.collection('users').doc(uid).update({"archivesPin": newPin});
+    } catch (e) {
+      print(e);
+      Get.snackbar(
+        "Updating Archive Pin failed",
+        e.toString(),
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      rethrow;
+    }
+  }
+  // TODO Add user data update methods
 }

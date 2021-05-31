@@ -58,7 +58,9 @@ class PinSetScreen extends StatelessWidget {
                           style: TextStyle(fontSize: 22),
                         ),
                         Spacer(),
-                        BiometricBox(),
+                        BiometricBox(
+                          key: ValueKey('biometrics'),
+                        ),
                         Spacer(),
                         ContinueButton(onPressed: () {
                           Get.offNamedUntil(ArchivesScreen.id, ModalRoute.withName(HomeScreen.id));

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:notes_app/src/controllers/archives_auth_controller.dart';
+import 'package:notes_app/src/controllers/user_controller.dart';
 import 'package:notes_app/src/ui/screens/app/pin_set_screen.dart';
 import 'package:notes_app/src/ui/widgets/biometric_box.dart';
 import 'package:notes_app/src/ui/widgets/continue_button.dart';
 import 'package:notes_app/src/ui/widgets/custom_back_button.dart';
 
-class ArchivesScreen extends GetView<ArchivesAuthController> {
+class ArchivesScreen extends GetView<UserController> {
   static final String id = "/archives";
   @override
   Widget build(BuildContext context) {
@@ -63,7 +63,7 @@ class FirstTime extends StatelessWidget {
               ),
             ),
             Spacer(),
-            BiometricBox(),
+            BiometricBox(key: ValueKey('biometricBox'),),
             Spacer(),
             ContinueButton(
               onPressed: () {

@@ -1,25 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:notes_app/src/controllers/archives_auth_controller.dart';
 import 'package:notes_app/src/controllers/drag_controller.dart';
-import 'package:notes_app/src/controllers/firebase_auth_controller.dart';
 import 'package:notes_app/src/controllers/notes_controller.dart';
 import 'package:notes_app/src/ui/screens/app/archives_screen.dart';
 import 'package:notes_app/src/ui/screens/app/note_screen.dart';
 import 'package:notes_app/src/ui/screens/app/profile_screen.dart';
 import 'package:notes_app/src/ui/widgets/app_bar_button.dart';
 
-// TODO Save and retrieve from the datebase
 class HomeScreen extends StatelessWidget {
   static final String id = "/home";
-  // TODO Find Why these controllers get deleted and preferably find a better method to initialize archivesauth
+  // TODO Find Why these controllers get deleted and preferably find a better method to initialize archivesAuth
   final DragController _dragController = Get.put(DragController(), permanent: true);
-  final ArchivesAuthController _archivesAuthController = Get.put(ArchivesAuthController());
-  final NotesController _notesController = Get.put(NotesController());
 
   @override
   Widget build(BuildContext context) {
     int? draggedId = -1;
+    Get.lazyPut(() => NotesController());
+    // Get.lazyPut(() => ArchivesAuthController());
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(

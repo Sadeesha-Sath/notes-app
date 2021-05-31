@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:notes_app/src/controllers/firebase_auth_controller.dart';
+import 'package:notes_app/src/file_handlers/inherited_preferences.dart';
+import 'package:notes_app/src/file_handlers/preferences_handler.dart';
 import 'package:notes_app/src/ui/screens/app/archives_screen.dart';
 import 'package:notes_app/src/ui/screens/app/home_screen.dart';
-import 'package:notes_app/src/ui/screens/app/note_screen.dart';
 import 'package:notes_app/src/ui/screens/app/pin_set_screen.dart';
 import 'package:notes_app/src/ui/screens/app/profile_screen.dart';
 import 'package:notes_app/src/ui/screens/auth/login_screen.dart';
@@ -14,10 +15,16 @@ import 'package:notes_app/src/ui/screens/auth/start_screen.dart';
 import 'package:notes_app/src/ui/widgets/loading.dart';
 import 'package:notes_app/src/ui/widgets/something_went_wrong.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  var preferences = await PreferencesHandler().readPreferences();
   Get.lazyPut<FirebaseAuthController>(() => FirebaseAuthController());
-  runApp(App());
+  runApp(
+    InheritedPreferences(
+      preferences: preferences,
+      child: App(),
+    ),
+  );
 }
 
 class App extends StatefulWidget {
@@ -40,7 +47,7 @@ class _AppState extends State<App> {
             return GetMaterialApp(
               title: 'Notes App',
               home: GetBuilder<FirebaseAuthController>(
-                autoRemove: false,  
+                autoRemove: false,
                 init: FirebaseAuthController(),
                 builder: (_) {
                   return Loading();
@@ -55,7 +62,7 @@ class _AppState extends State<App> {
                 GetPage(name: ArchivesScreen.id, page: () => ArchivesScreen()),
                 GetPage(name: PinSetScreen.id, page: () => PinSetScreen()),
               ],
-              theme: ThemeData(
+              theme: InheritedPreferences.of(context)!.preferences['isNightMode']! ? ThemeData.dark() :ThemeData(
                 primarySwatch: Colors.blue,
               ),
             );

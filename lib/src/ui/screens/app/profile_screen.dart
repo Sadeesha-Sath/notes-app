@@ -1,12 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:notes_app/src/controllers/archives_auth_controller.dart';
 import 'package:notes_app/src/controllers/firebase_auth_controller.dart';
+import 'package:notes_app/src/file_handlers/inherited_preferences.dart';
+import 'package:notes_app/src/file_handlers/preferences_handler.dart';
 import 'package:notes_app/src/ui/screens/app/archives_screen.dart';
+import 'package:notes_app/src/ui/widgets/biometric_list_tile.dart';
 import 'package:notes_app/src/ui/widgets/custom_back_button.dart';
 
-class ProfileScreen extends GetView<ArchivesAuthController> {
+class ProfileScreen extends StatelessWidget {
   static final id = '/profile';
   // final FirebaseAuthController _authController = Get.put(FirebaseAuthController());
   final FirebaseAuthController _authController = Get.find<FirebaseAuthController>();
@@ -181,23 +183,7 @@ class ProfileScreen extends GetView<ArchivesAuthController> {
                 Container(
                   child: Column(
                     children: [
-                      Container(
-                        child: SwitchListTile.adaptive(
-                          value: Get.isDarkMode,
-                          contentPadding: EdgeInsets.symmetric(horizontal: Get.width / 11),
-                          onChanged: (bool value) => Get.changeTheme(value ? ThemeData.dark() : ThemeData.light()),
-                          secondary: Icon(
-                            CupertinoIcons.moon_fill,
-                            color: Color(0xFF656565),
-                          ),
-                          title: Text(
-                            "Night Mode",
-                            style: TextStyle(
-                              color: Color(0xFF070707),
-                            ),
-                          ),
-                        ),
-                      ),
+                      NightModeListTile(),
                       Container(
                         child: ListTile(
                           contentPadding: EdgeInsets.symmetric(horizontal: Get.width / 11),
@@ -218,24 +204,8 @@ class ProfileScreen extends GetView<ArchivesAuthController> {
                           ),
                         ),
                       ),
-                      Container(
-                        child: Obx(
-                          () => SwitchListTile.adaptive(
-                            value: controller.isBiometricEnabled.value,
-                            contentPadding: EdgeInsets.symmetric(horizontal: Get.width / 11),
-                            onChanged: (bool value) => controller.toggleBiometricsActiveState(value),
-                            secondary: Icon(
-                              Icons.fingerprint_rounded,
-                              color: Color(0xFF656565),
-                            ),
-                            title: Text(
-                              "Use Biometric Authentication for Archives",
-                              style: TextStyle(
-                                color: Color(0xFF070707),
-                              ),
-                            ),
-                          ),
-                        ),
+                      BiometricListTile(
+                        key: ValueKey('biometrics'),
                       ),
                     ],
                   ),
@@ -364,6 +334,42 @@ class ProfileScreen extends GetView<ArchivesAuthController> {
                 ),
               ],
             ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class NightModeListTile extends StatefulWidget {
+  const NightModeListTile({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  _NightModeListTileState createState() => _NightModeListTileState();
+}
+
+class _NightModeListTileState extends State<NightModeListTile> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: SwitchListTile.adaptive(
+        value: Get.isDarkMode,
+        contentPadding: EdgeInsets.symmetric(horizontal: Get.width / 11),
+        onChanged: (bool value) {
+          InheritedPreferences.of(context)!.preferences['isNightMode'] = value;
+          Get.changeTheme(value ? ThemeData.dark() : ThemeData.light());
+          PreferencesHandler().updatePreferences(preferences: InheritedPreferences.of(context)!.preferences);
+        },
+        secondary: Icon(
+          CupertinoIcons.moon_fill,
+          color: Color(0xFF656565),
+        ),
+        title: Text(
+          "Night Mode",
+          style: TextStyle(
+            color: Color(0xFF070707),
           ),
         ),
       ),

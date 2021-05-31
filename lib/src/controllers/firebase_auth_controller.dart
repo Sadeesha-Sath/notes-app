@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:notes_app/src/controllers/archives_auth_controller.dart';
+import 'package:notes_app/src/controllers/drag_controller.dart';
 import 'package:notes_app/src/controllers/user_controller.dart';
 import 'package:notes_app/src/models/user.dart';
 import 'package:notes_app/src/models/user_data.dart';
@@ -23,8 +25,9 @@ class FirebaseAuthController extends GetxController {
     super.onInit();
   }
 
-  void checkUser(User? user) {
+  void checkUser(User? user) async {
     if (user != null) {
+      Get.put(UserController()).setUser = await Database().getUser(user.uid);
       Get.offNamed(HomeScreen.id);
     } else {
       Get.offNamed(StartScreen.id);
@@ -44,7 +47,7 @@ class FirebaseAuthController extends GetxController {
       );
       print("Created User model");
       if (await Database().createNewUser(_user)) {
-        Get.put(UserController()).setUser = _user;
+        Get.put(UserController(), permanent: true).setUser = _user;
         Get.offAllNamed(HomeScreen.id);
       }
       print("Upload Completed");
@@ -73,6 +76,8 @@ class FirebaseAuthController extends GetxController {
       await _auth.signOut();
       Get.find<UserController>().clear();
       print("Signed out user");
+      Get.find<DragController>().dispose();
+      // Get.find<ArchivesAuthController>().dispose();
       Get.offAllNamed(StartScreen.id);
     } catch (e) {
       print(e);

@@ -1,16 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:notes_app/src/controllers/archives_auth_controller.dart';
+import 'package:notes_app/src/file_handlers/inherited_preferences.dart';
+import 'package:notes_app/src/file_handlers/preferences_handler.dart';
 
-class BiometricBox extends StatelessWidget {
-  final ArchivesAuthController _archivesAuthController = Get.find<ArchivesAuthController>();
+class BiometricBox extends StatefulWidget {
+  BiometricBox({Key? key});
 
   @override
+  _BiometricBoxState createState() => _BiometricBoxState();
+}
+
+class _BiometricBoxState extends State<BiometricBox> {
+  @override
   Widget build(BuildContext context) {
+    var initialValue = InheritedPreferences.of(context)!.preferences;
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 50),
       child: InkWell(
-        onTap: () => _archivesAuthController.toggleBiometricsActiveState(),
+        onTap: () {
+          setState(() {
+            InheritedPreferences.of(context)!.preferences['isBiometricEnabled'] = !initialValue['isBiometricEnabled']!;
+          });
+          PreferencesHandler().updatePreferences(preferences: initialValue);
+        },
         child: Container(
           padding: EdgeInsets.only(
             top: 15,
@@ -32,12 +43,14 @@ class BiometricBox extends StatelessWidget {
                     "Use Biometrics",
                     style: TextStyle(fontSize: 16),
                   ),
-                  Obx(
-                    () => Switch.adaptive(
-                      value: _archivesAuthController.isBiometricEnabled.value,
-                      onChanged: (bool value) => _archivesAuthController.toggleBiometricsActiveState(value),
-                    ),
-                  ),
+                  Switch.adaptive(
+                      value: initialValue['isBiometricEnabled']!,
+                      onChanged: (bool value) {
+                        setState(() {
+                          InheritedPreferences.of(context)!.preferences['isBiometricEnabled'] = value;
+                        });
+                        PreferencesHandler().updatePreferences(preferences: initialValue);
+                      }),
                 ],
               ),
             ],

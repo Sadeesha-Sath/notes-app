@@ -28,4 +28,12 @@ class NotesController extends GetxController {
     String uid = Get.find<FirebaseAuthController>().user!.uid;
     deletedNoteList.bindStream(Database().noteStream(uid: uid, collectionName: "trash"));
   }
+
+  // @override
+  // void onClose() {
+  //   noteList.close();
+  //   deletedNoteList.close();
+  //   archivedNoteList.close();
+  //   super.onClose();
+  // }
 }

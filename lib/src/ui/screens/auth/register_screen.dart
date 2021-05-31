@@ -1,15 +1,15 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:notes_app/src/controllers/register_controller.dart';
+import 'package:notes_app/src/controllers/firebase_auth_controller.dart';
 import 'package:notes_app/src/ui/screens/app/home_screen.dart';
 import 'package:notes_app/src/ui/screens/auth/login_screen.dart';
 import 'package:notes_app/src/ui/ui_constants.dart';
 import 'package:notes_app/src/ui/widgets/custom_back_button.dart';
+import 'package:notes_app/src/ui/widgets/password_field.dart';
 
 class RegisterScreen extends StatelessWidget {
   static final String id = "/register";
-  final RegisterController _registerController = RegisterController();
   final TextEditingController _emailField = TextEditingController();
   final TextEditingController _password1Field = TextEditingController();
   final TextEditingController _password2Field = TextEditingController();
@@ -58,56 +58,8 @@ class RegisterScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              Obx(
-                () => Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-                  child: TextField(
-                    obscureText: _registerController.hidePassword1.value,
-                    style: TextStyle(fontSize: 16),
-                    textAlign: TextAlign.left,
-                    controller: _password1Field,
-                    decoration: textFieldDecoration.copyWith(
-                      prefixIcon: Icon(Icons.password),
-                      suffixIcon: IconButton(
-                        splashRadius: 20,
-                        onPressed: () {
-                          print("Changing Visibility");
-                          _registerController.toggleHidePassword1();
-                        },
-                        icon: Icon(_registerController.hidePassword1.value
-                            ? Icons.visibility_rounded
-                            : Icons.visibility_off_rounded),
-                      ),
-                      hintText: "Enter a password",
-                    ),
-                  ),
-                ),
-              ),
-              Obx(
-                () => Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-                  child: TextField(
-                    obscureText: _registerController.hidePassword2.value,
-                    style: TextStyle(fontSize: 16),
-                    textAlign: TextAlign.left,
-                    controller: _password2Field,
-                    decoration: textFieldDecoration.copyWith(
-                      prefixIcon: Icon(Icons.password),
-                      suffixIcon: IconButton(
-                        splashRadius: 20,
-                        onPressed: () {
-                          print("Changing Visibility");
-                          _registerController.toggleHidePassword2();
-                        },
-                        icon: Icon(_registerController.hidePassword2.value
-                            ? Icons.visibility_rounded
-                            : Icons.visibility_off_rounded),
-                      ),
-                      hintText: "Retype the password",
-                    ),
-                  ),
-                ),
-              ),
+              PasswordTextField(controller: _password1Field, key: ValueKey(1)),
+              PasswordTextField(controller: _password2Field, hintText: "Retype Password", key: ValueKey(2),),
               Spacer(),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 40),
@@ -117,7 +69,14 @@ class RegisterScreen extends StatelessWidget {
                     shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
                   ),
                   onPressed: () {
-                    _registerController.validateForm(_emailField.text, _password1Field.text, _password2Field.text);
+                    if (_password1Field.text.length > 8 && _password2Field.text.length > 8) {
+                      if (_password1Field.text == _password2Field.text)
+                        Get.find<FirebaseAuthController>().registerUser(_emailField.text, _password1Field.text);
+                      else
+                        Get.snackbar("Passwords don't match", "Please check the passwords and try again");
+                    } else {
+                      Get.snackbar("Password is too short", "The password must be at least 8 characters long.");
+                    }
                   },
                   child: Center(
                     child: Text(

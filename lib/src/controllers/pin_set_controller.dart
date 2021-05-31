@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:notes_app/src/controllers/archives_auth_controller.dart';
+import 'package:notes_app/src/controllers/user_controller.dart';
 
 class PinSetController extends GetxController {
   TextEditingController pin1 = TextEditingController();
@@ -28,7 +28,7 @@ class PinSetController extends GetxController {
 
   void checkPin() {
     if (pin1.text == pin2.text) {
-      Get.find<ArchivesAuthController>().setPin(int.tryParse(pin1.text)!);
+      Get.find<UserController>().setPin(int.tryParse(pin1.text)!);
       ++stage;
     } else {
       errorMessage.value = "Pins Don't match. Please check and try again.";

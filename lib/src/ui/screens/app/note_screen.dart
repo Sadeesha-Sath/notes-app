@@ -1,28 +1,32 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:notes_app/src/controllers/notes_controller.dart';
+import 'package:notes_app/src/controllers/user_controller.dart';
 import 'package:notes_app/src/models/note_model.dart';
+import 'package:notes_app/src/services/database.dart';
 import 'package:notes_app/src/ui/widgets/app_bar_button.dart';
 import 'package:notes_app/src/ui/widgets/custom_back_button.dart';
 
 class NoteScreen extends StatefulWidget {
   final NoteModel noteModel;
-  final bool isArchived;
+  final String collectionName;
 
-  NoteScreen({required this.noteModel, this.isArchived = false});
+  NoteScreen({required this.noteModel, this.collectionName = "notes"});
 
   @override
-  _NoteScreenState createState() => _NoteScreenState(noteModel: noteModel, isArchived: isArchived);
+  _NoteScreenState createState() => _NoteScreenState(noteModel: noteModel, collectionName: collectionName);
 }
 
 class _NoteScreenState extends State<NoteScreen> {
-  _NoteScreenState({this.isArchived = false, required this.noteModel});
+  _NoteScreenState({this.collectionName = "notes", required this.noteModel});
 
   NoteModel noteModel;
-  bool isArchived;
+  String collectionName;
 
   @override
   Widget build(BuildContext context) {
+    bool isArchived = (collectionName == 'archives');
     return Scaffold(
       appBar: AppBar(
         leading: CustomBackButton(),
@@ -30,7 +34,19 @@ class _NoteScreenState extends State<NoteScreen> {
         actions: [
           AppbarButton(icon: Icons.edit, onTap: () {}),
           AppbarButton(icon: Icons.search_rounded, onTap: () {}),
-          isArchived ? Container() :AppbarButton(icon: Icons.favorite_outline_rounded, onTap: () {}),
+          isArchived
+              ? Container()
+              : AppbarButton(
+                  icon: noteModel.isFavourite ? Icons.favorite_rounded : Icons.favorite_outline_rounded,
+                  onTap: () {
+                    noteModel.isFavourite = !noteModel.isFavourite;
+                    Database().updateFavourite(
+                      uid: Get.find<UserController>().user!.uid,
+                      collectionName: collectionName,
+                      noteId: noteModel.noteId,
+                      isFavourite: noteModel.isFavourite,
+                    );
+                  }),
           AppbarButton(
             popupMenuButton: PopupMenuButton(
               onSelected: (value) {
@@ -41,11 +57,18 @@ class _NoteScreenState extends State<NoteScreen> {
                   case "Send to Trash":
                     // Add to Trash
                     break;
+                  case "Remove from Archive":
+                    // Remove from Archive
+                    break;
                 }
               },
               itemBuilder: (BuildContext context) {
                 return {
-                  {'text': isArchived ? 'Remove from Archive':'Add to Archive', 'iconData': isArchived ? Icons.remove_circle_outline  :Icons.archive_rounded, "color": Colors.grey.shade800},
+                  {
+                    'text': isArchived ? 'Remove from Archive' : 'Add to Archive',
+                    'iconData': isArchived ? Icons.remove_circle_outline : Icons.archive_rounded,
+                    "color": Colors.grey.shade800
+                  },
                   {'text': 'Send to Trash', 'iconData': Icons.delete_rounded, 'color': Colors.redAccent}
                 }.map((Map<String, dynamic> choice) {
                   return PopupMenuItem<String>(
