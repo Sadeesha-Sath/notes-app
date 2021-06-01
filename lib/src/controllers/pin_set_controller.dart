@@ -20,13 +20,14 @@ class PinSetController extends GetxController {
     } else {
       errorMessage.value = "Invalid Input. Only Numbers are allowed. Please try again.";
       invalidInput.value = true;
-      pin1.clear();
+      stage.value == 1 ? pin1.clear() : pin2.clear();
     }
   }
 
   void pinVisibilityToggle() => hidePin.toggle();
 
   void checkPin() {
+    print("checking pin");
     if (pin1.text == pin2.text) {
       Get.find<UserController>().setPin(int.tryParse(pin1.text)!);
       ++stage;

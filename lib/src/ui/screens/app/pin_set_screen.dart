@@ -9,7 +9,7 @@ import 'package:notes_app/src/ui/widgets/continue_button.dart';
 import 'package:notes_app/src/ui/widgets/custom_back_button.dart';
 
 class PinSetScreen extends StatelessWidget {
-  static final String id = "/archives/pin_set";
+  static final String id = "/archives_init/pin_set";
   final PinSetController _pinSetController = Get.put(PinSetController());
   @override
   Widget build(BuildContext context) {

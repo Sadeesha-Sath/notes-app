@@ -133,7 +133,11 @@ class HomeScreen extends StatelessWidget {
                                               Container(
                                                 alignment: Alignment.topLeft,
                                                 child: Text(
-                                                  e.title,
+                                                  e.title != null
+                                                      ? e.title!
+                                                      : e.body!.split(" ").length < 9
+                                                          ? e.body!.split(" ").join() + "..."
+                                                          : e.body!.split(" ").sublist(0, 8).join() + "...",
                                                   strutStyle: StrutStyle(fontSize: 22),
                                                   style: TextStyle(fontSize: 21, fontWeight: FontWeight.w600),
                                                 ),

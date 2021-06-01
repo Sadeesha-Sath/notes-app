@@ -35,101 +35,32 @@ class _NoteScreenState extends State<NoteScreen> {
         actions: [
           AppbarButton(icon: Icons.edit, onTap: () {}),
           AppbarButton(icon: Icons.search_rounded, onTap: () {}),
-          isArchived
-              ? Container()
-              : AppbarButton(
-                  icon: noteModel.isFavourite ? Icons.favorite_rounded : Icons.favorite_outline_rounded,
-                  onTap: () {
-                    noteModel.isFavourite = !noteModel.isFavourite;
-                    Database().updateFavourite(
-                      uid: Get.find<UserController>().user!.uid,
-                      collectionName: collectionName,
-                      noteId: noteModel.noteId,
-                      isFavourite: noteModel.isFavourite,
-                    );
-                  }),
-          AppbarButton(
-            popupMenuButton: PopupMenuButton(
-              onSelected: (value) {
-                switch (value) {
-                  case "Send to Archive":
-                    // Add to Archive
-                    setState(() {
-                      collectionName = 'archives';
-                    });
-                    Database().transferNote(
-                        uid: Get.find<UserController>().user!.uid,
-                        toCollection: 'archives',
-                        fromCollection: 'notes',
-                        noteId: noteModel.noteId,
-                        noteModel: noteModel);
-                    break;
-                  case "Make normal":
-                    // Remove from Archive
-                    setState(() {
-                      collectionName = 'notes';
-                    });
-                    Database().transferNote(
-                        uid: Get.find<UserController>().user!.uid,
-                        toCollection: 'archives',
-                        fromCollection: 'notes',
-                        noteId: noteModel.noteId,
-                        noteModel: noteModel);
-                    break;
-                  case "Send to Trash":
-                    // Add to Trash
-                    Database().transferNote(
-                        uid: Get.find<UserController>().user!.uid,
-                        toCollection: 'trash',
-                        fromCollection: collectionName,
-                        noteId: noteModel.noteId,
-                        noteModel: noteModel);
-                    Get.back();
-                    break;
-                  case "Delete Forever":
-                    // Add to Trash
-                    Database().deleteNote(
-                        uid: Get.find<UserController>().user!.uid,
-                        collectionName: 'archives',
-                        noteId: noteModel.noteId,
-                        );
-                    Get.back();
-                    break;
-                }
-              },
-              itemBuilder: (BuildContext context) {
-                return {
-                  {
-                    'text': isArchived ? 'Make Normal' : 'Send to Archive',
-                    'iconData': isArchived ? CupertinoIcons.lock_slash_fill : CupertinoIcons.lock_fill,
-                    "color": Colors.grey.shade800
-                  },
-                  {
-                    'text': isArchived ? 'Delete Forever' : 'Send to Trash',
-                    'iconData': isArchived ? Icons.delete_forever_rounded : Icons.delete_rounded,
-                    'color': Colors.redAccent
-                  }
-                }.map((Map<String, dynamic> choice) {
-                  return PopupMenuItem<String>(
-                    value: choice['text'],
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Icon(
-                          choice['iconData'],
-                          color: choice['color'],
-                        ),
-                        Text(
-                          choice['text'],
-                          style: TextStyle(color: choice['color']),
-                        ),
-                      ],
-                    ),
+          if (isArchived)
+            AppbarButton(
+                icon: noteModel.isFavourite ? Icons.favorite_rounded : Icons.favorite_outline_rounded,
+                onTap: () {
+                  noteModel.isFavourite = !noteModel.isFavourite;
+                  Database().updateFavourite(
+                    uid: Get.find<UserController>().user!.uid,
+                    collectionName: collectionName,
+                    noteId: noteModel.noteId,
+                    isFavourite: noteModel.isFavourite,
                   );
-                }).toList();
-              },
-            ),
-          ),
+                }),
+          // isArchived
+          //     ? Container()
+          //     : AppbarButton(
+          //         icon: noteModel.isFavourite ? Icons.favorite_rounded : Icons.favorite_outline_rounded,
+          //         onTap: () {
+          //           noteModel.isFavourite = !noteModel.isFavourite;
+          //           Database().updateFavourite(
+          //             uid: Get.find<UserController>().user!.uid,
+          //             collectionName: collectionName,
+          //             noteId: noteModel.noteId,
+          //             isFavourite: noteModel.isFavourite,
+          //           );
+          //         }),
+          AppbarButton(popupMenuButton: _popupMenuButton(isArchived)),
         ],
       ),
       body: Container(
@@ -139,7 +70,7 @@ class _NoteScreenState extends State<NoteScreen> {
           children: [
             SizedBox(height: 15),
             Text(
-              noteModel.title,
+              noteModel.title ?? "[No Title]",
               style: TextStyle(fontSize: 27, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 15),
@@ -149,7 +80,7 @@ class _NoteScreenState extends State<NoteScreen> {
             ),
             SizedBox(height: 15),
             Text(
-              noteModel.body,
+              noteModel.body ?? "[No Text]",
               style: TextStyle(fontSize: 18, color: Colors.grey.shade900),
               maxLines: null,
               strutStyle: StrutStyle(fontSize: 21.5),
@@ -157,6 +88,89 @@ class _NoteScreenState extends State<NoteScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  PopupMenuButton _popupMenuButton(bool isArchived) {
+    return PopupMenuButton<String>(
+      onSelected: (value) {
+        switch (value) {
+          case "Send to Archive":
+            // Add to Archive
+            setState(() {
+              collectionName = 'archives';
+            });
+            Database().transferNote(
+                uid: Get.find<UserController>().user!.uid,
+                toCollection: 'archives',
+                fromCollection: 'notes',
+                noteId: noteModel.noteId,
+                noteModel: noteModel);
+            break;
+          case "Make normal":
+            // Remove from Archive
+            setState(() {
+              collectionName = 'notes';
+            });
+            Database().transferNote(
+                uid: Get.find<UserController>().user!.uid,
+                toCollection: 'archives',
+                fromCollection: 'notes',
+                noteId: noteModel.noteId,
+                noteModel: noteModel);
+            break;
+          case "Send to Trash":
+            // Add to Trash
+            Database().transferNote(
+                uid: Get.find<UserController>().user!.uid,
+                toCollection: 'trash',
+                fromCollection: collectionName,
+                noteId: noteModel.noteId,
+                noteModel: noteModel);
+            Get.back();
+            break;
+          case "Delete Forever":
+            // Add to Trash
+            Database().deleteNote(
+              uid: Get.find<UserController>().user!.uid,
+              collectionName: 'archives',
+              noteId: noteModel.noteId,
+            );
+            Get.back();
+            break;
+        }
+      },
+      itemBuilder: (BuildContext context) {
+        return {
+          {
+            'text': isArchived ? 'Make Normal' : 'Send to Archive',
+            'iconData': isArchived ? CupertinoIcons.lock_slash_fill : CupertinoIcons.lock_fill,
+            "color": Colors.grey.shade800
+          },
+          {
+            'text': isArchived ? 'Delete Forever' : 'Send to Trash',
+            'iconData': isArchived ? Icons.delete_forever_rounded : Icons.delete_rounded,
+            'color': Colors.redAccent
+          }
+        }.map((Map<String, dynamic> choice) {
+          return PopupMenuItem<String>(
+            value: choice['text'],
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Icon(
+                  choice['iconData'],
+                  color: choice['color'],
+                ),
+                Text(
+                  choice['text'],
+                  style: TextStyle(color: choice['color']),
+                ),
+              ],
+            ),
+          );
+        }).toList();
+      },
     );
   }
 }

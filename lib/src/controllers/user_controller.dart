@@ -11,10 +11,13 @@ class UserController extends GetxController {
 
   User? get user => _currentUser.value;
   @override
-  onInit() {
+  onInit() async {
     _currentUser.bindStream(Get.find<FirebaseAuthController>().user.stream);
-
+    if (user != null) {
+      this._userModel.value = await Database().getUser(user!.uid);
+    }
     ever(_currentUser, setUser);
+
     super.onInit();
   }
 
@@ -74,7 +77,9 @@ class UserController extends GetxController {
   }
 
   bool setPin(int pin) {
-    if (_userModel.value!.archivesPin == null) {
+    print("got into setpin");
+    if (_userModel.value?.archivesPin == null) {
+      print("arrived through null check");
       _userModel.update((val) {
         val!.archivesPin = pin.hashCode;
       });
@@ -84,7 +89,8 @@ class UserController extends GetxController {
     return false;
   }
 
-  void updatePin(int pin) {
-    Database().updatePin(uid: _userModel.value!.uid, newPin: pin);
+  void updatePin(int pin) async {
+    print("got in to update pin");
+    await Database().updatePin(uid: _userModel.value!.uid, newPin: pin);
   }
 }

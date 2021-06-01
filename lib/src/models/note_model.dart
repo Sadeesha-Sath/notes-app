@@ -1,16 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class NoteModel {
-  String body;
-  String title;
+  String? body;
+  String? title;
   Timestamp dateCreated;
   bool isFavourite;
   String noteId;
 
   NoteModel(
       {required this.noteId,
-      required this.body,
-      required this.title,
+      this.body,
+      this.title,
       required this.dateCreated,
       required this.isFavourite});
   
