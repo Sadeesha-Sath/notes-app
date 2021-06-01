@@ -132,7 +132,7 @@ class ProfileScreen extends StatelessWidget {
                             ),
                           ),
                           leading: Icon(
-                            Icons.archive_rounded,
+                            CupertinoIcons.lock_fill,
                             color: Color(0xFF656565),
                           ),
                           trailing: Icon(

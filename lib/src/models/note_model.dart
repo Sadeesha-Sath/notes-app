@@ -13,6 +13,15 @@ class NoteModel {
       required this.title,
       required this.dateCreated,
       required this.isFavourite});
+  
+  NoteModel.fromDocSnapshotEncrypted(DocumentSnapshot documentSnapshot)
+      : noteId = documentSnapshot.id,
+      // TODO Decypt this on demand
+        title = documentSnapshot['title'],
+        // TODO Maybe decypt only the title first and then decrypt the body when needed
+        body = documentSnapshot['body'],
+        dateCreated = documentSnapshot['dateCreated'],
+        isFavourite = documentSnapshot['isFavourite'];
 
   NoteModel.fromDocumentSnapshot(DocumentSnapshot documentSnapshot)
       : noteId = documentSnapshot.id,

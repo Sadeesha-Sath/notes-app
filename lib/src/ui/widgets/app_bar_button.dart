@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 
 class AppbarButton extends StatelessWidget {
   final IconData? icon;
+  final Icon? customIcon;
   final onTap;
   final PopupMenuButton? popupMenuButton;
 
-  AppbarButton({this.icon, this.onTap, this.popupMenuButton});
+  AppbarButton({this.icon, this.onTap, this.popupMenuButton, this.customIcon});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +22,7 @@ class AppbarButton extends StatelessWidget {
             InkWell(
               onTap: onTap,
               child: Center(
-                child: Icon(icon),
+                child: customIcon ?? Icon(icon),
               ),
             ),
       ),

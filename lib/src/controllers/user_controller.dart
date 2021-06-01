@@ -1,15 +1,51 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:notes_app/src/controllers/firebase_auth_controller.dart';
 import 'package:notes_app/src/models/user.dart';
+import 'package:notes_app/src/models/user_data.dart';
 import 'package:notes_app/src/services/database.dart';
 
 class UserController extends GetxController {
   Rx<UserModel?> _userModel = Rx<UserModel?>(null);
+  Rx<User?> _currentUser = Rx(Get.find<FirebaseAuthController>().user.value);
 
-  UserModel? get user => _userModel.value;
+  User? get user => _currentUser.value;
+  @override
+  onInit() {
+    _currentUser.bindStream(Get.find<FirebaseAuthController>().user.stream);
 
-  set setUser(UserModel? value) {
-    this._userModel.value = value;
-    print(_userModel.value?.uid);
+    ever(_currentUser, setUser);
+    super.onInit();
+  }
+
+  void setUser(User? user) async {
+    if (user != null) {
+      try {
+        print("getting user data from database");
+        this._userModel.value = await Database().getUser(user.uid);
+        print("getting user data successful");
+      } catch (e) {
+        print('error catched 1');
+        print(e);
+        UserModel _user = UserModel(
+          userData: UserData(
+            email: user.email!.trim(),
+            name: user.email!.trim().split("@")[0],
+          ),
+          uid: user.uid,
+        );
+        print("created model");
+        try {
+          print('creating a new user');
+          await Database().createNewUser(_user);
+          this._userModel.value = _user;
+        } catch (e) {
+          print('error catched 2');
+          print(e);
+        }
+      }
+      print(_userModel.value?.uid);
+    }
   }
 
   void clear() {

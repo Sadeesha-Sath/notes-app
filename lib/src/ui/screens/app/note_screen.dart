@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:notes_app/src/controllers/notes_controller.dart';
 import 'package:notes_app/src/controllers/user_controller.dart';
 import 'package:notes_app/src/models/note_model.dart';
 import 'package:notes_app/src/services/database.dart';
@@ -27,6 +26,8 @@ class _NoteScreenState extends State<NoteScreen> {
   @override
   Widget build(BuildContext context) {
     bool isArchived = (collectionName == 'archives');
+    bool isInTrash = collectionName == 'trash';
+    // TODO In trash, only restore and delete permenently works, and they are on the main app bar
     return Scaffold(
       appBar: AppBar(
         leading: CustomBackButton(),
@@ -51,25 +52,63 @@ class _NoteScreenState extends State<NoteScreen> {
             popupMenuButton: PopupMenuButton(
               onSelected: (value) {
                 switch (value) {
-                  case "Add to Archive":
+                  case "Send to Archive":
                     // Add to Archive
+                    setState(() {
+                      collectionName = 'archives';
+                    });
+                    Database().transferNote(
+                        uid: Get.find<UserController>().user!.uid,
+                        toCollection: 'archives',
+                        fromCollection: 'notes',
+                        noteId: noteModel.noteId,
+                        noteModel: noteModel);
+                    break;
+                  case "Make normal":
+                    // Remove from Archive
+                    setState(() {
+                      collectionName = 'notes';
+                    });
+                    Database().transferNote(
+                        uid: Get.find<UserController>().user!.uid,
+                        toCollection: 'archives',
+                        fromCollection: 'notes',
+                        noteId: noteModel.noteId,
+                        noteModel: noteModel);
                     break;
                   case "Send to Trash":
                     // Add to Trash
+                    Database().transferNote(
+                        uid: Get.find<UserController>().user!.uid,
+                        toCollection: 'trash',
+                        fromCollection: collectionName,
+                        noteId: noteModel.noteId,
+                        noteModel: noteModel);
+                    Get.back();
                     break;
-                  case "Remove from Archive":
-                    // Remove from Archive
+                  case "Delete Forever":
+                    // Add to Trash
+                    Database().deleteNote(
+                        uid: Get.find<UserController>().user!.uid,
+                        collectionName: 'archives',
+                        noteId: noteModel.noteId,
+                        );
+                    Get.back();
                     break;
                 }
               },
               itemBuilder: (BuildContext context) {
                 return {
                   {
-                    'text': isArchived ? 'Remove from Archive' : 'Add to Archive',
-                    'iconData': isArchived ? Icons.remove_circle_outline : Icons.archive_rounded,
+                    'text': isArchived ? 'Make Normal' : 'Send to Archive',
+                    'iconData': isArchived ? CupertinoIcons.lock_slash_fill : CupertinoIcons.lock_fill,
                     "color": Colors.grey.shade800
                   },
-                  {'text': 'Send to Trash', 'iconData': Icons.delete_rounded, 'color': Colors.redAccent}
+                  {
+                    'text': isArchived ? 'Delete Forever' : 'Send to Trash',
+                    'iconData': isArchived ? Icons.delete_forever_rounded : Icons.delete_rounded,
+                    'color': Colors.redAccent
+                  }
                 }.map((Map<String, dynamic> choice) {
                   return PopupMenuItem<String>(
                     value: choice['text'],
@@ -100,17 +139,17 @@ class _NoteScreenState extends State<NoteScreen> {
           children: [
             SizedBox(height: 15),
             Text(
-              "Hello, this is the title",
+              noteModel.title,
               style: TextStyle(fontSize: 27, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 15),
             Text(
-              "Sat, 22 Jun 2020",
+              noteModel.getDateCreated,
               style: TextStyle(fontSize: 18, color: Colors.black54, fontWeight: FontWeight.w500),
             ),
             SizedBox(height: 15),
             Text(
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis condimentum purus sit amet arcu laoreet, a maximus est fringilla. Nam eget bibendum urna, in eleifend elit. Nulla porta blandit dui semper suscipit. Fusce mi neque, imperdiet eu nisl eget, vulputate commodo libero. Integer id tincidunt felis. Etiam imperdiet commodo lacus ut sagittis. Curabitur semper vestibulum hendrerit. In blandit tellus at nibh ornare congue. Quisque at imperdiet tortor.",
+              noteModel.body,
               style: TextStyle(fontSize: 18, color: Colors.grey.shade900),
               maxLines: null,
               strutStyle: StrutStyle(fontSize: 21.5),

@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:notes_app/src/controllers/firebase_auth_controller.dart';
+import 'package:notes_app/src/controllers/user_controller.dart';
 import 'package:notes_app/src/models/note_model.dart';
 import 'package:notes_app/src/services/database.dart';
 
@@ -14,18 +14,28 @@ class NotesController extends GetxController {
 
   @override
   void onInit() {
-    String uid = Get.find<FirebaseAuthController>().user!.uid;
+    String uid = Get.find<UserController>().user!.uid;
+    // if (uid == null) {
+    //   print("user not found");
+    //   uid = Get.find<FirebaseAuthController>().user.value!.uid;
+    // }
     noteList.bindStream(Database().noteStream(uid: uid, collectionName: "notes"));
     super.onInit();
   }
 
   void bindArchives() {
-    String uid = Get.find<FirebaseAuthController>().user!.uid;
+    String uid = Get.find<UserController>().user!.uid;
+
+    // if (uid == null) {
+    //   print("User again not found");
+    //   uid = Get.find<FirebaseAuthController>().user.value!.uid;
+    // }
+
     archivedNoteList.bindStream(Database().noteStream(uid: uid, collectionName: "archives"));
   }
 
   void bindTrash() {
-    String uid = Get.find<FirebaseAuthController>().user!.uid;
+    String uid = Get.find<UserController>().user!.uid;
     deletedNoteList.bindStream(Database().noteStream(uid: uid, collectionName: "trash"));
   }
 
