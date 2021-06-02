@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:notes_app/src/controllers/pin_set_controller.dart';
+import 'package:notes_app/src/controllers/user_controller.dart';
+import 'package:notes_app/src/models/note_model.dart';
+import 'package:notes_app/src/services/database.dart';
 import 'package:notes_app/src/ui/screens/app/archives_screen.dart';
 import 'package:notes_app/src/ui/screens/app/home_screen.dart';
 import 'package:notes_app/src/ui/ui_constants.dart';
@@ -11,6 +14,7 @@ import 'package:notes_app/src/ui/widgets/custom_back_button.dart';
 class PinSetScreen extends StatelessWidget {
   static final String id = "/archives_init/pin_set";
   final PinSetController _pinSetController = Get.put(PinSetController());
+  final NoteModel? noteModel = Get.arguments;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,6 +67,14 @@ class PinSetScreen extends StatelessWidget {
                         ),
                         Spacer(),
                         ContinueButton(onPressed: () {
+                          if (noteModel != null) {
+                            Database().transferNote(
+                                uid: Get.find<UserController>().user!.uid,
+                                toCollection: 'archives',
+                                fromCollection: 'notes',
+                                noteId: noteModel!.noteId,
+                                noteModel: noteModel!);
+                          }
                           Get.offNamedUntil(ArchivesScreen.id, ModalRoute.withName(HomeScreen.id));
                         })
                       ],

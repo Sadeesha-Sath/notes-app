@@ -5,14 +5,16 @@ import 'package:notes_app/src/ui/widgets/archive_init.dart';
 
 class UnlockArchivesScreen extends StatelessWidget {
   static final String id = "/unlock_archives";
+  final arguments = Get.arguments['noteModel'];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Get.find<UserController>().isPinSet() ?
-        // TODO Implement archives pin/biometrics
-         Container() :
-          ArchiveInit(),
+        child: Get.find<UserController>().isPinSet()
+            ?
+            // TODO Implement archives pin/biometrics
+            Container()
+            : ArchiveInit(noteModel: arguments),
       ),
     );
   }

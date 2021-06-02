@@ -4,7 +4,9 @@ import 'package:get/get.dart';
 import 'package:notes_app/src/controllers/user_controller.dart';
 import 'package:notes_app/src/models/note_model.dart';
 import 'package:notes_app/src/services/database.dart';
+import 'package:notes_app/src/ui/screens/app/unlock_archives_screen.dart';
 import 'package:notes_app/src/ui/widgets/app_bar_button.dart';
+import 'package:notes_app/src/ui/widgets/archive_init.dart';
 import 'package:notes_app/src/ui/widgets/custom_back_button.dart';
 
 class NoteScreen extends StatefulWidget {
@@ -42,7 +44,6 @@ class _NoteScreenState extends State<NoteScreen> {
                   noteModel.isFavourite = !noteModel.isFavourite;
                   Database().updateFavourite(
                     uid: Get.find<UserController>().user!.uid,
-                    collectionName: collectionName,
                     noteId: noteModel.noteId,
                     isFavourite: noteModel.isFavourite,
                   );
@@ -97,18 +98,27 @@ class _NoteScreenState extends State<NoteScreen> {
         switch (value) {
           case "Send to Archive":
             // Add to Archive
-            setState(() {
-              collectionName = 'archives';
-            });
-            Database().transferNote(
-                uid: Get.find<UserController>().user!.uid,
-                toCollection: 'archives',
-                fromCollection: 'notes',
-                noteId: noteModel.noteId,
-                noteModel: noteModel);
+            // TODO Add confirmation dialog/ bottom sheet
+            if (Get.find<UserController>().isPinSet()) {
+              setState(() {
+                collectionName = 'archives';
+              });
+              Database().transferNote(
+                  uid: Get.find<UserController>().user!.uid,
+                  toCollection: 'archives',
+                  fromCollection: 'notes',
+                  noteId: noteModel.noteId,
+                  noteModel: noteModel);
+            } else {
+              Get.toNamed(UnlockArchivesScreen.id, arguments: {"noteModel": noteModel});
+              Get.snackbar("Archive not initialized yet",
+                  "Initialize archive to lock your note. Don't worry, your note will be saved and transferred when you finsh setting up");
+              
+            }
             break;
           case "Make normal":
             // Remove from Archive
+            // TODO Add confirmation and biometric auth
             setState(() {
               collectionName = 'notes';
             });

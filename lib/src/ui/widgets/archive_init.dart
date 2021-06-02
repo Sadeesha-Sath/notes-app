@@ -1,12 +1,15 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:notes_app/src/models/note_model.dart';
 import 'package:notes_app/src/ui/screens/app/pin_set_screen.dart';
 import 'package:notes_app/src/ui/widgets/biometric_box.dart';
 import 'package:notes_app/src/ui/widgets/continue_button.dart';
 import 'package:notes_app/src/ui/widgets/custom_back_button.dart';
 
 class ArchiveInit extends StatelessWidget {
+  ArchiveInit({this.noteModel});
+  final NoteModel? noteModel;
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -51,7 +54,7 @@ class ArchiveInit extends StatelessWidget {
             Spacer(),
             ContinueButton(
               onPressed: () {
-                Get.toNamed(PinSetScreen.id);
+                Get.toNamed(PinSetScreen.id, arguments: noteModel);
               },
             )
           ],

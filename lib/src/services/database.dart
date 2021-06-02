@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:notes_app/src/models/note_model.dart';
 import 'package:notes_app/src/models/user.dart';
+import 'package:notes_app/src/services/encrypter.dart';
 
 class Database {
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -64,10 +65,12 @@ class Database {
         updateFields["isFavourite"] = newModel.isFavourite;
       }
       if (oldModel.body != newModel.body) {
-        updateFields['body'] = newModel.body;
+        updateFields['body'] =
+            collectionName == 'archives' ? EncrypterClass().encryptText(string: newModel.body ?? "") : newModel.body;
       }
       if (oldModel.title != newModel.title) {
-        updateFields['title'] = newModel.title;
+        updateFields['title'] =
+            collectionName == 'archives' ? EncrypterClass().encryptText(string: newModel.title ?? "") : newModel.title;
       }
       _firestore.collection("users").doc(uid).collection(collectionName).doc(oldModel.noteId).update(updateFields);
     } catch (e) {
@@ -81,15 +84,9 @@ class Database {
     }
   }
 
-  Future<void> updateFavourite(
-      {required String uid, required String collectionName, required String noteId, required bool isFavourite}) async {
+  Future<void> updateFavourite({required String uid, required String noteId, required bool isFavourite}) async {
     try {
-      _firestore
-          .collection('users')
-          .doc(uid)
-          .collection(collectionName)
-          .doc(noteId)
-          .update({"isFavourite": isFavourite});
+      _firestore.collection('users').doc(uid).collection('notes').doc(noteId).update({"isFavourite": isFavourite});
     } catch (e) {
       print(e);
       Get.snackbar(
@@ -126,8 +123,8 @@ class Database {
       {required String uid, String collectionName = 'notes', required NoteModel note, String? noteId}) async {
     try {
       final data = {
-        "title": note.title,
-        "body": note.body,
+        "title": collectionName == "archives" ? EncrypterClass().encryptText(string: note.title ?? "") : note.title,
+        "body": collectionName == "archives" ? EncrypterClass().encryptText(string: note.body ?? "") : note.body,
         "dateCreated": note.dateCreated,
         "isFavourite": note.isFavourite
       };
@@ -164,7 +161,7 @@ class Database {
     }
   }
 
-  Future<void> updatePin({required String uid, required int newPin}) async {
+  Future<void> updateArchivesPin({required String uid, required int newPin}) async {
     try {
       _firestore.collection('users').doc(uid).update({"archivesPin": newPin});
     } catch (e) {
@@ -206,18 +203,5 @@ class Database {
     }
   }
 
-  Future<void> updateArchivesPin({required String uid, required int pin}) async {
-    try {
-      _firestore.collection('users').doc(uid).update({"archivesPin": pin});
-    } catch (e) {
-      print('archivePin update error');
-      print(e);
-      Get.snackbar(
-        "Updating pin failed",
-        e.toString(),
-        snackPosition: SnackPosition.BOTTOM,
-      );
-      rethrow;
-    }
-  }
+
 }

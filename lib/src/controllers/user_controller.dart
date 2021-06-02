@@ -10,6 +10,8 @@ class UserController extends GetxController {
   Rx<User?> _currentUser = Rx(Get.find<FirebaseAuthController>().user.value);
 
   User? get user => _currentUser.value;
+  UserModel? get userModel => _userModel.value;
+
   @override
   onInit() async {
     _currentUser.bindStream(Get.find<FirebaseAuthController>().user.stream);
@@ -91,6 +93,6 @@ class UserController extends GetxController {
 
   void updatePin(int pin) async {
     print("got in to update pin");
-    await Database().updatePin(uid: _userModel.value!.uid, newPin: pin);
+    await Database().updateArchivesPin(uid: _userModel.value!.uid, newPin: pin);
   }
 }
