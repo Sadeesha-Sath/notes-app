@@ -10,8 +10,7 @@ import 'package:notes_app/src/ui/widgets/app_bar_button.dart';
 
 class HomeScreen extends StatelessWidget {
   static final String id = "/home";
-  // TODO Find Why these controllers get deleted and preferably find a better method to initialize archivesAuth
-  final DragController _dragController = Get.put(DragController(), permanent: true);
+  final DragController _dragController = Get.put(DragController());
 
   @override
   Widget build(BuildContext context) {

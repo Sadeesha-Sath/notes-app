@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:notes_app/src/services/encrypter.dart';
 
 class NoteModel {
   String? body;
@@ -7,19 +8,12 @@ class NoteModel {
   bool isFavourite;
   String noteId;
 
-  NoteModel(
-      {required this.noteId,
-      this.body,
-      this.title,
-      required this.dateCreated,
-      required this.isFavourite});
-  
+  NoteModel({required this.noteId, this.body, this.title, required this.dateCreated, required this.isFavourite});
+
   NoteModel.fromDocSnapshotEncrypted(DocumentSnapshot documentSnapshot)
       : noteId = documentSnapshot.id,
-      // TODO Decypt this on demand
-        title = documentSnapshot['title'],
-        // TODO Maybe decypt only the title first and then decrypt the body when needed
-        body = documentSnapshot['body'],
+        title = EncrypterClass().decryptText(string: documentSnapshot['title']),
+        body = EncrypterClass().decryptText(string: documentSnapshot['body']),
         dateCreated = documentSnapshot['dateCreated'],
         isFavourite = documentSnapshot['isFavourite'];
 
@@ -39,7 +33,6 @@ class NoteModel {
     }
     return "${date.day} $monthName, ${date.year}";
   }
-
 
   String getWeekDay(int weekDay) {
     if (weekDay == 1)

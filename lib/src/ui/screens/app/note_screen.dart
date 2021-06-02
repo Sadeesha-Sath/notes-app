@@ -6,7 +6,6 @@ import 'package:notes_app/src/models/note_model.dart';
 import 'package:notes_app/src/services/database.dart';
 import 'package:notes_app/src/ui/screens/app/unlock_archives_screen.dart';
 import 'package:notes_app/src/ui/widgets/app_bar_button.dart';
-import 'package:notes_app/src/ui/widgets/archive_init.dart';
 import 'package:notes_app/src/ui/widgets/custom_back_button.dart';
 
 class NoteScreen extends StatefulWidget {
@@ -29,40 +28,25 @@ class _NoteScreenState extends State<NoteScreen> {
   Widget build(BuildContext context) {
     bool isArchived = (collectionName == 'archives');
     bool isInTrash = collectionName == 'trash';
-    // TODO In trash, only restore and delete permenently works, and they are on the main app bar
+
     return Scaffold(
+      resizeToAvoidBottomInset: false,
+      bottomNavigationBar: BottomAppBar(
+        shape: CircularNotchedRectangle(),
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: 5,
+          itemBuilder: (context, index) => Container(
+            decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.blueAccent),
+            width: 10,
+            height: 10,
+          ),
+        ),
+      ),
       appBar: AppBar(
         leading: CustomBackButton(),
         backgroundColor: Colors.white,
-        actions: [
-          AppbarButton(icon: Icons.edit, onTap: () {}),
-          AppbarButton(icon: Icons.search_rounded, onTap: () {}),
-          if (isArchived)
-            AppbarButton(
-                icon: noteModel.isFavourite ? Icons.favorite_rounded : Icons.favorite_outline_rounded,
-                onTap: () {
-                  noteModel.isFavourite = !noteModel.isFavourite;
-                  Database().updateFavourite(
-                    uid: Get.find<UserController>().user!.uid,
-                    noteId: noteModel.noteId,
-                    isFavourite: noteModel.isFavourite,
-                  );
-                }),
-          // isArchived
-          //     ? Container()
-          //     : AppbarButton(
-          //         icon: noteModel.isFavourite ? Icons.favorite_rounded : Icons.favorite_outline_rounded,
-          //         onTap: () {
-          //           noteModel.isFavourite = !noteModel.isFavourite;
-          //           Database().updateFavourite(
-          //             uid: Get.find<UserController>().user!.uid,
-          //             collectionName: collectionName,
-          //             noteId: noteModel.noteId,
-          //             isFavourite: noteModel.isFavourite,
-          //           );
-          //         }),
-          AppbarButton(popupMenuButton: _popupMenuButton(isArchived)),
-        ],
+        actions: getActions(isArchived, isInTrash),
       ),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: Get.width / 20, vertical: Get.height / 45),
@@ -92,6 +76,52 @@ class _NoteScreenState extends State<NoteScreen> {
     );
   }
 
+  List<Widget> getActions(bool isArchived, bool isInTrash) {
+    if (isInTrash) {
+      return [
+        AppbarButton(icon: Icons.edit, onTap: () {}),
+        AppbarButton(icon: Icons.search_rounded, onTap: () {}),
+        if (isArchived)
+          AppbarButton(
+              icon: noteModel.isFavourite ? Icons.favorite_rounded : Icons.favorite_outline_rounded,
+              onTap: () {
+                noteModel.isFavourite = !noteModel.isFavourite;
+                Database().updateFavourite(
+                  uid: Get.find<UserController>().user!.uid,
+                  noteId: noteModel.noteId,
+                  isFavourite: noteModel.isFavourite,
+                );
+              }),
+        AppbarButton(popupMenuButton: _popupMenuButton(isArchived)),
+      ];
+    }
+    return [
+      AppbarButton(
+        icon: Icons.restore_page_rounded,
+        onTap: () async {
+          // TODO Add confirmations
+          Database().transferNote(
+              uid: Get.find<UserController>().user!.uid,
+              toCollection: 'notes',
+              fromCollection: 'trash',
+              noteId: noteModel.noteId,
+              noteModel: noteModel);
+
+          Get.back();
+        },
+      ),
+      AppbarButton(
+        icon: Icons.delete_forever_rounded,
+        onTap: () async {
+          // TODO Add confirmations
+          Database().deleteNote(uid: Get.find<UserController>().user!.uid, noteId: noteModel.noteId);
+
+          Get.back();
+        },
+      )
+    ];
+  }
+
   PopupMenuButton _popupMenuButton(bool isArchived) {
     return PopupMenuButton<String>(
       onSelected: (value) {
@@ -113,7 +143,6 @@ class _NoteScreenState extends State<NoteScreen> {
               Get.toNamed(UnlockArchivesScreen.id, arguments: {"noteModel": noteModel});
               Get.snackbar("Archive not initialized yet",
                   "Initialize archive to lock your note. Don't worry, your note will be saved and transferred when you finsh setting up");
-              
             }
             break;
           case "Make normal":

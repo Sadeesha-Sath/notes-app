@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -10,7 +11,7 @@ class CustomBackButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       splashRadius: 25,
-      icon: Icon(Icons.arrow_back_ios_new_rounded,color: Colors.black,),
+      icon: Icon(CupertinoIcons.arrow_turn_up_left ,color: Colors.black,),
       onPressed: () => Get.back(),
     );
   }
