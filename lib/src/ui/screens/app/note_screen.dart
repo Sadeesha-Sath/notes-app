@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:notes_app/src/controllers/user_controller.dart';
 import 'package:notes_app/src/models/note_model.dart';
 import 'package:notes_app/src/services/database.dart';
 import 'package:notes_app/src/ui/screens/app/unlock_archives_screen.dart';
+import 'package:notes_app/src/ui/ui_constants.dart';
 import 'package:notes_app/src/ui/widgets/app_bar_button.dart';
 import 'package:notes_app/src/ui/widgets/custom_back_button.dart';
 
@@ -15,6 +17,7 @@ class NoteScreen extends StatefulWidget {
   final bool isNewNote;
 
   NoteScreen({required this.noteModel, this.collectionName = "notes", this.isNewNote = false});
+
   NoteScreen.newNote({
     this.isNewNote = true,
     this.collectionName = 'notes',
@@ -34,27 +37,31 @@ class _NoteScreenState extends State<NoteScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool isArchived = (collectionName == 'archives');
+    TextEditingController _titleController = TextEditingController(text: noteModel.title);
+    TextEditingController _bodyController = TextEditingController(text: noteModel.body);
+    bool isArchived = collectionName == 'archives';
     bool isInTrash = collectionName == 'trash';
 
     // TODO Check the noteModel noteId availability to distinguish between new note and edited note when accessing the database
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      bottomNavigationBar: !isEditable
-          ? BottomAppBar(
-              shape: CircularNotchedRectangle(),
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: 5,
-                itemBuilder: (context, index) => Container(
-                  decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.blueAccent),
-                  width: 10,
-                  height: 10,
-                ),
-              ),
-            )
-          : null,
+      // bottomNavigationBar: isEditable
+      //     ? BottomAppBar(
+      //         color: Colors.red,
+      //         shape: CircularNotchedRectangle(),
+      //         child: ListView.builder(
+      //           shrinkWrap: true,
+      //           scrollDirection: Axis.horizontal,
+      //           itemCount: 5,
+      //           itemBuilder: (context, index) => Container(
+      //             decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.blueAccent),
+      //             width: 50,
+      //             height: 50,
+      //           ),
+      //         ),
+      //       )
+      //     : null,
       appBar: AppBar(
         leading: CustomBackButton(),
         backgroundColor: Colors.white,
@@ -64,15 +71,47 @@ class _NoteScreenState extends State<NoteScreen> {
         padding: EdgeInsets.symmetric(horizontal: Get.width / 20, vertical: Get.height / 45),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: getBBodyChildren(),
+          children: getBodyChildren(titleController: _titleController, bodyController: _bodyController),
         ),
       ),
     );
   }
 
-  List<Widget> getBBodyChildren() {
+  List<Widget> getBodyChildren(
+      {required TextEditingController titleController, required TextEditingController bodyController}) {
     if (isEditable) {
       // Editable body
+      // TODO Add some ease in animations to smooth out the transition
+      return [
+        SizedBox(height: 15),
+        TextField(
+          style: TextStyle(fontSize: 27, fontWeight: FontWeight.w600),
+          textAlignVertical: TextAlignVertical.top,
+          controller: titleController,
+          textCapitalization: TextCapitalization.sentences,
+          decoration: textFieldDecoration.copyWith(
+              contentPadding: EdgeInsets.symmetric(horizontal: 22, vertical: 16),
+              hintText: "Title",
+              hintStyle: TextStyle(fontSize: 27, fontWeight: FontWeight.w600)),
+          autocorrect: true,
+          maxLines: null,
+        ),
+        SizedBox(height: 15),
+        TextField(
+          style: TextStyle(fontSize: 18, color: Colors.grey.shade900),
+          strutStyle: StrutStyle(fontSize: 21.5),
+          controller: bodyController,
+          textAlignVertical: TextAlignVertical.top,
+          textCapitalization: TextCapitalization.sentences,
+          decoration: textFieldDecoration.copyWith(
+            contentPadding: EdgeInsets.symmetric(horizontal: 22, vertical: 16),
+            hintText: "Text",
+            hintStyle: TextStyle(fontSize: 18, color: Colors.grey.shade900),
+          ),
+          autocorrect: true,
+          maxLines: null,
+        ),
+      ];
     }
     return [
       SizedBox(height: 15),
@@ -85,7 +124,7 @@ class _NoteScreenState extends State<NoteScreen> {
         noteModel.getDateCreated,
         style: TextStyle(fontSize: 18, color: Colors.black54, fontWeight: FontWeight.w500),
       ),
-      SizedBox(height: 15),
+      SizedBox(height: 30),
       Text(
         noteModel.body ?? "[No Text]",
         style: TextStyle(fontSize: 18, color: Colors.grey.shade900),
@@ -99,17 +138,16 @@ class _NoteScreenState extends State<NoteScreen> {
     if (isEditable) {
       return [
         Container(
-          margin: EdgeInsets.symmetric(horizontal: 3),
           child: TextButton(
             onPressed: () {},
             child: Text(
               "Save",
-              style: TextStyle(color: Colors.blueAccent),
+              style: TextStyle(color: Colors.blueAccent, fontSize: 18),
             ),
           ),
         ),
         Container(
-          margin: EdgeInsets.symmetric(horizontal: 3),
+          margin: EdgeInsets.only(right: 10),
           child: TextButton(
               onPressed: () {
                 setState(() {
@@ -118,12 +156,12 @@ class _NoteScreenState extends State<NoteScreen> {
               },
               child: Text(
                 "Discard",
-                style: TextStyle(color: Colors.redAccent),
+                style: TextStyle(color: Colors.redAccent, fontSize: 18),
               )),
         )
       ];
     }
-    if (isInTrash) {
+    if (!isInTrash) {
       return [
         AppbarButton(
             icon: Icons.edit,
@@ -133,18 +171,24 @@ class _NoteScreenState extends State<NoteScreen> {
               });
             }),
         AppbarButton(icon: Icons.search_rounded, onTap: () {}),
-        if (isArchived)
+        if (!isArchived)
           AppbarButton(
               icon: noteModel.isFavourite ? Icons.favorite_rounded : Icons.favorite_outline_rounded,
               onTap: () {
-                noteModel.isFavourite = !noteModel.isFavourite;
-                Database().updateFavourite(
-                  uid: Get.find<UserController>().user!.uid,
-                  noteId: noteModel.noteId!,
-                  isFavourite: noteModel.isFavourite,
-                );
+                setState(() {
+                  noteModel.isFavourite = !noteModel.isFavourite;
+                });
+                // When creating a new note, avoid updating the favourites before the note is pushed. It will be pushed with the note content.
+                if (noteModel.noteId != null) {
+                  Database().updateFavourite(
+                    uid: Get.find<UserController>().user!.uid,
+                    noteId: noteModel.noteId!,
+                    isFavourite: noteModel.isFavourite,
+                  );
+                }
               }),
         AppbarButton(popupMenuButton: _popupMenuButton(isArchived)),
+        SizedBox(width: 5),
       ];
     }
     return [
@@ -170,7 +214,8 @@ class _NoteScreenState extends State<NoteScreen> {
 
           Get.back();
         },
-      )
+      ),
+      SizedBox(width: 5),
     ];
   }
 
@@ -196,10 +241,11 @@ class _NoteScreenState extends State<NoteScreen> {
             } else {
               Get.toNamed(UnlockArchivesScreen.id, arguments: noteModel);
               Get.snackbar("Archive not initialized yet",
-                  "Initialize archive to lock your note. Don't worry, your note will be saved and transferred when you finsh setting up", duration: Duration(seconds: 3));
+                  "Initialize archive to lock your note. Don't worry, your note will be saved and transferred when you finsh setting up",
+                  duration: Duration(seconds: 3));
             }
             break;
-          case "Make normal":
+          case "Make Normal":
             // Remove from Archive
             // TODO Add confirmation and biometric auth
             setState(() {
@@ -207,8 +253,8 @@ class _NoteScreenState extends State<NoteScreen> {
             });
             Database().transferNote(
                 uid: Get.find<UserController>().user!.uid,
-                toCollection: 'archives',
-                fromCollection: 'notes',
+                toCollection: 'notes',
+                fromCollection: 'archives',
                 noteId: noteModel.noteId!,
                 noteModel: noteModel);
             break;

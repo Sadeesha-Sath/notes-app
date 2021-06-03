@@ -13,9 +13,9 @@ class PinSetController extends GetxController {
   void isInt(String value) {
     if (int.tryParse(value) != null) {
       invalidInput.value = false;
-      if (stage.value == 1)
+      if (stage.value == 1) {
         ++stage;
-      else
+      } else
         checkPin();
     } else {
       errorMessage.value = "Invalid Input. Only Numbers are allowed. Please try again.";

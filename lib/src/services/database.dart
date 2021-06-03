@@ -28,6 +28,7 @@ class Database {
   Future<UserModel> getUser(String uid) async {
     try {
       DocumentSnapshot _doc = await _firestore.collection("users").doc(uid).get();
+      print('getting data from cloud successful');
 
       return UserModel.fromDocumentSnapshot(documentSnapshot: _doc);
     } catch (e) {
@@ -49,7 +50,8 @@ class Database {
       rethrow;
     }
   }
-  Future<void> updateIV({required String uid, required IV iv}) async {
+
+  Future<void> updateIV({required String uid, required String iv}) async {
     try {
       _firestore.collection('users').doc(uid).update({"iv": iv});
     } catch (e) {
@@ -219,6 +221,4 @@ class Database {
       rethrow;
     }
   }
-
-  
 }

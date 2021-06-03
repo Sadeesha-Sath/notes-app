@@ -17,7 +17,7 @@ class UserController extends GetxController {
   @override
   onInit() async {
     _currentUser.bindStream(Get.find<FirebaseAuthController>().user.stream);
-    if (user != null) {
+    if (user?.uid != null) {
       setUser(user);
     }
 
@@ -30,9 +30,11 @@ class UserController extends GetxController {
     if (user != null) {
       try {
         print("getting user data from database");
-        this._userModel.value = await Database().getUser(user.uid);
+
+        _userModel.value = await Database().getUser(user.uid);
         print("getting user data successful");
       } catch (e) {
+        // TODO Find the null passing to string error
         print('error catched 1');
         print(e);
         UserModel _user = UserModel(
@@ -77,18 +79,20 @@ class UserController extends GetxController {
       _userModel.update((val) {
         val!.archivesPin = pin.hashCode;
       });
+      print(pin.hashCode);
+      // TODO HashCode does nothing. Use some hashing algorithm to generate this hashcode, and once the length changes, the encryption key will also change so find the perfect value for it again
       // generating an iv when the archive is initialized
       // this iv will never change
       enc.IV iv = await EncrypterClass.getNewIv;
-      EncrypterClass.loadIv(iv);
-      await Database().updateIV(uid: _userModel.value!.uid, iv: iv);
-      updatePin(pin);
+      EncrypterClass.loadIv(iv.base64);
+      await Database().updateIV(uid: userModel!.uid, iv: iv.base64);
+      updatePin(pin.hashCode);
       return true;
     } else if (isPinCorrect(pin)) {
       _userModel.update((val) {
         val!.archivesPin = pin.hashCode;
       });
-      updatePin(pin);
+      updatePin(pin.hashCode);
       return true;
     }
     return false;
@@ -96,7 +100,6 @@ class UserController extends GetxController {
 
   void updatePin(int pin) async {
     print("got in to update pin");
-    EncrypterClass.updateArchivesPin(pin);
     await Database().updateArchivesPin(uid: _userModel.value!.uid, newPin: pin);
   }
 }

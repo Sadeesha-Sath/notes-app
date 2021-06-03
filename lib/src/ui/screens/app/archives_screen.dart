@@ -45,14 +45,14 @@ class ArchivesScreen extends GetView<NotesController> {
                   title: GetX<NotesController>(
                     init: Get.find<NotesController>(),
                     builder: (NotesController notesController) {
-                      if (notesController.notes != null) {
-                        if (notesController.notes!.isNotEmpty) {
+                      if (notesController.archivedNotes != null) {
+                        if (notesController.archivedNotes!.isNotEmpty) {
                           return Row(
                             crossAxisAlignment: CrossAxisAlignment.baseline,
                             textBaseline: TextBaseline.alphabetic,
                             children: [
                               Text(
-                                "${notesController.notes!.length} Notes",
+                                "${notesController.archivedNotes!.length} Notes",
                                 style: TextStyle(color: Colors.black, fontSize: 33),
                               ),
                               SizedBox(
@@ -65,9 +65,22 @@ class ArchivesScreen extends GetView<NotesController> {
                             ],
                           );
                         } else {
-                          return Text(
-                            "No Notes Yet",
-                            style: TextStyle(color: Colors.black, fontSize: 30),
+                          return Row(
+                            crossAxisAlignment: CrossAxisAlignment.baseline,
+                            textBaseline: TextBaseline.alphabetic,
+                            children: [
+                              Text(
+                                "No Secrets Yet ",
+                                style: TextStyle(color: Colors.black, fontSize: 27),
+                              ),
+                              SizedBox(
+                                width: 2,
+                              ),
+                              Icon(
+                                CupertinoIcons.lock_fill,
+                                size: 29,
+                              )
+                            ],
                           );
                         }
                       } else {

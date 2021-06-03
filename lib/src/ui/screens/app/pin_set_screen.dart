@@ -68,12 +68,19 @@ class PinSetScreen extends StatelessWidget {
                         Spacer(),
                         ContinueButton(onPressed: () {
                           if (noteModel != null) {
-                            Database().transferNote(
-                                uid: Get.find<UserController>().user!.uid,
-                                toCollection: 'archives',
-                                fromCollection: 'notes',
-                                noteId: noteModel!.noteId!,
-                                noteModel: noteModel!);
+                            if (noteModel!.noteId != null) {
+                              Database().transferNote(
+                                  uid: Get.find<UserController>().user!.uid,
+                                  toCollection: 'archives',
+                                  fromCollection: 'notes',
+                                  noteId: noteModel!.noteId!,
+                                  noteModel: noteModel!);
+                            } else {
+                              Database().addNote(
+                                  uid: Get.find<UserController>().user!.uid,
+                                  note: noteModel!,
+                                  collectionName: 'archives');
+                            }
                           }
                           Get.offNamedUntil(ArchivesScreen.id, ModalRoute.withName(HomeScreen.id));
                         })
@@ -90,9 +97,11 @@ class PinSetScreen extends StatelessWidget {
 
 class FirstTwoTimes extends StatelessWidget {
   final PinSetController _pinSetController = Get.find<PinSetController>();
+  final _focusNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
+    _focusNode.requestFocus();
     return Column(
       children: [
         Spacer(
@@ -110,7 +119,7 @@ class FirstTwoTimes extends StatelessWidget {
             style: TextStyle(fontSize: 22),
             controller: _pinSetController.stage.value == 1 ? _pinSetController.pin1 : _pinSetController.pin2,
             obscureText: _pinSetController.hidePin.value,
-            autofocus: true,
+            focusNode: _focusNode,
             textAlign: TextAlign.center,
             keyboardType: TextInputType.number,
             decoration: textFieldDecoration.copyWith(

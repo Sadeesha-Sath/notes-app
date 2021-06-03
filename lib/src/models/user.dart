@@ -6,11 +6,11 @@ class UserModel {
   int? archivesPin;
   UserData userData;
   String uid;
-  enc.IV? iv;
+  String? iv;
 
   UserModel({this.archivesPin, required this.userData, required this.uid, this.iv});
 
-  UserModel.fromDocumentSnapshot({required DocumentSnapshot documentSnapshot})
+  UserModel.fromDocumentSnapshot({required DocumentSnapshot documentSnapshot, uid})
       : uid = documentSnapshot.id,
         archivesPin = documentSnapshot['archivesPin'],
         userData = UserData.fromDocumentSnapshot(documentSnapshot['profileData']),
