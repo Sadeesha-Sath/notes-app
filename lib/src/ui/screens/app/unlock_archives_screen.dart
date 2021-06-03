@@ -5,7 +5,8 @@ import 'package:notes_app/src/ui/widgets/archive_init.dart';
 
 class UnlockArchivesScreen extends StatelessWidget {
   static final String id = "/unlock_archives";
-  final arguments = Get.arguments['noteModel'];
+  final arguments = Get.arguments;
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(

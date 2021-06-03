@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -11,16 +12,23 @@ import 'package:notes_app/src/ui/widgets/custom_back_button.dart';
 class NoteScreen extends StatefulWidget {
   final NoteModel noteModel;
   final String collectionName;
+  final bool isNewNote;
 
-  NoteScreen({required this.noteModel, this.collectionName = "notes"});
+  NoteScreen({required this.noteModel, this.collectionName = "notes", this.isNewNote = false});
+  NoteScreen.newNote({
+    this.isNewNote = true,
+    this.collectionName = 'notes',
+  }) : noteModel = NoteModel(noteId: null, dateCreated: Timestamp.now(), isFavourite: false);
 
   @override
-  _NoteScreenState createState() => _NoteScreenState(noteModel: noteModel, collectionName: collectionName);
+  _NoteScreenState createState() =>
+      _NoteScreenState(noteModel: noteModel, collectionName: collectionName, isEditable: isNewNote);
 }
 
 class _NoteScreenState extends State<NoteScreen> {
-  _NoteScreenState({this.collectionName = "notes", required this.noteModel});
+  _NoteScreenState({this.collectionName = "notes", required this.noteModel, required this.isEditable});
 
+  bool isEditable;
   NoteModel noteModel;
   String collectionName;
 
@@ -29,57 +37,101 @@ class _NoteScreenState extends State<NoteScreen> {
     bool isArchived = (collectionName == 'archives');
     bool isInTrash = collectionName == 'trash';
 
+    // TODO Check the noteModel noteId availability to distinguish between new note and edited note when accessing the database
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      bottomNavigationBar: BottomAppBar(
-        shape: CircularNotchedRectangle(),
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: 5,
-          itemBuilder: (context, index) => Container(
-            decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.blueAccent),
-            width: 10,
-            height: 10,
-          ),
-        ),
-      ),
+      bottomNavigationBar: !isEditable
+          ? BottomAppBar(
+              shape: CircularNotchedRectangle(),
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: 5,
+                itemBuilder: (context, index) => Container(
+                  decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.blueAccent),
+                  width: 10,
+                  height: 10,
+                ),
+              ),
+            )
+          : null,
       appBar: AppBar(
         leading: CustomBackButton(),
         backgroundColor: Colors.white,
-        actions: getActions(isArchived, isInTrash),
+        actions: getAppbarActions(isArchived, isInTrash),
       ),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: Get.width / 20, vertical: Get.height / 45),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 15),
-            Text(
-              noteModel.title ?? "[No Title]",
-              style: TextStyle(fontSize: 27, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 15),
-            Text(
-              noteModel.getDateCreated,
-              style: TextStyle(fontSize: 18, color: Colors.black54, fontWeight: FontWeight.w500),
-            ),
-            SizedBox(height: 15),
-            Text(
-              noteModel.body ?? "[No Text]",
-              style: TextStyle(fontSize: 18, color: Colors.grey.shade900),
-              maxLines: null,
-              strutStyle: StrutStyle(fontSize: 21.5),
-            ),
-          ],
+          children: getBBodyChildren(),
         ),
       ),
     );
   }
 
-  List<Widget> getActions(bool isArchived, bool isInTrash) {
+  List<Widget> getBBodyChildren() {
+    if (isEditable) {
+      // Editable body
+    }
+    return [
+      SizedBox(height: 15),
+      Text(
+        noteModel.title ?? "[No Title]",
+        style: TextStyle(fontSize: 27, fontWeight: FontWeight.bold),
+      ),
+      SizedBox(height: 15),
+      Text(
+        noteModel.getDateCreated,
+        style: TextStyle(fontSize: 18, color: Colors.black54, fontWeight: FontWeight.w500),
+      ),
+      SizedBox(height: 15),
+      Text(
+        noteModel.body ?? "[No Text]",
+        style: TextStyle(fontSize: 18, color: Colors.grey.shade900),
+        maxLines: null,
+        strutStyle: StrutStyle(fontSize: 21.5),
+      ),
+    ];
+  }
+
+  List<Widget> getAppbarActions(bool isArchived, bool isInTrash) {
+    if (isEditable) {
+      return [
+        Container(
+          margin: EdgeInsets.symmetric(horizontal: 3),
+          child: TextButton(
+            onPressed: () {},
+            child: Text(
+              "Save",
+              style: TextStyle(color: Colors.blueAccent),
+            ),
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.symmetric(horizontal: 3),
+          child: TextButton(
+              onPressed: () {
+                setState(() {
+                  isEditable = false;
+                });
+              },
+              child: Text(
+                "Discard",
+                style: TextStyle(color: Colors.redAccent),
+              )),
+        )
+      ];
+    }
     if (isInTrash) {
       return [
-        AppbarButton(icon: Icons.edit, onTap: () {}),
+        AppbarButton(
+            icon: Icons.edit,
+            onTap: () {
+              setState(() {
+                isEditable = true;
+              });
+            }),
         AppbarButton(icon: Icons.search_rounded, onTap: () {}),
         if (isArchived)
           AppbarButton(
@@ -88,7 +140,7 @@ class _NoteScreenState extends State<NoteScreen> {
                 noteModel.isFavourite = !noteModel.isFavourite;
                 Database().updateFavourite(
                   uid: Get.find<UserController>().user!.uid,
-                  noteId: noteModel.noteId,
+                  noteId: noteModel.noteId!,
                   isFavourite: noteModel.isFavourite,
                 );
               }),
@@ -104,7 +156,7 @@ class _NoteScreenState extends State<NoteScreen> {
               uid: Get.find<UserController>().user!.uid,
               toCollection: 'notes',
               fromCollection: 'trash',
-              noteId: noteModel.noteId,
+              noteId: noteModel.noteId!,
               noteModel: noteModel);
 
           Get.back();
@@ -114,7 +166,7 @@ class _NoteScreenState extends State<NoteScreen> {
         icon: Icons.delete_forever_rounded,
         onTap: () async {
           // TODO Add confirmations
-          Database().deleteNote(uid: Get.find<UserController>().user!.uid, noteId: noteModel.noteId);
+          Database().deleteNote(uid: Get.find<UserController>().user!.uid, noteId: noteModel.noteId!);
 
           Get.back();
         },
@@ -129,6 +181,8 @@ class _NoteScreenState extends State<NoteScreen> {
           case "Send to Archive":
             // Add to Archive
             // TODO Add confirmation dialog/ bottom sheet
+
+            // TODO Use snackbars to alert the completation of use actions
             if (Get.find<UserController>().isPinSet()) {
               setState(() {
                 collectionName = 'archives';
@@ -137,12 +191,12 @@ class _NoteScreenState extends State<NoteScreen> {
                   uid: Get.find<UserController>().user!.uid,
                   toCollection: 'archives',
                   fromCollection: 'notes',
-                  noteId: noteModel.noteId,
+                  noteId: noteModel.noteId!,
                   noteModel: noteModel);
             } else {
-              Get.toNamed(UnlockArchivesScreen.id, arguments: {"noteModel": noteModel});
+              Get.toNamed(UnlockArchivesScreen.id, arguments: noteModel);
               Get.snackbar("Archive not initialized yet",
-                  "Initialize archive to lock your note. Don't worry, your note will be saved and transferred when you finsh setting up");
+                  "Initialize archive to lock your note. Don't worry, your note will be saved and transferred when you finsh setting up", duration: Duration(seconds: 3));
             }
             break;
           case "Make normal":
@@ -155,7 +209,7 @@ class _NoteScreenState extends State<NoteScreen> {
                 uid: Get.find<UserController>().user!.uid,
                 toCollection: 'archives',
                 fromCollection: 'notes',
-                noteId: noteModel.noteId,
+                noteId: noteModel.noteId!,
                 noteModel: noteModel);
             break;
           case "Send to Trash":
@@ -164,7 +218,7 @@ class _NoteScreenState extends State<NoteScreen> {
                 uid: Get.find<UserController>().user!.uid,
                 toCollection: 'trash',
                 fromCollection: collectionName,
-                noteId: noteModel.noteId,
+                noteId: noteModel.noteId!,
                 noteModel: noteModel);
             Get.back();
             break;
@@ -173,7 +227,7 @@ class _NoteScreenState extends State<NoteScreen> {
             Database().deleteNote(
               uid: Get.find<UserController>().user!.uid,
               collectionName: 'archives',
-              noteId: noteModel.noteId,
+              noteId: noteModel.noteId!,
             );
             Get.back();
             break;

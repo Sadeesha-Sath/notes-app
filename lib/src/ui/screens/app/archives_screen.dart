@@ -151,6 +151,7 @@ class ArchivesScreen extends GetView<NotesController> {
                               child: Text(
                                 "No secret notes yet. Send an existing note to Archives to get started",
                                 style: TextStyle(fontSize: 18),
+                                strutStyle: StrutStyle(fontSize: 20),
                               ),
                             ),
                           ),

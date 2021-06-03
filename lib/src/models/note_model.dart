@@ -6,7 +6,7 @@ class NoteModel {
   String? title;
   Timestamp dateCreated;
   bool isFavourite;
-  String noteId;
+  String? noteId;
 
   NoteModel({required this.noteId, this.body, this.title, required this.dateCreated, required this.isFavourite});
 

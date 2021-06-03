@@ -16,8 +16,9 @@ class UserController extends GetxController {
   onInit() async {
     _currentUser.bindStream(Get.find<FirebaseAuthController>().user.stream);
     if (user != null) {
-      this._userModel.value = await Database().getUser(user!.uid);
-    }
+      setUser(user);
+      }
+      
     ever(_currentUser, setUser);
 
     super.onInit();

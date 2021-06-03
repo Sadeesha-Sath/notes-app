@@ -34,6 +34,7 @@ class ArchiveInit extends StatelessWidget {
                 "Keep your personal notes to yourself",
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 30, fontWeight: FontWeight.w700),
+                strutStyle: StrutStyle(fontSize: 32),
               ),
             ),
             SizedBox(
@@ -45,6 +46,7 @@ class ArchiveInit extends StatelessWidget {
                 "A secure, encrypted space for your most Confidential notes. Unlocked and decrypted only by a pin or your biometrics. Set up a pin to get started.",
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 16),
+                strutStyle: StrutStyle(fontSize: 19),
               ),
             ),
             Spacer(),

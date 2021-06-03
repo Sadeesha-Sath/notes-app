@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:notes_app/src/controllers/drag_controller.dart';
 import 'package:notes_app/src/controllers/notes_controller.dart';
+import 'package:notes_app/src/controllers/user_controller.dart';
 import 'package:notes_app/src/ui/screens/app/archives_screen.dart';
 import 'package:notes_app/src/ui/screens/app/note_screen.dart';
 import 'package:notes_app/src/ui/screens/app/profile_screen.dart';
+import 'package:notes_app/src/ui/screens/app/unlock_archives_screen.dart';
 import 'package:notes_app/src/ui/widgets/app_bar_button.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -15,6 +17,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     int? draggedId = -1;
+    Get.lazyPut(() => UserController());
     Get.lazyPut(() => NotesController());
 
     return Scaffold(
@@ -46,7 +49,7 @@ class HomeScreen extends StatelessWidget {
                     icon: Icons.search_rounded,
                   ),
                   AppbarButton(
-                    onTap: () => Get.toNamed(ArchivesScreen.id),
+                    onTap: () => Get.toNamed(UnlockArchivesScreen.id),
                     icon: CupertinoIcons.lock_fill,
                   ),
                   AppbarButton(
@@ -186,6 +189,7 @@ class HomeScreen extends StatelessWidget {
                               child: Text(
                                 "Looks like you haven't taken a note for a while. Let's be a bit more productive, shall we?",
                                 style: TextStyle(fontSize: 18),
+                                strutStyle: StrutStyle(fontSize: 20),
                               ),
                             ),
                           ),

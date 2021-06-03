@@ -105,7 +105,7 @@ class Database {
       required String noteId,
       required NoteModel noteModel}) async {
     try {
-      addNote(uid: uid, collectionName: toCollection, note: noteModel, noteId: noteId);
+      addNote(uid: uid, collectionName: toCollection, note: noteModel);
       deleteNote(uid: uid, noteId: noteId, collectionName: fromCollection);
     } catch (e) {
       print("transfer failed");
@@ -120,7 +120,7 @@ class Database {
   }
 
   Future<void> addNote(
-      {required String uid, String collectionName = 'notes', required NoteModel note, String? noteId}) async {
+      {required String uid, String collectionName = 'notes', required NoteModel note}) async {
     try {
       final data = {
         "title": collectionName == "archives" ? EncrypterClass().encryptText(string: note.title ?? "") : note.title,
@@ -128,11 +128,11 @@ class Database {
         "dateCreated": note.dateCreated,
         "isFavourite": note.isFavourite
       };
-      if (noteId == null) {
+      if (note.noteId == null) {
         _firestore.collection('users').doc(uid).collection(collectionName).add(data);
       } else {
         // To Preserve the noteID for easier integration when transferring notes between collections
-        _firestore.collection('users').doc(uid).collection(collectionName).doc(noteId).set(data);
+        _firestore.collection('users').doc(uid).collection(collectionName).doc(note.noteId).set(data);
       }
     } catch (e) {
       print("add error");
@@ -202,6 +202,4 @@ class Database {
       rethrow;
     }
   }
-
-
 }

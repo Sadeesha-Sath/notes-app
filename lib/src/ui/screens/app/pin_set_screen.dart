@@ -72,7 +72,7 @@ class PinSetScreen extends StatelessWidget {
                                 uid: Get.find<UserController>().user!.uid,
                                 toCollection: 'archives',
                                 fromCollection: 'notes',
-                                noteId: noteModel!.noteId,
+                                noteId: noteModel!.noteId!,
                                 noteModel: noteModel!);
                           }
                           Get.offNamedUntil(ArchivesScreen.id, ModalRoute.withName(HomeScreen.id));
