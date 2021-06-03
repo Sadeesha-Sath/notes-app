@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:encrypt/encrypt.dart';
 import 'package:get/get.dart';
 import 'package:notes_app/src/models/note_model.dart';
 import 'package:notes_app/src/models/user.dart';
@@ -14,6 +15,7 @@ class Database {
         "archivesPin": user.archivesPin,
         "profileData": user.userData.toMap(),
         "uid": user.uid,
+        "iv": user.iv,
       });
       print("uploaded to firestore");
       return true;
@@ -30,6 +32,64 @@ class Database {
       return UserModel.fromDocumentSnapshot(documentSnapshot: _doc);
     } catch (e) {
       print(e);
+      rethrow;
+    }
+  }
+
+  Future<void> updateArchivesPin({required String uid, required int newPin}) async {
+    try {
+      _firestore.collection('users').doc(uid).update({"archivesPin": newPin});
+    } catch (e) {
+      print(e);
+      Get.snackbar(
+        "Updating Archive Pin failed",
+        e.toString(),
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      rethrow;
+    }
+  }
+  Future<void> updateIV({required String uid, required IV iv}) async {
+    try {
+      _firestore.collection('users').doc(uid).update({"iv": iv});
+    } catch (e) {
+      print(e);
+      Get.snackbar(
+        "Updating IV failed",
+        e.toString(),
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      rethrow;
+    }
+  }
+
+  Future<void> updateUser({required UserModel currentUserData, required UserModel newUserData}) async {
+    Map<String, dynamic> fieldsToUpdate = {};
+    if (currentUserData.userData.name != newUserData.userData.name) {
+      fieldsToUpdate['profileData.name'] = newUserData.userData.name;
+    }
+    if (currentUserData.userData.email != newUserData.userData.email) {
+      fieldsToUpdate['profileData.email'] = newUserData.userData.email;
+    }
+    if (currentUserData.userData.profileUrl != newUserData.userData.profileUrl) {
+      fieldsToUpdate['profileData.profileUrl'] = newUserData.userData.profileUrl;
+    }
+    if (currentUserData.archivesPin != newUserData.archivesPin) {
+      fieldsToUpdate['archivesPin'] = newUserData.archivesPin;
+    }
+    if (currentUserData.iv != newUserData.iv) {
+      fieldsToUpdate['iv'] = newUserData.iv;
+    }
+    try {
+      _firestore.collection('users').doc(currentUserData.uid).update(fieldsToUpdate);
+    } catch (e) {
+      print("profile Update error");
+      print(e);
+      Get.snackbar(
+        "Updating profile failed",
+        e.toString(),
+        snackPosition: SnackPosition.BOTTOM,
+      );
       rethrow;
     }
   }
@@ -119,8 +179,7 @@ class Database {
     }
   }
 
-  Future<void> addNote(
-      {required String uid, String collectionName = 'notes', required NoteModel note}) async {
+  Future<void> addNote({required String uid, String collectionName = 'notes', required NoteModel note}) async {
     try {
       final data = {
         "title": collectionName == "archives" ? EncrypterClass().encryptText(string: note.title ?? "") : note.title,
@@ -161,45 +220,5 @@ class Database {
     }
   }
 
-  Future<void> updateArchivesPin({required String uid, required int newPin}) async {
-    try {
-      _firestore.collection('users').doc(uid).update({"archivesPin": newPin});
-    } catch (e) {
-      print(e);
-      Get.snackbar(
-        "Updating Archive Pin failed",
-        e.toString(),
-        snackPosition: SnackPosition.BOTTOM,
-      );
-      rethrow;
-    }
-  }
-
-  Future<void> updateUser({required UserModel currentUserData, required UserModel newUserData}) async {
-    Map<String, dynamic> fieldsToUpdate = {};
-    if (currentUserData.userData.name == newUserData.userData.name) {
-      fieldsToUpdate['profileData.name'] = newUserData.userData.name;
-    }
-    if (currentUserData.userData.email == newUserData.userData.email) {
-      fieldsToUpdate['profileData.email'] = newUserData.userData.email;
-    }
-    if (currentUserData.userData.profileUrl == newUserData.userData.profileUrl) {
-      fieldsToUpdate['profileData.profileUrl'] = newUserData.userData.profileUrl;
-    }
-    if (currentUserData.archivesPin == newUserData.archivesPin) {
-      fieldsToUpdate['archivesPin'] = newUserData.archivesPin;
-    }
-    try {
-      _firestore.collection('users').doc(currentUserData.uid).update(fieldsToUpdate);
-    } catch (e) {
-      print("profile Update error");
-      print(e);
-      Get.snackbar(
-        "Updating profile failed",
-        e.toString(),
-        snackPosition: SnackPosition.BOTTOM,
-      );
-      rethrow;
-    }
-  }
+  
 }

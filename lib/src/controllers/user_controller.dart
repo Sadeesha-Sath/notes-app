@@ -1,9 +1,11 @@
+import 'package:encrypt/encrypt.dart' as enc;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:notes_app/src/controllers/firebase_auth_controller.dart';
 import 'package:notes_app/src/models/user.dart';
 import 'package:notes_app/src/models/user_data.dart';
 import 'package:notes_app/src/services/database.dart';
+import 'package:notes_app/src/services/encrypter.dart';
 
 class UserController extends GetxController {
   Rx<UserModel?> _userModel = Rx<UserModel?>(null);
@@ -17,8 +19,8 @@ class UserController extends GetxController {
     _currentUser.bindStream(Get.find<FirebaseAuthController>().user.stream);
     if (user != null) {
       setUser(user);
-      }
-      
+    }
+
     ever(_currentUser, setUser);
 
     super.onInit();
@@ -68,21 +70,21 @@ class UserController extends GetxController {
     return false;
   }
 
-  bool resetPin(int pin) {
-    if (isPinCorrect(pin)) {
-      _userModel.update((val) {
-        val!.archivesPin = pin.hashCode;
-      });
-      updatePin(pin);
-      return true;
-    }
-    return false;
-  }
-
-  bool setPin(int pin) {
+  Future<bool> setPin(int pin) async {
     print("got into setpin");
     if (_userModel.value?.archivesPin == null) {
       print("arrived through null check");
+      _userModel.update((val) {
+        val!.archivesPin = pin.hashCode;
+      });
+      // generating an iv when the archive is initialized
+      // this iv will never change
+      enc.IV iv = await EncrypterClass.getNewIv;
+      EncrypterClass.loadIv(iv);
+      await Database().updateIV(uid: _userModel.value!.uid, iv: iv);
+      updatePin(pin);
+      return true;
+    } else if (isPinCorrect(pin)) {
       _userModel.update((val) {
         val!.archivesPin = pin.hashCode;
       });
@@ -94,6 +96,7 @@ class UserController extends GetxController {
 
   void updatePin(int pin) async {
     print("got in to update pin");
+    EncrypterClass.updateArchivesPin(pin);
     await Database().updateArchivesPin(uid: _userModel.value!.uid, newPin: pin);
   }
 }
