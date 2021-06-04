@@ -10,6 +10,7 @@ import 'package:notes_app/src/ui/screens/app/archives_screen.dart';
 import 'package:notes_app/src/ui/screens/app/home_screen.dart';
 import 'package:notes_app/src/ui/screens/app/pin_set_screen.dart';
 import 'package:notes_app/src/ui/screens/app/profile_screen.dart';
+import 'package:notes_app/src/ui/screens/app/trash_screen.dart';
 import 'package:notes_app/src/ui/screens/app/unlock_archives_screen.dart';
 import 'package:notes_app/src/ui/screens/auth/login_screen.dart';
 import 'package:notes_app/src/ui/screens/auth/register_screen.dart';
@@ -65,6 +66,7 @@ class _AppState extends State<App> {
                 GetPage(name: ArchivesScreen.id, page: () => ArchivesScreen()),
                 GetPage(name: PinSetScreen.id, page: () => PinSetScreen()),
                 GetPage(name: UnlockArchivesScreen.id, page: () => UnlockArchivesScreen()),
+                GetPage(name: TrashScreen.id, page: () => TrashScreen()),
               ],
               theme: InheritedPreferences.of(context)!.preferences['isNightMode']!
                   ? ThemeData.dark()

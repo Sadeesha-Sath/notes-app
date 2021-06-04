@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:encrypt/encrypt.dart' as enc;
 import 'package:notes_app/src/models/user_data.dart';
 
 class UserModel {

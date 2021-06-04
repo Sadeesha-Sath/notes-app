@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:notes_app/src/controllers/drag_controller.dart';
 import 'package:notes_app/src/controllers/notes_controller.dart';
 import 'package:notes_app/src/controllers/user_controller.dart';
+import 'package:notes_app/src/helpers/content_trimmer.dart';
 import 'package:notes_app/src/ui/screens/app/note_screen.dart';
 import 'package:notes_app/src/ui/screens/app/profile_screen.dart';
 import 'package:notes_app/src/ui/screens/app/unlock_archives_screen.dart';
@@ -136,11 +137,7 @@ class HomeScreen extends StatelessWidget {
                                               Container(
                                                 alignment: Alignment.topLeft,
                                                 child: Text(
-                                                  e.title != null
-                                                      ? e.title!
-                                                      : e.body!.split(" ").length < 9
-                                                          ? e.body!.split(" ").join() + "..."
-                                                          : e.body!.split(" ").sublist(0, 8).join() + "...",
+                                                  ContentTrimmer.trimTitle(e.title) ?? ContentTrimmer.trimBody(e.body) ?? "[No Content]",
                                                   strutStyle: StrutStyle(fontSize: 22),
                                                   style: TextStyle(fontSize: 21, fontWeight: FontWeight.w600),
                                                 ),
@@ -230,7 +227,7 @@ class HomeScreen extends StatelessWidget {
               //         _dragController.animationController.value = 0;
               //       },
               //       child: Material(
-              //         // TODO Make Drag Behaviour
+              //
               //         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
               //         clipBehavior: Clip.hardEdge,
               //         color: Colors.blue,
@@ -260,7 +257,7 @@ class HomeScreen extends StatelessWidget {
               //                 ],
               //               ),
               //             ),
-              //             // TODO Refine this and make it responsive
+              //           
               //             AnimatedBuilder(
               //                 animation: _dragController.animationController,
               //                 builder: (context, child) {

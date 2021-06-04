@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:notes_app/src/controllers/notes_controller.dart';
+import 'package:notes_app/src/helpers/content_trimmer.dart';
 import 'package:notes_app/src/ui/screens/app/note_screen.dart';
 import 'package:notes_app/src/ui/widgets/app_bar_button.dart';
 
@@ -127,11 +128,7 @@ class ArchivesScreen extends GetView<NotesController> {
                                         Container(
                                           alignment: Alignment.topLeft,
                                           child: Text(
-                                            e.title != null
-                                                ? e.title!
-                                                : e.body!.split(" ").length < 9
-                                                    ? e.body!.split(" ").join() + "..."
-                                                    : e.body!.split(" ").sublist(0, 8).join() + "...",
+                                            ContentTrimmer.trimTitle(e.title) ?? ContentTrimmer.trimBody(e.body) ?? "[No Content]",
                                             strutStyle: StrutStyle(fontSize: 22),
                                             style: TextStyle(fontSize: 21, fontWeight: FontWeight.w600),
                                           ),

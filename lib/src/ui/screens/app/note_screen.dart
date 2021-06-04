@@ -36,52 +36,55 @@ class _NoteScreenState extends State<NoteScreen> {
   bool isEditable;
   NoteModel noteModel;
   String collectionName;
+  late TextEditingController _titleController;
+  late TextEditingController _bodyController;
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController _titleController = TextEditingController(text: noteModel.title);
-    TextEditingController _bodyController = TextEditingController(text: noteModel.body);
+    if (isEditable) {
+      _titleController = TextEditingController(text: noteModel.title);
+      _bodyController = TextEditingController(text: noteModel.body);
+    }
     bool isArchived = collectionName == 'archives';
     bool isInTrash = collectionName == 'trash';
 
-    // TODO Check the noteModel noteId availability to distinguish between new note and edited note when accessing the database
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      // bottomNavigationBar: isEditable
-      //     ? BottomAppBar(
-      //         color: Colors.red,
-      //         shape: CircularNotchedRectangle(),
-      //         child: ListView.builder(
-      //           shrinkWrap: true,
-      //           scrollDirection: Axis.horizontal,
-      //           itemCount: 5,
-      //           itemBuilder: (context, index) => Container(
-      //             decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.blueAccent),
-      //             width: 50,
-      //             height: 50,
-      //           ),
-      //         ),
-      //       )
-      //     : null,
+      bottomNavigationBar: isEditable
+          ? BottomAppBar(
+              color: Colors.red,
+              shape: CircularNotchedRectangle(),
+              child: Container(
+                height: 60,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  itemCount: 5,
+                  itemBuilder: (context, index) => Container(
+                    decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.blueAccent),
+                    width: 50,
+                    height: 50,
+                  ),
+                ),
+              ),
+            )
+          : null,
       appBar: AppBar(
         leading: CustomBackButton(),
         backgroundColor: Colors.white,
-        actions:
-            getAppbarActions(isArchived, isInTrash, titleController: _titleController, bodyController: _bodyController),
+        actions: getAppbarActions(isArchived, isInTrash),
       ),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: Get.width / 20, vertical: Get.height / 45),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: getBodyChildren(titleController: _titleController, bodyController: _bodyController),
+          children: getBodyChildren(),
         ),
       ),
     );
   }
 
-  List<Widget> getBodyChildren(
-      {required TextEditingController titleController, required TextEditingController bodyController}) {
+  List<Widget> getBodyChildren() {
     if (isEditable) {
       // Editable body
       // TODO Add some ease in animations to smooth out the transition
@@ -90,7 +93,7 @@ class _NoteScreenState extends State<NoteScreen> {
         TextField(
           style: TextStyle(fontSize: 27, fontWeight: FontWeight.w600),
           textAlignVertical: TextAlignVertical.top,
-          controller: titleController,
+          controller: _titleController,
           textCapitalization: TextCapitalization.sentences,
           decoration: textFieldDecoration.copyWith(
               contentPadding: EdgeInsets.symmetric(horizontal: 22, vertical: 16),
@@ -103,7 +106,7 @@ class _NoteScreenState extends State<NoteScreen> {
         TextField(
           style: TextStyle(fontSize: 18, color: Colors.grey.shade900),
           strutStyle: StrutStyle(fontSize: 21.5),
-          controller: bodyController,
+          controller: _bodyController,
           textAlignVertical: TextAlignVertical.top,
           textCapitalization: TextCapitalization.sentences,
           decoration: textFieldDecoration.copyWith(
@@ -137,8 +140,10 @@ class _NoteScreenState extends State<NoteScreen> {
     ];
   }
 
-  List<Widget> getAppbarActions(bool isArchived, bool isInTrash,
-      {required TextEditingController titleController, required TextEditingController bodyController}) {
+  List<Widget> getAppbarActions(
+    bool isArchived,
+    bool isInTrash,
+  ) {
     if (isEditable) {
       return [
         Container(
@@ -146,8 +151,8 @@ class _NoteScreenState extends State<NoteScreen> {
             onPressed: () async {
               if (isNewNote) {
                 setState(() {
-                  noteModel.title = titleController.text;
-                  noteModel.body = bodyController.text;
+                  noteModel.title = _titleController.text;
+                  noteModel.body = _bodyController.text;
                 });
                 Database.addNote(uid: Get.find<UserController>().userModel!.uid, note: noteModel);
                 setState(() {
@@ -163,13 +168,13 @@ class _NoteScreenState extends State<NoteScreen> {
                     noteId: noteModel.noteId,
                     dateCreated: noteModel.dateCreated,
                     isFavourite: noteModel.isFavourite,
-                    title: titleController.text,
-                    body: bodyController.text,
+                    title: _titleController.text,
+                    body: _bodyController.text,
                   ),
                 );
                 setState(() {
-                  noteModel.title = titleController.text;
-                  noteModel.body = bodyController.text;
+                  noteModel.title = _titleController.text;
+                  noteModel.body = _bodyController.text;
                   isEditable = false;
                 });
               }
@@ -235,6 +240,8 @@ class _NoteScreenState extends State<NoteScreen> {
         icon: Icons.restore_page_rounded,
         onTap: () async {
           // TODO Add confirmations
+          Get.dialog(AlertDialog(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)), content: Text("Are you sure you want to restore this file?"),));
+
           Database.transferNote(
               uid: Get.find<UserController>().user!.uid,
               toCollection: 'notes',

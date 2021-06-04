@@ -122,9 +122,6 @@ class Database {
       required NoteModel newModel}) async {
     try {
       Map<String, dynamic> updateFields = {};
-      if (oldModel.isFavourite != newModel.isFavourite) {
-        updateFields["isFavourite"] = newModel.isFavourite;
-      }
       if (oldModel.body != newModel.body) {
         updateFields['body'] =
             collectionName == 'archives' ? EncrypterClass().encryptText(string: newModel.body ?? "") : newModel.body;
