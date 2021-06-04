@@ -1,16 +1,35 @@
+import 'dart:convert';
+import 'package:crypto/crypto.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:notes_app/src/controllers/user_controller.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 
 class EncrypterClass {
-  static int archivesPin = Get.find<UserController>().userModel!.archivesPin!;
-  static final key1 = encrypt.Key.fromUtf8(archivesPin.hashCode.toString());
+  static String archivesPin = Get.find<UserController>().userModel!.archivesPin!;
+  static final key1 = encrypt.Key.fromUtf8(hashGenerator(string: archivesPin));
   static final key2 = encrypt.Key.fromUtf8(dotenv.env['APP_SPECIFIC_SECRET_KEY']!);
   static var iv = Get.find<UserController>().userModel!.iv;
   static final masterKey =
-      encrypt.Key.fromBase16(encrypt.Key.fromUtf8(key1.base64 + key2.base64).base16.substring(21, 53));
+      encrypt.Key.fromBase16(encrypt.Key.fromUtf8(key1.base64 + key2.base64).base16.substring(111, 143));
   static final encrypter = encrypt.Encrypter(encrypt.AES(masterKey));
+
+  static String hashGenerator({int? pin, String? string}) {
+    late var bytes;
+    if (pin != null) {
+      assert(string == null);
+      bytes = utf8.encode(pin.toRadixString(int.parse(dotenv.env['RADIX']!)));
+    } else {
+      assert(string != null);
+      bytes = utf8.encode(string!);
+    }
+
+    var digest = sha512.convert(bytes);
+
+    // print("Digest as bytes: ${digest.bytes}");
+    // print("Digest as hex string: $digest");
+    return digest.toString();
+  }
 
   static get getNewIv => encrypt.IV.fromSecureRandom(16);
 
@@ -18,7 +37,7 @@ class EncrypterClass {
     // print(key1.base64);
     // print(key2.base64);
     // print(masterKey.length);
-    print("MasterKey :-   ${masterKey.base64}");
+    // print("MasterKey :-   ${masterKey.base64}");
     if (iv != null)
       iv = Get.find<UserController>().userModel!.iv;
     else
@@ -27,7 +46,7 @@ class EncrypterClass {
 
   String encryptText({required String string}) {
     final encrypted = encrypter.encrypt(string, iv: encrypt.IV.fromBase64(iv!));
-    print("IV:    ${encrypt.IV.fromBase64(iv!).base64}");
+    // print("IV:    ${encrypt.IV.fromBase64(iv!).base64}");
     // print(encrypted.bytes);
     // print(encrypted.base16);
     // print(encrypted.base64);

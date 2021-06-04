@@ -3,7 +3,7 @@ import 'package:encrypt/encrypt.dart' as enc;
 import 'package:notes_app/src/models/user_data.dart';
 
 class UserModel {
-  int? archivesPin;
+  String? archivesPin;
   UserData userData;
   String uid;
   String? iv;

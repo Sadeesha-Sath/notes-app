@@ -8,7 +8,7 @@ class PinSetController extends GetxController {
   var stage = 1.obs;
   var hidePin = true.obs;
   var invalidInput = false.obs;
-  var errorMessage = "Invalid Input. Only Numbers are allowed. Please try again".obs;
+  var errorMessage = "".obs;
 
   void isInt(String value) {
     if (int.tryParse(value) != null) {

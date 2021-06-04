@@ -37,7 +37,7 @@ class Database {
     }
   }
 
-  Future<void> updateArchivesPin({required String uid, required int newPin}) async {
+  Future<void> updateArchivesPin({required String uid, required String newPin}) async {
     try {
       _firestore.collection('users').doc(uid).update({"archivesPin": newPin});
     } catch (e) {
@@ -168,7 +168,7 @@ class Database {
       required NoteModel noteModel}) async {
     try {
       addNote(uid: uid, collectionName: toCollection, note: noteModel);
-      deleteNote(uid: uid, noteId: noteId, collectionName: fromCollection);
+      // deleteNote(uid: uid, noteId: noteId, collectionName: fromCollection);
     } catch (e) {
       print("transfer failed");
       print(e);

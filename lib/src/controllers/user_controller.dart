@@ -67,38 +67,38 @@ class UserController extends GetxController {
     return true;
   }
 
-  bool isPinCorrect(int pin) {
-    if (pin.hashCode == _userModel.value!.archivesPin) return true;
+  bool isPinCorrect(String pin) {
+    if (pin == _userModel.value!.archivesPin) return true;
     return false;
   }
 
   Future<bool> setPin(int pin) async {
+    String hashedPin = EncrypterClass.hashGenerator(pin: pin);
     print("got into setpin");
     if (_userModel.value?.archivesPin == null) {
       print("arrived through null check");
       _userModel.update((val) {
-        val!.archivesPin = pin.hashCode;
+        val!.archivesPin = hashedPin;
       });
-      print(pin.hashCode);
-      // TODO HashCode does nothing. Use some hashing algorithm to generate this hashcode, and once the length changes, the encryption key will also change so find the perfect value for it again
+      print(hashedPin);
       // generating an iv when the archive is initialized
       // this iv will never change
       enc.IV iv = await EncrypterClass.getNewIv;
       EncrypterClass.loadIv(iv.base64);
       await Database().updateIV(uid: userModel!.uid, iv: iv.base64);
-      updatePin(pin.hashCode);
+      updatePin(hashedPin);
       return true;
-    } else if (isPinCorrect(pin)) {
+    } else if (isPinCorrect(hashedPin)) {
       _userModel.update((val) {
-        val!.archivesPin = pin.hashCode;
+        val!.archivesPin = hashedPin;
       });
-      updatePin(pin.hashCode);
+      updatePin(hashedPin);
       return true;
     }
     return false;
   }
 
-  void updatePin(int pin) async {
+  void updatePin(String pin) async {
     print("got in to update pin");
     await Database().updateArchivesPin(uid: _userModel.value!.uid, newPin: pin);
   }

@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:notes_app/src/controllers/drag_controller.dart';
 import 'package:notes_app/src/controllers/notes_controller.dart';
 import 'package:notes_app/src/controllers/user_controller.dart';
-import 'package:notes_app/src/services/encrypter.dart';
 import 'package:notes_app/src/ui/screens/app/note_screen.dart';
 import 'package:notes_app/src/ui/screens/app/profile_screen.dart';
 import 'package:notes_app/src/ui/screens/app/unlock_archives_screen.dart';
@@ -16,7 +15,6 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     int? draggedId = -1;
     Get.lazyPut(() => UserController());
     Get.lazyPut(() => NotesController());
