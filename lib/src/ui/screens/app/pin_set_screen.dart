@@ -4,7 +4,7 @@ import 'package:notes_app/src/controllers/pin_set_controller.dart';
 import 'package:notes_app/src/controllers/user_controller.dart';
 import 'package:notes_app/src/models/note_model.dart';
 import 'package:notes_app/src/services/database.dart';
-import 'package:notes_app/src/ui/screens/app/archives_screen.dart';
+import 'package:notes_app/src/ui/screens/app/locked_notes_screen.dart';
 import 'package:notes_app/src/ui/screens/app/home_screen.dart';
 import 'package:notes_app/src/ui/ui_constants.dart';
 import 'package:notes_app/src/ui/widgets/biometric_box.dart';
@@ -27,7 +27,7 @@ class PinSetScreen extends StatelessWidget {
         ),
         centerTitle: true,
         title: Text(
-          "Set Up Archive",
+          "Set Up Protected Space",
           style: TextStyle(color: Colors.black, fontSize: 25),
         ),
         backgroundColor: Colors.transparent,
@@ -71,18 +71,19 @@ class PinSetScreen extends StatelessWidget {
                             if (noteModel!.noteId != null) {
                               Database.transferNote(
                                   uid: Get.find<UserController>().user!.uid,
-                                  toCollection: 'archives',
+                                  toCollection: 'locked',
                                   fromCollection: 'notes',
-                                  noteId: noteModel!.noteId!,
+                   
                                   noteModel: noteModel!);
                             } else {
+                              // ? IS this necessory
                               Database.addNote(
                                   uid: Get.find<UserController>().user!.uid,
                                   note: noteModel!,
-                                  collectionName: 'archives');
+                                  collectionName: 'locked');
                             }
                           }
-                          Get.offNamedUntil(ArchivesScreen.id, ModalRoute.withName(HomeScreen.id));
+                          Get.offNamedUntil(LockedNotesScreen.id, ModalRoute.withName(HomeScreen.id));
                         })
                       ],
                     ),

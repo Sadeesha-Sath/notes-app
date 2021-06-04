@@ -6,7 +6,8 @@ import 'package:get/get.dart';
 import 'package:notes_app/src/controllers/user_controller.dart';
 import 'package:notes_app/src/models/note_model.dart';
 import 'package:notes_app/src/services/database.dart';
-import 'package:notes_app/src/ui/screens/app/unlock_archives_screen.dart';
+import 'package:notes_app/src/ui/platform_aware_widgets/platform_alert_dialog.dart';
+import 'package:notes_app/src/ui/screens/app/unlock_locked_notes_screen.dart';
 import 'package:notes_app/src/ui/ui_constants.dart';
 import 'package:notes_app/src/ui/widgets/app_bar_button.dart';
 import 'package:notes_app/src/ui/widgets/custom_back_button.dart';
@@ -45,7 +46,7 @@ class _NoteScreenState extends State<NoteScreen> {
       _titleController = TextEditingController(text: noteModel.title);
       _bodyController = TextEditingController(text: noteModel.body);
     }
-    bool isArchived = collectionName == 'archives';
+    bool isLocked = collectionName == 'locked';
     bool isInTrash = collectionName == 'trash';
 
     return Scaffold(
@@ -72,7 +73,7 @@ class _NoteScreenState extends State<NoteScreen> {
       appBar: AppBar(
         leading: CustomBackButton(),
         backgroundColor: Colors.white,
-        actions: getAppbarActions(isArchived, isInTrash),
+        actions: getAppbarActions(isLocked, isInTrash),
       ),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: Get.width / 20, vertical: Get.height / 45),
@@ -141,7 +142,7 @@ class _NoteScreenState extends State<NoteScreen> {
   }
 
   List<Widget> getAppbarActions(
-    bool isArchived,
+    bool isLocked,
     bool isInTrash,
   ) {
     if (isEditable) {
@@ -154,10 +155,11 @@ class _NoteScreenState extends State<NoteScreen> {
                   noteModel.title = _titleController.text;
                   noteModel.body = _bodyController.text;
                 });
-                Database.addNote(uid: Get.find<UserController>().userModel!.uid, note: noteModel);
+                var newNoteId = await Database.addNote(uid: Get.find<UserController>().userModel!.uid, note: noteModel);
                 setState(() {
                   isNewNote = false;
                   isEditable = false;
+                  noteModel.noteId = newNoteId;
                 });
               } else {
                 Database.updateNote(
@@ -215,7 +217,7 @@ class _NoteScreenState extends State<NoteScreen> {
               });
             }),
         AppbarButton(icon: Icons.search_rounded, onTap: () {}),
-        if (!isArchived)
+        if (!isLocked)
           AppbarButton(
               icon: noteModel.isFavourite ? Icons.favorite_rounded : Icons.favorite_outline_rounded,
               onTap: () {
@@ -231,7 +233,7 @@ class _NoteScreenState extends State<NoteScreen> {
                   );
                 }
               }),
-        AppbarButton(popupMenuButton: _popupMenuButton(isArchived)),
+        AppbarButton(popupMenuButton: _popupMenuButton(isLocked)),
         SizedBox(width: 5),
       ];
     }
@@ -239,24 +241,45 @@ class _NoteScreenState extends State<NoteScreen> {
       AppbarButton(
         icon: Icons.restore_page_rounded,
         onTap: () async {
-          // TODO Add confirmations
-          Get.dialog(AlertDialog(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)), content: Text("Are you sure you want to restore this file?"),));
+          var value = await PlatformAlertDialog(
+            title: "Confirm Restore",
+            cancelText: "Cancel",
+            confirmText: "Restore",
+            content: "Are you sure about restoring this note?",
+            confirmColor: Colors.greenAccent.shade700,
+          ).show(context);
 
-          Database.transferNote(
-              uid: Get.find<UserController>().user!.uid,
-              toCollection: 'notes',
-              fromCollection: 'trash',
-              noteId: noteModel.noteId!,
-              noteModel: noteModel);
+          if (value) {
+            Database.transferNote(
+                uid: Get.find<UserController>().user!.uid,
+                toCollection: 'notes',
+                fromCollection: 'trash',
+                noteModel: noteModel);
+          }
 
           Get.back();
         },
       ),
       AppbarButton(
-        icon: Icons.delete_forever_rounded,
+        customIcon: Icon(
+          Icons.delete_forever_rounded,
+          color: Colors.red.shade200,
+        ),
         onTap: () async {
-          // TODO Add confirmations
-          Database.deleteNote(uid: Get.find<UserController>().user!.uid, noteId: noteModel.noteId!);
+          var value = await PlatformAlertDialog(
+            title: "Confirm Delete",
+            cancelText: "Cancel",
+            confirmText: "Delete",
+            content: "Do you want to delete this permenantly?",
+            confirmColor: Colors.redAccent,
+          ).show(context);
+
+          if (value) {
+            Database.deleteNote(
+              uid: Get.find<UserController>().user!.uid,
+              noteId: noteModel.noteId!,
+            );
+          }
 
           Get.back();
         },
@@ -265,83 +288,120 @@ class _NoteScreenState extends State<NoteScreen> {
     ];
   }
 
-  PopupMenuButton _popupMenuButton(bool isArchived) {
+  PopupMenuButton _popupMenuButton(bool isLocked) {
     return PopupMenuButton<String>(
-      onSelected: (value) {
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      onSelected: (value) async {
         switch (value) {
-          case "Send to Archive":
-            // Add to Archive
-            // TODO Add confirmation dialog/ bottom sheet
+          case "Lock Note":
+            // Add to Protected-Space
+            var value = await PlatformAlertDialog(
+              title: "Confirm Moving",
+              cancelText: "Cancel",
+              confirmText: "Move",
+              content: "Do you want to lock this note? You will have to use your pin to gain access.",
+              confirmColor: Colors.greenAccent.shade700,
+            ).show(context);
 
-            // TODO Use snackbars to alert the completation of use actions
-            if (Get.find<UserController>().isPinSet()) {
-              setState(() {
-                collectionName = 'archives';
-              });
-              Database.transferNote(
+            if (value) {
+              if (Get.find<UserController>().isPinSet()) {
+                setState(() {
+                  collectionName = 'locked';
+                });
+                await Database.transferNote(
                   uid: Get.find<UserController>().user!.uid,
-                  toCollection: 'archives',
+                  toCollection: 'locked',
                   fromCollection: 'notes',
-                  noteId: noteModel.noteId!,
-                  noteModel: noteModel);
-            } else {
-              Get.toNamed(UnlockArchivesScreen.id, arguments: noteModel);
-              Get.snackbar("Archive not initialized yet",
-                  "Initialize archive to lock your note. Don't worry, your note will be saved and transferred when you finsh setting up",
-                  duration: Duration(seconds: 3));
+                  noteModel: noteModel,
+                );
+                Get.snackbar("Locking Successful", "The note was locked in the Protected-Space successfully.",
+                    snackPosition: SnackPosition.BOTTOM);
+              } else {
+                Get.toNamed(UnlockLockedNotesScreen.id, arguments: noteModel);
+                Get.snackbar("Protcted-Space not initialized yet",
+                    "Initialize Protected-Space to lock your note. Don't worry, your note will be saved and transferred when you finsh setting up",
+                    duration: Duration(seconds: 3), snackPosition: SnackPosition.BOTTOM);
+              }
             }
+
             break;
-          case "Make Normal":
-            // Remove from Archive
+          case "Unlock Note":
+            // Remove from Protected-Space
             // TODO Add confirmation and biometric auth
             setState(() {
               collectionName = 'notes';
             });
-            Database.transferNote(
-                uid: Get.find<UserController>().user!.uid,
-                toCollection: 'notes',
-                fromCollection: 'archives',
-                noteId: noteModel.noteId!,
-                noteModel: noteModel);
+            await Database.transferNote(
+              uid: Get.find<UserController>().user!.uid,
+              toCollection: 'notes',
+              fromCollection: 'locked',
+              noteModel: noteModel,
+            );
+            Get.snackbar("Unlock Successful", "Note was unlocked successfully", snackPosition: SnackPosition.BOTTOM);
             break;
           case "Send to Trash":
             // Add to Trash
-            Database.transferNote(
+            var value = await PlatformAlertDialog(
+              title: "Confirm Deleting",
+              cancelText: "Cancel",
+              confirmText: "Delete",
+              content: "Do you want to delete this note? You can restore it from the Trash.",
+              confirmColor: Colors.redAccent,
+            ).show(context);
+
+            if (value) {
+              Database.transferNote(
                 uid: Get.find<UserController>().user!.uid,
                 toCollection: 'trash',
                 fromCollection: collectionName,
-                noteId: noteModel.noteId!,
-                noteModel: noteModel);
-            Get.back();
+                noteModel: noteModel,
+              );
+              Get.back();
+              Get.snackbar("Delete Completed", "The note was sent to Trash successfully.",
+                  snackPosition: SnackPosition.BOTTOM);
+            }
+
             break;
           case "Delete Forever":
             // Add to Trash
-            Database.deleteNote(
-              uid: Get.find<UserController>().user!.uid,
-              collectionName: 'archives',
-              noteId: noteModel.noteId!,
-            );
-            Get.back();
+            var value = await PlatformAlertDialog(
+              title: "Confirm Delete",
+              cancelText: "Cancel",
+              confirmText: "Delete",
+              content: "Do you want to delete this permenantly?. You won't be able to restore it.",
+              confirmColor: Colors.redAccent,
+            ).show(context);
+
+            if (value) {
+              Database.deleteNote(
+                uid: Get.find<UserController>().user!.uid,
+                collectionName: 'locked',
+                noteId: noteModel.noteId!,
+              );
+              Get.back();
+              Get.snackbar("Delete Completed", "The note was deleted permenently.",
+                  snackPosition: SnackPosition.BOTTOM);
+            }
             break;
         }
       },
       itemBuilder: (BuildContext context) {
         return {
           {
-            'text': isArchived ? 'Make Normal' : 'Send to Archive',
-            'iconData': isArchived ? CupertinoIcons.lock_slash_fill : CupertinoIcons.lock_fill,
+            'text': isLocked ? 'Unlock Note' : 'Lock Note',
+            'iconData': isLocked ? CupertinoIcons.lock_slash_fill : CupertinoIcons.lock_fill,
             "color": Colors.grey.shade800
           },
           {
-            'text': isArchived ? 'Delete Forever' : 'Send to Trash',
-            'iconData': isArchived ? Icons.delete_forever_rounded : Icons.delete_rounded,
+            'text': isLocked ? 'Delete Forever' : 'Send to Trash',
+            'iconData': isLocked ? Icons.delete_forever_rounded : Icons.delete_rounded,
             'color': Colors.redAccent
           }
         }.map((Map<String, dynamic> choice) {
           return PopupMenuItem<String>(
             value: choice['text'],
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Icon(
                   choice['iconData'],

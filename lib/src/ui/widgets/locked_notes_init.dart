@@ -6,8 +6,8 @@ import 'package:notes_app/src/ui/widgets/biometric_box.dart';
 import 'package:notes_app/src/ui/widgets/continue_button.dart';
 import 'package:notes_app/src/ui/widgets/custom_back_button.dart';
 
-class ArchiveInit extends StatelessWidget {
-  ArchiveInit({this.noteModel});
+class LockedNotesInit extends StatelessWidget {
+  LockedNotesInit({this.noteModel});
   final NoteModel? noteModel;
 
   @override
@@ -22,23 +22,43 @@ class ArchiveInit extends StatelessWidget {
               alignment: Alignment.topLeft,
               child: CustomBackButton(),
             ),
+            // Container(
+            //   margin: EdgeInsets.only(bottom: 20),
+            //   padding: EdgeInsets.symmetric(horizontal: Get.width / 60),
+            //   child: Text(
+            //     "INTRODUCING",
+            //     textAlign: TextAlign.center,
+            //     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+            //     strutStyle: StrutStyle(fontSize: 18),
+            //   ),
+            // ),
             CircleAvatar(
-              radius: 120,
+              radius: 100,
             ),
             SizedBox(
-              height: 20,
+              height: 17.5,
             ),
             Container(
               padding: EdgeInsets.symmetric(horizontal: Get.width / 60),
               child: Text(
-                "Keep your personal notes to yourself",
+                "INTRODUCING",
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 30, fontWeight: FontWeight.w700),
-                strutStyle: StrutStyle(fontSize: 32),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.grey.shade800),
+                strutStyle: StrutStyle(fontSize: 18),
+              ),
+            ),
+            SizedBox(height: 15),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: Get.width / 60),
+              child: Text(
+                "Protected-Space",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 35, fontWeight: FontWeight.w700),
+                strutStyle: StrutStyle(fontSize: 37),
               ),
             ),
             SizedBox(
-              height: 20,
+              height: 25,
             ),
             Container(
               padding: EdgeInsets.symmetric(horizontal: Get.width / 60),

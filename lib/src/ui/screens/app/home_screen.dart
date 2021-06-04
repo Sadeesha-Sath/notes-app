@@ -7,7 +7,7 @@ import 'package:notes_app/src/controllers/user_controller.dart';
 import 'package:notes_app/src/helpers/content_trimmer.dart';
 import 'package:notes_app/src/ui/screens/app/note_screen.dart';
 import 'package:notes_app/src/ui/screens/app/profile_screen.dart';
-import 'package:notes_app/src/ui/screens/app/unlock_archives_screen.dart';
+import 'package:notes_app/src/ui/screens/app/unlock_locked_notes_screen.dart';
 import 'package:notes_app/src/ui/widgets/app_bar_button.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -51,7 +51,7 @@ class HomeScreen extends StatelessWidget {
                     icon: Icons.search_rounded,
                   ),
                   AppbarButton(
-                    onTap: () => Get.toNamed(UnlockArchivesScreen.id),
+                    onTap: () => Get.toNamed(UnlockLockedNotesScreen.id),
                     icon: CupertinoIcons.lock_fill,
                   ),
                   AppbarButton(
@@ -116,7 +116,7 @@ class HomeScreen extends StatelessWidget {
                                   onHorizontalDragStart: (details) => draggedId = index,
                                   onHorizontalDragEnd: (details) {
                                     if (_dragController.animationController.value > Get.width / 4)
-                                      print("Archived $index");
+                                      print("Locked $index");
                                     else if (_dragController.animationController.value < 0 &&
                                         _dragController.animationController.value < -1 * (Get.width / 4))
                                       print("Deleted $index");
@@ -137,7 +137,9 @@ class HomeScreen extends StatelessWidget {
                                               Container(
                                                 alignment: Alignment.topLeft,
                                                 child: Text(
-                                                  ContentTrimmer.trimTitle(e.title) ?? ContentTrimmer.trimBody(e.body) ?? "[No Content]",
+                                                  ContentTrimmer.trimTitle(e.title) ??
+                                                      ContentTrimmer.trimBody(e.body) ??
+                                                      "[No Content]",
                                                   strutStyle: StrutStyle(fontSize: 22),
                                                   style: TextStyle(fontSize: 21, fontWeight: FontWeight.w600),
                                                 ),
@@ -257,7 +259,7 @@ class HomeScreen extends StatelessWidget {
               //                 ],
               //               ),
               //             ),
-              //           
+              //
               //             AnimatedBuilder(
               //                 animation: _dragController.animationController,
               //                 builder: (context, child) {

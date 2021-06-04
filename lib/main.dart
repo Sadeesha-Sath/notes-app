@@ -6,12 +6,12 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:notes_app/src/controllers/firebase_auth_controller.dart';
 import 'package:notes_app/src/file_handlers/inherited_preferences.dart';
 import 'package:notes_app/src/file_handlers/preferences_handler.dart';
-import 'package:notes_app/src/ui/screens/app/archives_screen.dart';
+import 'package:notes_app/src/ui/screens/app/locked_notes_screen.dart';
 import 'package:notes_app/src/ui/screens/app/home_screen.dart';
 import 'package:notes_app/src/ui/screens/app/pin_set_screen.dart';
 import 'package:notes_app/src/ui/screens/app/profile_screen.dart';
 import 'package:notes_app/src/ui/screens/app/trash_screen.dart';
-import 'package:notes_app/src/ui/screens/app/unlock_archives_screen.dart';
+import 'package:notes_app/src/ui/screens/app/unlock_locked_notes_screen.dart';
 import 'package:notes_app/src/ui/screens/auth/login_screen.dart';
 import 'package:notes_app/src/ui/screens/auth/register_screen.dart';
 import 'package:notes_app/src/ui/screens/auth/start_screen.dart';
@@ -63,9 +63,9 @@ class _AppState extends State<App> {
                 GetPage(name: RegisterScreen.id, page: () => RegisterScreen()),
                 GetPage(name: HomeScreen.id, page: () => HomeScreen()),
                 GetPage(name: ProfileScreen.id, page: () => ProfileScreen()),
-                GetPage(name: ArchivesScreen.id, page: () => ArchivesScreen()),
+                GetPage(name: LockedNotesScreen.id, page: () => LockedNotesScreen()),
                 GetPage(name: PinSetScreen.id, page: () => PinSetScreen()),
-                GetPage(name: UnlockArchivesScreen.id, page: () => UnlockArchivesScreen()),
+                GetPage(name: UnlockLockedNotesScreen.id, page: () => UnlockLockedNotesScreen()),
                 GetPage(name: TrashScreen.id, page: () => TrashScreen()),
               ],
               theme: InheritedPreferences.of(context)!.preferences['isNightMode']!

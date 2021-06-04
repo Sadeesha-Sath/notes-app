@@ -5,11 +5,11 @@ import 'package:notes_app/src/services/database.dart';
 
 class NotesController extends GetxController {
   Rx<List<NoteModel>?> noteList = Rx<List<NoteModel>?>(null);
-  Rx<List<NoteModel>?> archivedNoteList = Rx<List<NoteModel>?>(null);
+  Rx<List<NoteModel>?> lockedNoteList = Rx<List<NoteModel>?>(null);
   Rx<List<NoteModel>?> deletedNoteList = Rx<List<NoteModel>?>(null);
 
   List<NoteModel>? get notes => noteList.value;
-  List<NoteModel>? get archivedNotes => archivedNoteList.value;
+  List<NoteModel>? get lockedNotes => lockedNoteList.value;
   List<NoteModel>? get deletedNotes => deletedNoteList.value;
 
   @override
@@ -23,7 +23,7 @@ class NotesController extends GetxController {
     super.onInit();
   }
 
-  void bindArchives() {
+  void bindLocked() {
     String uid = Get.find<UserController>().user!.uid;
 
     // if (uid == null) {
@@ -31,7 +31,7 @@ class NotesController extends GetxController {
     //   uid = Get.find<FirebaseAuthController>().user.value!.uid;
     // }
 
-    archivedNoteList.bindStream(Database.noteStream(uid: uid, collectionName: "archives"));
+    lockedNoteList.bindStream(Database.noteStream(uid: uid, collectionName: "locked"));
   }
 
   void bindTrash() {
@@ -39,11 +39,11 @@ class NotesController extends GetxController {
     deletedNoteList.bindStream(Database.noteStream(uid: uid, collectionName: "trash"));
   }
 
-  // @override
-  // void onClose() {
-  //   noteList.close();
-  //   deletedNoteList.close();
-  //   archivedNoteList.close();
-  //   super.onClose();
-  // }
+  @override
+  void onClose() {
+    noteList.close();
+    deletedNoteList.close();
+    lockedNoteList.close();
+    super.onClose();
+  }
 }

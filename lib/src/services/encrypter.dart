@@ -6,8 +6,8 @@ import 'package:notes_app/src/controllers/user_controller.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 
 class EncrypterClass {
-  static String archivesPin = Get.find<UserController>().userModel!.archivesPin!;
-  static final key1 = encrypt.Key.fromUtf8(hashGenerator(string: archivesPin));
+  static String protectedSpacePin = Get.find<UserController>().userModel!.protectedSpacePin!;
+  static final key1 = encrypt.Key.fromUtf8(hashGenerator(string: protectedSpacePin));
   static final key2 = encrypt.Key.fromUtf8(dotenv.env['APP_SPECIFIC_SECRET_KEY']!);
   static var iv = Get.find<UserController>().userModel!.iv;
   static final masterKey =

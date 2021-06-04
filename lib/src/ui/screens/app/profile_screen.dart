@@ -4,7 +4,8 @@ import 'package:get/get.dart';
 import 'package:notes_app/src/controllers/firebase_auth_controller.dart';
 import 'package:notes_app/src/file_handlers/inherited_preferences.dart';
 import 'package:notes_app/src/file_handlers/preferences_handler.dart';
-import 'package:notes_app/src/ui/screens/app/archives_screen.dart';
+import 'package:notes_app/src/ui/screens/app/trash_screen.dart';
+import 'package:notes_app/src/ui/screens/app/unlock_locked_notes_screen.dart';
 import 'package:notes_app/src/ui/widgets/biometric_list_tile.dart';
 import 'package:notes_app/src/ui/widgets/custom_back_button.dart';
 
@@ -124,9 +125,9 @@ class ProfileScreen extends StatelessWidget {
                       Container(
                         child: ListTile(
                           contentPadding: EdgeInsets.symmetric(horizontal: Get.width / 11),
-                          onTap: () => Get.toNamed(ArchivesScreen.id),
+                          onTap: () => Get.toNamed(UnlockLockedNotesScreen.id),
                           title: Text(
-                            "Archives",
+                            "Protected Space",
                             style: TextStyle(
                               color: Color(0xFF070707),
                             ),
@@ -144,7 +145,9 @@ class ProfileScreen extends StatelessWidget {
                       Container(
                         child: ListTile(
                           contentPadding: EdgeInsets.symmetric(horizontal: Get.width / 11),
-                          onTap: () {},
+                          onTap: () {
+                            Get.toNamed(TrashScreen.id);
+                          },
                           title: Text(
                             "Trash",
                             style: TextStyle(
@@ -197,7 +200,7 @@ class ProfileScreen extends StatelessWidget {
                             size: 22,
                           ),
                           title: Text(
-                            "Change Archives Pin",
+                            "Change Protected-Space Pin",
                             style: TextStyle(
                               color: Color(0xFF070707),
                             ),

@@ -11,7 +11,7 @@ class Database {
     try {
       print("Creating database model");
       await _firestore.collection("users").doc(user.uid).set({
-        "archivesPin": user.archivesPin,
+        "protectedSpacePin": user.protectedSpacePin,
         "profileData": user.userData.toMap(),
         "uid": user.uid,
         "iv": user.iv,
@@ -36,13 +36,13 @@ class Database {
     }
   }
 
-  static Future<void> updateArchivesPin({required String uid, required String newPin}) async {
+  static Future<void> updateprotectedSpacePin({required String uid, required String newPin}) async {
     try {
-      _firestore.collection('users').doc(uid).update({"archivesPin": newPin});
+      _firestore.collection('users').doc(uid).update({"protectedSpacePin": newPin});
     } catch (e) {
       print(e);
       Get.snackbar(
-        "Updating Archive Pin failed",
+        "Updating Protected-Space Pin failed",
         e.toString(),
         snackPosition: SnackPosition.BOTTOM,
       );
@@ -75,8 +75,8 @@ class Database {
     if (currentUserData.userData.profileUrl != newUserData.userData.profileUrl) {
       fieldsToUpdate['profileData.profileUrl'] = newUserData.userData.profileUrl;
     }
-    if (currentUserData.archivesPin != newUserData.archivesPin) {
-      fieldsToUpdate['archivesPin'] = newUserData.archivesPin;
+    if (currentUserData.protectedSpacePin != newUserData.protectedSpacePin) {
+      fieldsToUpdate['protectedSpacePin'] = newUserData.protectedSpacePin;
     }
     if (currentUserData.iv != newUserData.iv) {
       fieldsToUpdate['iv'] = newUserData.iv;
@@ -105,7 +105,7 @@ class Database {
         .map((QuerySnapshot query) {
       List<NoteModel> retVal = [];
       query.docs.forEach((element) {
-        if (collectionName == 'archives') {
+        if (collectionName == 'locked') {
           retVal.add(NoteModel.fromDocSnapshotEncrypted(element));
         } else {
           retVal.add(NoteModel.fromDocumentSnapshot(element));
@@ -124,11 +124,11 @@ class Database {
       Map<String, dynamic> updateFields = {};
       if (oldModel.body != newModel.body) {
         updateFields['body'] =
-            collectionName == 'archives' ? EncrypterClass().encryptText(string: newModel.body ?? "") : newModel.body;
+            collectionName == 'locked' ? EncrypterClass().encryptText(string: newModel.body ?? "") : newModel.body;
       }
       if (oldModel.title != newModel.title) {
         updateFields['title'] =
-            collectionName == 'archives' ? EncrypterClass().encryptText(string: newModel.title ?? "") : newModel.title;
+            collectionName == 'locked' ? EncrypterClass().encryptText(string: newModel.title ?? "") : newModel.title;
       }
       _firestore.collection("users").doc(uid).collection(collectionName).doc(oldModel.noteId).update(updateFields);
     } catch (e) {
@@ -160,11 +160,11 @@ class Database {
       {required String uid,
       required String toCollection,
       required String fromCollection,
-      required String noteId,
+  
       required NoteModel noteModel}) async {
     try {
       addNote(uid: uid, collectionName: toCollection, note: noteModel);
-      deleteNote(uid: uid, noteId: noteId, collectionName: fromCollection);
+      deleteNote(uid: uid, noteId: noteModel.noteId!, collectionName: fromCollection);
     } catch (e) {
       print("transfer failed");
       print(e);
@@ -177,16 +177,17 @@ class Database {
     }
   }
 
-  static Future<void> addNote({required String uid, String collectionName = 'notes', required NoteModel note}) async {
+  static Future addNote({required String uid, String collectionName = 'notes', required NoteModel note}) async {
     try {
       final data = {
-        "title": collectionName == "archives" ? EncrypterClass().encryptText(string: note.title ?? "") : note.title,
-        "body": collectionName == "archives" ? EncrypterClass().encryptText(string: note.body ?? "") : note.body,
+        "title": collectionName == "locked" ? EncrypterClass().encryptText(string: note.title ?? "") : note.title,
+        "body": collectionName == "locked" ? EncrypterClass().encryptText(string: note.body ?? "") : note.body,
         "dateCreated": note.dateCreated,
         "isFavourite": note.isFavourite
       };
       if (note.noteId == null) {
-        _firestore.collection('users').doc(uid).collection(collectionName).add(data);
+        var noteResponse = await _firestore.collection('users').doc(uid).collection(collectionName).add(data);
+        return noteResponse.id;
       } else {
         // To Preserve the noteID for easier integration when transferring notes between collections
         _firestore.collection('users').doc(uid).collection(collectionName).doc(note.noteId).set(data);

@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:notes_app/src/file_handlers/inherited_preferences.dart';
 import 'package:notes_app/src/file_handlers/preferences_handler.dart';
 
-
 class BiometricListTile extends StatefulWidget {
   const BiometricListTile({
     Key? key,
@@ -12,8 +11,6 @@ class BiometricListTile extends StatefulWidget {
   @override
   _BiometricListTileState createState() => _BiometricListTileState();
 }
-
-
 
 class _BiometricListTileState extends State<BiometricListTile> {
   @override
@@ -33,7 +30,7 @@ class _BiometricListTileState extends State<BiometricListTile> {
           color: Color(0xFF656565),
         ),
         title: Text(
-          "Use Biometric Authentication for Archives",
+          "Use Biometric Authentication for Protected-Space",
           style: TextStyle(
             color: Color(0xFF070707),
           ),

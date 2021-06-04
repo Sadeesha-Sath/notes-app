@@ -62,25 +62,25 @@ class UserController extends GetxController {
   }
 
   bool isPinSet() {
-    if (_userModel.value?.archivesPin == null) return false;
+    if (_userModel.value?.protectedSpacePin == null) return false;
     return true;
   }
 
   bool isPinCorrect(String pin) {
-    if (pin == _userModel.value!.archivesPin) return true;
+    if (pin == _userModel.value!.protectedSpacePin) return true;
     return false;
   }
 
   Future<bool> setPin(int pin) async {
     String hashedPin = EncrypterClass.hashGenerator(pin: pin);
     print("got into setpin");
-    if (_userModel.value?.archivesPin == null) {
+    if (_userModel.value?.protectedSpacePin == null) {
       print("arrived through null check");
       _userModel.update((val) {
-        val!.archivesPin = hashedPin;
+        val!.protectedSpacePin = hashedPin;
       });
       print(hashedPin);
-      // generating an iv when the archive is initialized
+      // generating an iv when the Protected-Space is initialized
       // this iv will never change
       enc.IV iv = await EncrypterClass.getNewIv;
       EncrypterClass.loadIv(iv.base64);
@@ -89,7 +89,7 @@ class UserController extends GetxController {
       return true;
     } else if (isPinCorrect(hashedPin)) {
       _userModel.update((val) {
-        val!.archivesPin = hashedPin;
+        val!.protectedSpacePin = hashedPin;
       });
       updatePin(hashedPin);
       return true;
@@ -99,6 +99,6 @@ class UserController extends GetxController {
 
   void updatePin(String pin) async {
     print("got in to update pin");
-    await Database.updateArchivesPin(uid: _userModel.value!.uid, newPin: pin);
+    await Database.updateprotectedSpacePin(uid: _userModel.value!.uid, newPin: pin);
   }
 }

@@ -6,11 +6,11 @@ import 'package:notes_app/src/helpers/content_trimmer.dart';
 import 'package:notes_app/src/ui/screens/app/note_screen.dart';
 import 'package:notes_app/src/ui/widgets/app_bar_button.dart';
 
-class ArchivesScreen extends GetView<NotesController> {
-  static final String id = "/archives";
+class LockedNotesScreen extends GetView<NotesController> {
+  static final String id = "/locked_notes";
   @override
   Widget build(BuildContext context) {
-    controller.bindArchives();
+    controller.bindLocked();
     return Scaffold(
       body: SafeArea(
         top: false,
@@ -28,7 +28,7 @@ class ArchivesScreen extends GetView<NotesController> {
                 backgroundColor: Color(0xFFFAFAFA),
                 actions: [
                   AppbarButton(
-                    onTap: () => Get.toNamed(ArchivesScreen.id),
+                    onTap: () => Get.toNamed(LockedNotesScreen.id),
                     icon: CupertinoIcons.lock_slash_fill,
                   ),
                   AppbarButton(
@@ -46,14 +46,14 @@ class ArchivesScreen extends GetView<NotesController> {
                   title: GetX<NotesController>(
                     init: Get.find<NotesController>(),
                     builder: (NotesController notesController) {
-                      if (notesController.archivedNotes != null) {
-                        if (notesController.archivedNotes!.isNotEmpty) {
+                      if (notesController.lockedNotes != null) {
+                        if (notesController.lockedNotes!.isNotEmpty) {
                           return Row(
                             crossAxisAlignment: CrossAxisAlignment.baseline,
                             textBaseline: TextBaseline.alphabetic,
                             children: [
                               Text(
-                                "${notesController.archivedNotes!.length} Notes",
+                                "${notesController.lockedNotes!.length} Notes",
                                 style: TextStyle(color: Colors.black, fontSize: 33),
                               ),
                               SizedBox(
@@ -100,20 +100,19 @@ class ArchivesScreen extends GetView<NotesController> {
               GetX<NotesController>(
                   init: Get.find<NotesController>(),
                   builder: (NotesController notesController) {
-                    // notesController.bindArchives();
-                    if (notesController.archivedNotes != null) {
-                      if (notesController.archivedNotes!.isNotEmpty) {
+                    if (notesController.lockedNotes != null) {
+                      if (notesController.lockedNotes!.isNotEmpty) {
                         return SliverGrid.count(
                           crossAxisCount: MediaQuery.of(context).orientation == Orientation.portrait ? 2 : 3,
                           childAspectRatio: 1,
-                          children: notesController.archivedNotes!.map((e) {
+                          children: notesController.lockedNotes!.map((e) {
                             return Container(
                               margin: EdgeInsets.all(7.5),
                               child: GestureDetector(
                                 onTap: () {
                                   Get.to(() => NoteScreen(
                                         noteModel: e,
-                                        collectionName: 'archives',
+                                        collectionName: 'locked',
                                       ));
                                 },
                                 child: Material(
@@ -128,7 +127,9 @@ class ArchivesScreen extends GetView<NotesController> {
                                         Container(
                                           alignment: Alignment.topLeft,
                                           child: Text(
-                                            ContentTrimmer.trimTitle(e.title) ?? ContentTrimmer.trimBody(e.body) ?? "[No Content]",
+                                            ContentTrimmer.trimTitle(e.title) ??
+                                                ContentTrimmer.trimBody(e.body) ??
+                                                "[No Content]",
                                             strutStyle: StrutStyle(fontSize: 22),
                                             style: TextStyle(fontSize: 21, fontWeight: FontWeight.w600),
                                           ),
@@ -159,7 +160,7 @@ class ArchivesScreen extends GetView<NotesController> {
                             margin: EdgeInsets.symmetric(vertical: 20),
                             child: Center(
                               child: Text(
-                                "No secret notes yet. Send an existing note to Archives to get started",
+                                "No secret notes yet. Send an existing note to Protected-Space to get started",
                                 style: TextStyle(fontSize: 18),
                                 strutStyle: StrutStyle(fontSize: 20),
                               ),

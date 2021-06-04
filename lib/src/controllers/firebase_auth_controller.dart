@@ -58,7 +58,6 @@ class FirebaseAuthController extends GetxController {
       Get.find<UserController>().clear();
       print("Signed out user");
       Get.find<DragController>().dispose();
-      // Get.find<ArchivesAuthController>().dispose();
       Get.offAllNamed(StartScreen.id);
     } catch (e) {
       print(e);
