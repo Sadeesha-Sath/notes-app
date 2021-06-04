@@ -31,10 +31,9 @@ class UserController extends GetxController {
       try {
         print("getting user data from database");
 
-        _userModel.value = await Database().getUser(user.uid);
+        _userModel.value = await Database.getUser(user.uid);
         print("getting user data successful");
       } catch (e) {
-        // TODO Find the null passing to string error
         print('error catched 1');
         print(e);
         UserModel _user = UserModel(
@@ -47,7 +46,7 @@ class UserController extends GetxController {
         print("created model");
         try {
           print('creating a new user');
-          await Database().createNewUser(_user);
+          await Database.createNewUser(_user);
           this._userModel.value = _user;
         } catch (e) {
           print('error catched 2');
@@ -85,7 +84,7 @@ class UserController extends GetxController {
       // this iv will never change
       enc.IV iv = await EncrypterClass.getNewIv;
       EncrypterClass.loadIv(iv.base64);
-      await Database().updateIV(uid: userModel!.uid, iv: iv.base64);
+      await Database.updateIV(uid: userModel!.uid, iv: iv.base64);
       updatePin(hashedPin);
       return true;
     } else if (isPinCorrect(hashedPin)) {
@@ -100,6 +99,6 @@ class UserController extends GetxController {
 
   void updatePin(String pin) async {
     print("got in to update pin");
-    await Database().updateArchivesPin(uid: _userModel.value!.uid, newPin: pin);
+    await Database.updateArchivesPin(uid: _userModel.value!.uid, newPin: pin);
   }
 }

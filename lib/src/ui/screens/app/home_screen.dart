@@ -22,7 +22,9 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         backgroundColor: Color(0xFF303030),
-        onPressed: () {},
+        onPressed: () {
+          Get.to(() => NoteScreen.newNote());
+        },
         child: Icon(
           Icons.add,
           size: 30,

@@ -1,14 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:encrypt/encrypt.dart';
 import 'package:get/get.dart';
 import 'package:notes_app/src/models/note_model.dart';
 import 'package:notes_app/src/models/user.dart';
 import 'package:notes_app/src/services/encrypter.dart';
 
 class Database {
-  FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  static FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<bool> createNewUser(UserModel user) async {
+  static Future<bool> createNewUser(UserModel user) async {
     try {
       print("Creating database model");
       await _firestore.collection("users").doc(user.uid).set({
@@ -25,7 +24,7 @@ class Database {
     }
   }
 
-  Future<UserModel> getUser(String uid) async {
+  static Future<UserModel> getUser(String uid) async {
     try {
       DocumentSnapshot _doc = await _firestore.collection("users").doc(uid).get();
       print('getting data from cloud successful');
@@ -37,7 +36,7 @@ class Database {
     }
   }
 
-  Future<void> updateArchivesPin({required String uid, required String newPin}) async {
+  static Future<void> updateArchivesPin({required String uid, required String newPin}) async {
     try {
       _firestore.collection('users').doc(uid).update({"archivesPin": newPin});
     } catch (e) {
@@ -51,7 +50,7 @@ class Database {
     }
   }
 
-  Future<void> updateIV({required String uid, required String iv}) async {
+  static Future<void> updateIV({required String uid, required String iv}) async {
     try {
       _firestore.collection('users').doc(uid).update({"iv": iv});
     } catch (e) {
@@ -65,7 +64,7 @@ class Database {
     }
   }
 
-  Future<void> updateUser({required UserModel currentUserData, required UserModel newUserData}) async {
+  static Future<void> updateUser({required UserModel currentUserData, required UserModel newUserData}) async {
     Map<String, dynamic> fieldsToUpdate = {};
     if (currentUserData.userData.name != newUserData.userData.name) {
       fieldsToUpdate['profileData.name'] = newUserData.userData.name;
@@ -96,7 +95,7 @@ class Database {
     }
   }
 
-  Stream<List<NoteModel>> noteStream({required String uid, required String collectionName}) {
+  static Stream<List<NoteModel>> noteStream({required String uid, required String collectionName}) {
     return _firestore
         .collection("users")
         .doc(uid)
@@ -116,7 +115,7 @@ class Database {
     });
   }
 
-  Future<void> updateNote(
+  static Future<void> updateNote(
       {required String uid,
       required String collectionName,
       required NoteModel oldModel,
@@ -146,7 +145,7 @@ class Database {
     }
   }
 
-  Future<void> updateFavourite({required String uid, required String noteId, required bool isFavourite}) async {
+  static Future<void> updateFavourite({required String uid, required String noteId, required bool isFavourite}) async {
     try {
       _firestore.collection('users').doc(uid).collection('notes').doc(noteId).update({"isFavourite": isFavourite});
     } catch (e) {
@@ -160,7 +159,7 @@ class Database {
     }
   }
 
-  Future<void> transferNote(
+  static Future<void> transferNote(
       {required String uid,
       required String toCollection,
       required String fromCollection,
@@ -168,7 +167,7 @@ class Database {
       required NoteModel noteModel}) async {
     try {
       addNote(uid: uid, collectionName: toCollection, note: noteModel);
-      // deleteNote(uid: uid, noteId: noteId, collectionName: fromCollection);
+      deleteNote(uid: uid, noteId: noteId, collectionName: fromCollection);
     } catch (e) {
       print("transfer failed");
       print(e);
@@ -181,7 +180,7 @@ class Database {
     }
   }
 
-  Future<void> addNote({required String uid, String collectionName = 'notes', required NoteModel note}) async {
+  static Future<void> addNote({required String uid, String collectionName = 'notes', required NoteModel note}) async {
     try {
       final data = {
         "title": collectionName == "archives" ? EncrypterClass().encryptText(string: note.title ?? "") : note.title,
@@ -207,7 +206,7 @@ class Database {
     }
   }
 
-  Future<void> deleteNote({required String uid, String collectionName = 'trash', required String noteId}) async {
+  static Future<void> deleteNote({required String uid, String collectionName = 'trash', required String noteId}) async {
     try {
       _firestore.collection('users').doc(uid).collection(collectionName).doc(noteId).delete();
     } catch (e) {

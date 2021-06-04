@@ -24,6 +24,7 @@ class NoteModel {
         dateCreated = documentSnapshot['dateCreated'],
         isFavourite = documentSnapshot['isFavourite'];
 
+
   String get getDateCreated {
     var date = dateCreated.toDate();
     var monthName = getMonthName(date.month);

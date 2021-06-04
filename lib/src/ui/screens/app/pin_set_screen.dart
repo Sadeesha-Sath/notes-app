@@ -69,14 +69,14 @@ class PinSetScreen extends StatelessWidget {
                         ContinueButton(onPressed: () {
                           if (noteModel != null) {
                             if (noteModel!.noteId != null) {
-                              Database().transferNote(
+                              Database.transferNote(
                                   uid: Get.find<UserController>().user!.uid,
                                   toCollection: 'archives',
                                   fromCollection: 'notes',
                                   noteId: noteModel!.noteId!,
                                   noteModel: noteModel!);
                             } else {
-                              Database().addNote(
+                              Database.addNote(
                                   uid: Get.find<UserController>().user!.uid,
                                   note: noteModel!,
                                   collectionName: 'archives');

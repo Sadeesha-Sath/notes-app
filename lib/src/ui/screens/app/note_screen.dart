@@ -24,13 +24,15 @@ class NoteScreen extends StatefulWidget {
   }) : noteModel = NoteModel(noteId: null, dateCreated: Timestamp.now(), isFavourite: false);
 
   @override
-  _NoteScreenState createState() =>
-      _NoteScreenState(noteModel: noteModel, collectionName: collectionName, isEditable: isNewNote);
+  _NoteScreenState createState() => _NoteScreenState(
+      noteModel: noteModel, collectionName: collectionName, isEditable: isNewNote, isNewNote: isNewNote);
 }
 
 class _NoteScreenState extends State<NoteScreen> {
-  _NoteScreenState({this.collectionName = "notes", required this.noteModel, required this.isEditable});
+  _NoteScreenState(
+      {this.collectionName = "notes", required this.noteModel, required this.isEditable, required this.isNewNote});
 
+  bool isNewNote;
   bool isEditable;
   NoteModel noteModel;
   String collectionName;
@@ -65,7 +67,8 @@ class _NoteScreenState extends State<NoteScreen> {
       appBar: AppBar(
         leading: CustomBackButton(),
         backgroundColor: Colors.white,
-        actions: getAppbarActions(isArchived, isInTrash),
+        actions:
+            getAppbarActions(isArchived, isInTrash, titleController: _titleController, bodyController: _bodyController),
       ),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: Get.width / 20, vertical: Get.height / 45),
@@ -106,7 +109,7 @@ class _NoteScreenState extends State<NoteScreen> {
           decoration: textFieldDecoration.copyWith(
             contentPadding: EdgeInsets.symmetric(horizontal: 22, vertical: 16),
             hintText: "Text",
-            hintStyle: TextStyle(fontSize: 18, color: Colors.grey.shade900),
+            hintStyle: TextStyle(fontSize: 18),
           ),
           autocorrect: true,
           maxLines: null,
@@ -134,12 +137,43 @@ class _NoteScreenState extends State<NoteScreen> {
     ];
   }
 
-  List<Widget> getAppbarActions(bool isArchived, bool isInTrash) {
+  List<Widget> getAppbarActions(bool isArchived, bool isInTrash,
+      {required TextEditingController titleController, required TextEditingController bodyController}) {
     if (isEditable) {
       return [
         Container(
           child: TextButton(
-            onPressed: () {},
+            onPressed: () async {
+              if (isNewNote) {
+                setState(() {
+                  noteModel.title = titleController.text;
+                  noteModel.body = bodyController.text;
+                });
+                Database.addNote(uid: Get.find<UserController>().userModel!.uid, note: noteModel);
+                setState(() {
+                  isNewNote = false;
+                  isEditable = false;
+                });
+              } else {
+                Database.updateNote(
+                  uid: Get.find<UserController>().userModel!.uid,
+                  collectionName: collectionName,
+                  oldModel: noteModel,
+                  newModel: NoteModel(
+                    noteId: noteModel.noteId,
+                    dateCreated: noteModel.dateCreated,
+                    isFavourite: noteModel.isFavourite,
+                    title: titleController.text,
+                    body: bodyController.text,
+                  ),
+                );
+                setState(() {
+                  noteModel.title = titleController.text;
+                  noteModel.body = bodyController.text;
+                  isEditable = false;
+                });
+              }
+            },
             child: Text(
               "Save",
               style: TextStyle(color: Colors.blueAccent, fontSize: 18),
@@ -149,15 +183,20 @@ class _NoteScreenState extends State<NoteScreen> {
         Container(
           margin: EdgeInsets.only(right: 10),
           child: TextButton(
-              onPressed: () {
+            onPressed: () {
+              if (isNewNote) {
+                Get.back();
+              } else {
                 setState(() {
                   isEditable = false;
                 });
-              },
-              child: Text(
-                "Discard",
-                style: TextStyle(color: Colors.redAccent, fontSize: 18),
-              )),
+              }
+            },
+            child: Text(
+              "Discard",
+              style: TextStyle(color: Colors.redAccent, fontSize: 18),
+            ),
+          ),
         )
       ];
     }
@@ -180,7 +219,7 @@ class _NoteScreenState extends State<NoteScreen> {
                 });
                 // When creating a new note, avoid updating the favourites before the note is pushed. It will be pushed with the note content.
                 if (noteModel.noteId != null) {
-                  Database().updateFavourite(
+                  Database.updateFavourite(
                     uid: Get.find<UserController>().user!.uid,
                     noteId: noteModel.noteId!,
                     isFavourite: noteModel.isFavourite,
@@ -196,7 +235,7 @@ class _NoteScreenState extends State<NoteScreen> {
         icon: Icons.restore_page_rounded,
         onTap: () async {
           // TODO Add confirmations
-          Database().transferNote(
+          Database.transferNote(
               uid: Get.find<UserController>().user!.uid,
               toCollection: 'notes',
               fromCollection: 'trash',
@@ -210,7 +249,7 @@ class _NoteScreenState extends State<NoteScreen> {
         icon: Icons.delete_forever_rounded,
         onTap: () async {
           // TODO Add confirmations
-          Database().deleteNote(uid: Get.find<UserController>().user!.uid, noteId: noteModel.noteId!);
+          Database.deleteNote(uid: Get.find<UserController>().user!.uid, noteId: noteModel.noteId!);
 
           Get.back();
         },
@@ -232,7 +271,7 @@ class _NoteScreenState extends State<NoteScreen> {
               setState(() {
                 collectionName = 'archives';
               });
-              Database().transferNote(
+              Database.transferNote(
                   uid: Get.find<UserController>().user!.uid,
                   toCollection: 'archives',
                   fromCollection: 'notes',
@@ -251,7 +290,7 @@ class _NoteScreenState extends State<NoteScreen> {
             setState(() {
               collectionName = 'notes';
             });
-            Database().transferNote(
+            Database.transferNote(
                 uid: Get.find<UserController>().user!.uid,
                 toCollection: 'notes',
                 fromCollection: 'archives',
@@ -260,7 +299,7 @@ class _NoteScreenState extends State<NoteScreen> {
             break;
           case "Send to Trash":
             // Add to Trash
-            Database().transferNote(
+            Database.transferNote(
                 uid: Get.find<UserController>().user!.uid,
                 toCollection: 'trash',
                 fromCollection: collectionName,
@@ -270,7 +309,7 @@ class _NoteScreenState extends State<NoteScreen> {
             break;
           case "Delete Forever":
             // Add to Trash
-            Database().deleteNote(
+            Database.deleteNote(
               uid: Get.find<UserController>().user!.uid,
               collectionName: 'archives',
               noteId: noteModel.noteId!,
