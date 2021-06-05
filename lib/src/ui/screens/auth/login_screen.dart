@@ -5,7 +5,7 @@ import 'package:notes_app/src/controllers/firebase_auth_controller.dart';
 import 'package:notes_app/src/ui/screens/auth/register_screen.dart';
 import 'package:notes_app/src/ui/ui_constants.dart';
 import 'package:notes_app/src/ui/widgets/custom_back_button.dart';
-import 'package:notes_app/src/ui/widgets/password_field.dart';
+import 'package:notes_app/src/ui/widgets/auth/password_field.dart';
 
 class LoginScreen extends StatelessWidget {
   static final String id = '/login';
@@ -62,7 +62,7 @@ class LoginScreen extends StatelessWidget {
                   controller: _emailField,
                   decoration: textFieldDecoration.copyWith(
                     prefixIcon: Icon(Icons.person),
-                    hintText: "Enter your email / username",
+                    hintText: "Enter your email",
                   ),
                 ),
               ),

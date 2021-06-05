@@ -16,8 +16,8 @@ import 'package:notes_app/src/ui/screens/app/unlock_locked_notes_screen.dart';
 import 'package:notes_app/src/ui/screens/auth/login_screen.dart';
 import 'package:notes_app/src/ui/screens/auth/register_screen.dart';
 import 'package:notes_app/src/ui/screens/auth/start_screen.dart';
-import 'package:notes_app/src/ui/widgets/loading.dart';
-import 'package:notes_app/src/ui/widgets/something_went_wrong.dart';
+import 'package:notes_app/src/ui/widgets/auth/loading.dart';
+import 'package:notes_app/src/ui/widgets/auth/something_went_wrong.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

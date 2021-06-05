@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:notes_app/src/ui/screens/auth/login_screen.dart';
 import 'package:notes_app/src/ui/screens/auth/register_screen.dart';
-import 'package:notes_app/src/ui/widgets/social_media_login_bottomsheet.dart';
+import 'package:notes_app/src/ui/widgets/auth/social_media_login_bottomsheet.dart';
 
 class StartScreen extends StatelessWidget {
   static final id = "/start";
