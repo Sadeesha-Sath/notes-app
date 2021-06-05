@@ -9,6 +9,7 @@ import 'package:notes_app/src/ui/widgets/auth/password_field.dart';
 
 class RegisterScreen extends StatelessWidget {
   static final String id = "/register";
+  final TextEditingController _nameField = TextEditingController();
   final TextEditingController _emailField = TextEditingController();
   final TextEditingController _password1Field = TextEditingController();
   final TextEditingController _password2Field = TextEditingController();
@@ -48,17 +49,34 @@ class RegisterScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
                 child: TextField(
                   style: TextStyle(fontSize: 16),
+                  keyboardType: TextInputType.text,
+                  textAlign: TextAlign.left,
+                  controller: _nameField,
+                  decoration: textFieldDecoration.copyWith(
+                    prefixIcon: Icon(Icons.person),
+                    hintText: "Enter your name",
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+                child: TextField(
+                  style: TextStyle(fontSize: 16),
                   keyboardType: TextInputType.emailAddress,
                   textAlign: TextAlign.left,
                   controller: _emailField,
                   decoration: textFieldDecoration.copyWith(
-                    prefixIcon: Icon(Icons.person),
+                    prefixIcon: Icon(Icons.email),
                     hintText: "Enter your email",
                   ),
                 ),
               ),
               PasswordTextField(controller: _password1Field, key: ValueKey(1)),
-              PasswordTextField(controller: _password2Field, hintText: "Retype Password", key: ValueKey(2),),
+              PasswordTextField(
+                controller: _password2Field,
+                hintText: "Retype Password",
+                key: ValueKey(2),
+              ),
               Spacer(),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 40),
@@ -70,11 +88,14 @@ class RegisterScreen extends StatelessWidget {
                   onPressed: () {
                     if (_password1Field.text.length > 8 && _password2Field.text.length > 8) {
                       if (_password1Field.text == _password2Field.text)
-                        Get.find<FirebaseAuthController>().registerUser(_emailField.text, _password1Field.text);
+                        Get.find<FirebaseAuthController>()
+                            .registerUser(_emailField.text, _password1Field.text, _nameField.text);
                       else
-                        Get.snackbar("Passwords don't match", "Please check the passwords and try again", snackPosition: SnackPosition.BOTTOM, duration: Duration(seconds: 3));
+                        Get.snackbar("Passwords don't match", "Please check the passwords and try again",
+                            snackPosition: SnackPosition.BOTTOM, duration: Duration(seconds: 3));
                     } else {
-                      Get.snackbar("Password is too short", "The password must be at least 8 characters long.",snackPosition: SnackPosition.BOTTOM, duration: Duration(seconds: 3));
+                      Get.snackbar("Password is too short", "The password must be at least 8 characters long.",
+                          snackPosition: SnackPosition.BOTTOM, duration: Duration(seconds: 3));
                     }
                   },
                   child: Center(

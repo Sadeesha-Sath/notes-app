@@ -36,6 +36,7 @@ class UserController extends GetxController {
         print('error catched 1');
         print(e);
         UserModel _user = UserModel(
+          name: user.displayName ?? user.email!.trim().split("@")[0],
           uid: user.uid,
         );
         print("created model");
@@ -50,6 +51,12 @@ class UserController extends GetxController {
       }
       print(_userModel.value?.uid);
     }
+  }
+
+  void updateName(String name) {
+    _userModel.update((val) {
+      val!.name = name;
+    });
   }
 
   void clear() {

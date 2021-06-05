@@ -10,56 +10,77 @@ class UserSection extends GetView<UserController> {
       padding: EdgeInsets.symmetric(horizontal: Get.width / 20),
       child: Column(
         children: [
-          CircleAvatar(
-            foregroundImage: controller.user?.photoURL != null
-                ? NetworkImage(controller.user!.photoURL!)
-                : null,
-            radius: 36,
+          Obx(
+            () => CircleAvatar(
+              foregroundImage: controller.user?.photoURL != null ? NetworkImage(controller.user!.photoURL!) : null,
+              radius: 36,
+            ),
           ),
           SizedBox(height: 5),
-          Text(
-            controller.user!.displayName!,
-            style: TextStyle(fontSize: 27),
+          Obx(
+            () => Text(
+              controller.userModel!.name,
+              style: TextStyle(fontSize: 27),
+            ),
           ),
           SizedBox(height: 3),
-          Text(
-            controller.user!.email!,
-            style: TextStyle(color: Colors.grey.shade700, fontSize: 16),
+          Obx(
+            () => Text(
+              controller.user!.email!,
+              style: TextStyle(color: Colors.grey.shade700, fontSize: 16),
+            ),
           ),
           SizedBox(height: 9),
           Container(
             padding: EdgeInsets.symmetric(horizontal: 115),
-            child: ElevatedButton(
-              style: ButtonStyle(
-                elevation: MaterialStateProperty.all(1.5),
-                padding: MaterialStateProperty.all(EdgeInsets.all(8.5)),
-                shape: MaterialStateProperty.all(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
+            child: Stack(
+              children: [
+                ElevatedButton(
+                  style: ButtonStyle(
+                    elevation: MaterialStateProperty.all(1.5),
+                    padding: MaterialStateProperty.all(EdgeInsets.all(8.5)),
+                    shape: MaterialStateProperty.all(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                  ),
+                  onPressed: () {
+                    Get.toNamed(EditProfileScreen.id);
+                  },
+                  child: Row(
+                    children: [
+                      Spacer(
+                        flex: 7,
+                      ),
+                      Text(
+                        "Edit Profile",
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      Icon(
+                        Icons.arrow_forward_ios_rounded,
+                        size: 18,
+                      ),
+                      Spacer(
+                        flex: 2,
+                      )
+                    ],
                   ),
                 ),
-              ),
-              onPressed: () {
-                Get.toNamed(EditProfileScreen.id);
-              },
-              child: Row(
-                children: [
-                  Spacer(
-                    flex: 7,
-                  ),
-                  Text(
-                    "Edit Profile",
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  Icon(
-                    Icons.arrow_forward_ios_rounded,
-                    size: 18,
-                  ),
-                  Spacer(
-                    flex: 2,
-                  )
-                ],
-              ),
+                Obx(
+                  () => !controller.user!.emailVerified
+                      ? Positioned(
+                          right: 2,
+                          top: 2,
+                          child: Container(
+                            width: 14,
+                            height: 14,
+                            decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.redAccent),
+                          ),
+                        )
+                      : Container(),
+                ),
+              ],
             ),
           ),
         ],

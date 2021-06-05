@@ -33,10 +33,10 @@ class FirebaseAuthController extends GetxController {
     }
   }
 
-  void registerUser(String email, String password) async {
+  void registerUser(String email, String password, String name) async {
     try {
       var response = await _auth.createUserWithEmailAndPassword(email: email.trim(), password: password);
-      await response.user!.updateProfile(displayName: email.trim().split("@")[0]);
+      await response.user!.updateProfile(displayName:name == "" ? email.trim().split("@")[0]: name);
     } catch (e) {
       print(e);
       Get.snackbar("Creating User Account was Unsuccessful", e.toString(), snackPosition: SnackPosition.BOTTOM);

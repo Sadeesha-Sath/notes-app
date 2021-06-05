@@ -61,7 +61,7 @@ class LoginScreen extends StatelessWidget {
                   textAlign: TextAlign.left,
                   controller: _emailField,
                   decoration: textFieldDecoration.copyWith(
-                    prefixIcon: Icon(Icons.person),
+                    prefixIcon: Icon(Icons.email),
                     hintText: "Enter your email",
                   ),
                 ),

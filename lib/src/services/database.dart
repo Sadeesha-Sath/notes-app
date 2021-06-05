@@ -13,6 +13,7 @@ class Database {
       await _firestore.collection("users").doc(user.uid).set({
         "protectedSpacePin": user.protectedSpacePin,
         "uid": user.uid,
+        "name": user.name,
         "iv": user.iv,
       });
       print("uploaded to firestore");
@@ -35,13 +36,27 @@ class Database {
     }
   }
 
-  static Future<void> updateprotectedSpacePin({required String uid, required String newPin}) async {
+  static Future<void> updateName(String uid, String name) async {
     try {
-      _firestore.collection('users').doc(uid).update({"protectedSpacePin": newPin});
+      await _firestore.collection("users").doc(uid).update({"name": name});
     } catch (e) {
       print(e);
       Get.snackbar(
-        "Updating Protected-Space Pin failed",
+        "Updating name failed",
+        e.toString(),
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      rethrow;
+    }
+  }
+
+  static Future<void> updateprotectedSpacePin({required String uid, required String newPin}) async {
+    try {
+      await _firestore.collection('users').doc(uid).update({"protectedSpacePin": newPin});
+    } catch (e) {
+      print(e);
+      Get.snackbar(
+        "Updating Protected Space Pin failed",
         e.toString(),
         snackPosition: SnackPosition.BOTTOM,
       );
@@ -62,7 +77,6 @@ class Database {
       rethrow;
     }
   }
-
 
   static Stream<List<NoteModel>> noteStream({required String uid, required String collectionName}) {
     return _firestore
