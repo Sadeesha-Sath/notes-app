@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:notes_app/src/models/note_model.dart';
 import 'package:notes_app/src/models/user.dart';
-import 'package:notes_app/src/services/encrypter.dart';
+import 'package:notes_app/src/services/encrypter_class.dart';
 
 class Database {
   static FirebaseFirestore _firestore = FirebaseFirestore.instance;

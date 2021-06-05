@@ -5,7 +5,7 @@ import 'package:notes_app/src/controllers/firebase_auth_controller.dart';
 import 'package:notes_app/src/models/user.dart';
 import 'package:notes_app/src/models/user_data.dart';
 import 'package:notes_app/src/services/database.dart';
-import 'package:notes_app/src/services/encrypter.dart';
+import 'package:notes_app/src/services/encrypter_class.dart';
 
 class UserController extends GetxController {
   Rx<UserModel?> _userModel = Rx<UserModel?>(null);

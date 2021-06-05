@@ -2,14 +2,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:notes_app/src/controllers/firebase_auth_controller.dart';
+import 'package:notes_app/src/controllers/user_controller.dart';
 import 'package:notes_app/src/file_handlers/inherited_preferences.dart';
 import 'package:notes_app/src/file_handlers/preferences_handler.dart';
+import 'package:notes_app/src/ui/screens/app/edit_profile_screen.dart';
 import 'package:notes_app/src/ui/screens/app/trash_screen.dart';
 import 'package:notes_app/src/ui/screens/app/unlock_locked_notes_screen.dart';
 import 'package:notes_app/src/ui/widgets/biometric_list_tile.dart';
 import 'package:notes_app/src/ui/widgets/custom_back_button.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends GetView<UserController> {
   static final id = '/profile';
   // final FirebaseAuthController _authController = Get.put(FirebaseAuthController());
   final FirebaseAuthController _authController = Get.find<FirebaseAuthController>();
@@ -33,20 +35,23 @@ class ProfileScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       CircleAvatar(
+                        foregroundImage: controller.userModel!.userData.profileUrl != null
+                            ? NetworkImage(controller.userModel!.userData.profileUrl!)
+                            : null,
                         radius: 36,
                       ),
                       SizedBox(
                         height: 5,
                       ),
                       Text(
-                        "John Doe",
+                        controller.userModel!.userData.name,
                         style: TextStyle(fontSize: 27),
                       ),
                       SizedBox(
                         height: 3,
                       ),
                       Text(
-                        "JohnDoe@abc.com",
+                        controller.userModel!.userData.email,
                         style: TextStyle(color: Colors.grey.shade700, fontSize: 16),
                       ),
                       SizedBox(
@@ -63,7 +68,9 @@ class ProfileScreen extends StatelessWidget {
                               ),
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            Get.toNamed(EditProfileScreen.id);
+                          },
                           child: Row(
                             children: [
                               Spacer(
@@ -107,7 +114,7 @@ class ProfileScreen extends StatelessWidget {
                           contentPadding: EdgeInsets.symmetric(horizontal: Get.width / 11),
                           onTap: () {},
                           leading: Icon(
-                            Icons.favorite_outline_rounded,
+                            Icons.favorite_rounded,
                             color: Color(0xFF656565),
                           ),
                           trailing: Icon(

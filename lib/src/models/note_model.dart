@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:notes_app/src/services/encrypter.dart';
+import 'package:notes_app/src/services/encrypter_class.dart';
 
 class NoteModel {
   String? body;

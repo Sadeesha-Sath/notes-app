@@ -137,7 +137,7 @@ class TrashScreen extends GetView<NotesController> {
               }
               return Container();
             }
-            return CircularProgressIndicator.adaptive();
+            return Center(child: CircularProgressIndicator.adaptive());
           },
         )
 
