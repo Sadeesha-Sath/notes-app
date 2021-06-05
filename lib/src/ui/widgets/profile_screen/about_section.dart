@@ -1,5 +1,5 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:notes_app/src/ui/widgets/profile_screen/profile_screen_listtile.dart';
 
 class AboutSection extends StatelessWidget {
@@ -22,12 +22,13 @@ class AboutSection extends StatelessWidget {
           ),
           ProfileScreenListTile(
             title: "Rate Us",
-            icon: Icons.star,
+            icon: Icons.star_outline_outlined,
             onTap: () {},
           ),
           ProfileScreenListTile(
             title: "View Licences",
-            icon: Icons.document_scanner_rounded,
+            // icon: Icons.document_scanner_outlined,
+            icon: CupertinoIcons.doc_text,
             onTap: () {
               showLicensePage(context: context);
             },

@@ -12,7 +12,6 @@ class Database {
       print("Creating database model");
       await _firestore.collection("users").doc(user.uid).set({
         "protectedSpacePin": user.protectedSpacePin,
-        "profileData": user.userData.toMap(),
         "uid": user.uid,
         "iv": user.iv,
       });
@@ -64,36 +63,6 @@ class Database {
     }
   }
 
-  static Future<void> updateUser({required UserModel currentUserData, required UserModel newUserData}) async {
-    Map<String, dynamic> fieldsToUpdate = {};
-    if (currentUserData.userData.name != newUserData.userData.name) {
-      fieldsToUpdate['profileData.name'] = newUserData.userData.name;
-    }
-    if (currentUserData.userData.email != newUserData.userData.email) {
-      fieldsToUpdate['profileData.email'] = newUserData.userData.email;
-    }
-    if (currentUserData.userData.profileUrl != newUserData.userData.profileUrl) {
-      fieldsToUpdate['profileData.profileUrl'] = newUserData.userData.profileUrl;
-    }
-    if (currentUserData.protectedSpacePin != newUserData.protectedSpacePin) {
-      fieldsToUpdate['protectedSpacePin'] = newUserData.protectedSpacePin;
-    }
-    if (currentUserData.iv != newUserData.iv) {
-      fieldsToUpdate['iv'] = newUserData.iv;
-    }
-    try {
-      _firestore.collection('users').doc(currentUserData.uid).update(fieldsToUpdate);
-    } catch (e) {
-      print("profile Update error");
-      print(e);
-      Get.snackbar(
-        "Updating profile failed",
-        e.toString(),
-        snackPosition: SnackPosition.BOTTOM,
-      );
-      rethrow;
-    }
-  }
 
   static Stream<List<NoteModel>> noteStream({required String uid, required String collectionName}) {
     return _firestore
@@ -160,7 +129,6 @@ class Database {
       {required String uid,
       required String toCollection,
       required String fromCollection,
-  
       required NoteModel noteModel}) async {
     try {
       addNote(uid: uid, collectionName: toCollection, note: noteModel);

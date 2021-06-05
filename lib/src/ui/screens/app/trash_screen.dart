@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:notes_app/src/controllers/notes_controller.dart';
@@ -29,70 +30,89 @@ class TrashScreen extends GetView<NotesController> {
               ),
               SizedBox(width: 10),
               Icon(
-                Icons.delete_rounded,
+                CupertinoIcons.trash,
                 color: Colors.grey.shade800,
               ),
             ],
           ),
           actions: [
-            // TODO Find out why the ui doesn't change
             AppbarButton(
               icon: Icons.restore_page_rounded,
               onTap: () async {
                 if (_trashScreenController.selectedItems.isNotEmpty) {
-                  var value = await PlatformAlertDialog(
-                    title: "Confirm Restore",
-                    cancelText: "Cancel",
-                    confirmText: "Restore",
-                    content: _trashScreenController.selectedItems.length > 1
-                        ? "Do you want to restore these notes?"
-                        : "Do you want to restore this note?",
-                    confirmColor: Colors.greenAccent.shade700,
-                  ).show(context);
+                  if (_trashScreenController.selectedItems.isNotEmpty) {
+                    var value = await PlatformAlertDialog(
+                      title: "Confirm Restore",
+                      cancelText: "Cancel",
+                      confirmText: "Restore",
+                      content: _trashScreenController.selectedItems.length > 1
+                          ? "Do you want to restore these notes?"
+                          : "Do you want to restore this note?",
+                      confirmColor: Colors.greenAccent.shade700,
+                    ).show(context);
 
-                  if (value) {
-                    var trashList = _trashScreenController.selectedItems.toList();
-                    trashList.sort();
-                    for (int index in trashList.reversed) {
-                      Database.transferNote(
-                        uid: Get.find<UserController>().userModel!.uid,
-                        toCollection: 'notes',
-                        fromCollection: 'trash',
-                        noteModel: controller.deletedNotes![index],
-                      );
+                    if (value) {
+                      var trashList = _trashScreenController.selectedItems.toList();
+
+                      trashList.sort();
+                      for (int index in trashList.reversed) {
+                        Database.transferNote(
+                          uid: Get.find<UserController>().userModel!.uid,
+                          toCollection: 'notes',
+                          fromCollection: 'trash',
+                          noteModel: controller.deletedNotes![index],
+                        );
+                      }
                     }
                   }
+                } else {
+                  if (controller.deletedNotes!.isEmpty)
+                    Get.snackbar("No notes in Trash", "There are no notes in trash to restore.",
+                        snackPosition: SnackPosition.BOTTOM);
+                  else
+                    Get.snackbar("No Items Selected", "There is no selected item to restore.",
+                        snackPosition: SnackPosition.BOTTOM);
                 }
               },
             ),
             AppbarButton(
               customIcon: Icon(
-                Icons.delete_forever_rounded,
+                // Icons.delete_forever_rounded,
+                CupertinoIcons.trash_fill,
                 color: Colors.red.shade200,
               ),
               onTap: () async {
                 if (_trashScreenController.selectedItems.isNotEmpty) {
-                  var value = await PlatformAlertDialog(
-                    title: "Confirm Delete",
-                    cancelText: "Cancel",
-                    confirmText: "Delete",
-                    content: _trashScreenController.selectedItems.length > 1
-                        ? "Do you want to delete these notes permenently?"
-                        : "Do you want to delete this note permenently?",
-                    confirmColor: Colors.redAccent,
-                  ).show(context);
+                  if (_trashScreenController.selectedItems.isNotEmpty) {
+                    var value = await PlatformAlertDialog(
+                      title: "Confirm Delete",
+                      cancelText: "Cancel",
+                      confirmText: "Delete",
+                      content: _trashScreenController.selectedItems.length > 1
+                          ? "Do you want to delete these notes permenently?"
+                          : "Do you want to delete this note permenently?",
+                      confirmColor: Colors.redAccent,
+                    ).show(context);
 
-                  if (value) {
-                    var trashList = _trashScreenController.selectedItems.toList();
-                    trashList.sort();
-                    for (int index in trashList.reversed) {
-                      Database.deleteNote(
-                        uid: Get.find<UserController>().userModel!.uid,
-                        noteId: controller.deletedNotes![index].noteId!,
-                      );
+                    if (value) {
+                      var trashList = _trashScreenController.selectedItems.toList();
+                      trashList.sort();
+                      for (int index in trashList.reversed) {
+                        Database.deleteNote(
+                          uid: Get.find<UserController>().userModel!.uid,
+                          noteId: controller.deletedNotes![index].noteId!,
+                        );
+                      }
+                      _trashScreenController.selectedItems.clear();
                     }
-                    _trashScreenController.selectedItems.clear();
                   }
+                } else {
+                  if (controller.deletedNotes!.isEmpty)
+                    Get.snackbar("No notes in Trash", "There are no notes in trash to delete.",
+                        snackPosition: SnackPosition.BOTTOM);
+                  else
+                    Get.snackbar("No Items Selected", "There is no selected item to delete.",
+                        snackPosition: SnackPosition.BOTTOM);
                 }
               },
             ),
@@ -135,7 +155,12 @@ class TrashScreen extends GetView<NotesController> {
                   itemCount: notesController.deletedNotes!.length,
                 );
               }
-              return Container();
+              // TODO design this
+              return Container(
+                child: Center(
+                  child: Text("Empty"),
+                ),
+              );
             }
             return Center(child: CircularProgressIndicator.adaptive());
           },

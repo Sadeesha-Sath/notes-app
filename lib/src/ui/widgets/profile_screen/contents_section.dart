@@ -17,17 +17,18 @@ class ContentsSection extends StatelessWidget {
         children: [
           ProfileScreenListTile(
             title: "Favourites",
-            icon: Icons.favorite_rounded,
+            icon: Icons.favorite_outline_rounded,
             onTap: () {},
           ),
           ProfileScreenListTile(
             title: "Protected Space",
-            icon: CupertinoIcons.lock_fill,
+            icon: CupertinoIcons.lock,
             onTap: () => Get.toNamed(UnlockLockedNotesScreen.id),
           ),
           ProfileScreenListTile(
             title: "Trash",
-            icon: Icons.delete_rounded,
+            // icon: Icons.delete_outline_rounded,
+            icon: CupertinoIcons.trash,
             onTap: () {
               Get.toNamed(TrashScreen.id);
             },

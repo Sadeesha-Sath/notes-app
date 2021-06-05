@@ -82,3 +82,4 @@ class _AppState extends State<App> {
         });
   }
 }
+// TODO MAybe get rid of user data section in the database and use the current user method in auth, and since it is binded to UserController.user getter, then use its fields instead of database

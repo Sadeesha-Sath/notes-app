@@ -39,17 +39,38 @@ class ProfileScreen extends StatelessWidget {
                 AboutSection(),
                 SizedBox(height: 15),
                 SectionSeparator("ACCOUNT"),
-                ProfileScreenListTile(
-                  title: "Sign Out",
-                  icon: Icons.exit_to_app_rounded,
-                  onTap: () => Get.find<FirebaseAuthController>().signOutUser(),
-                  color: Colors.redAccent,
-                ),
+                AccountSection(),
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+}
+
+class AccountSection extends StatelessWidget {
+  const AccountSection({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        ProfileScreenListTile(
+          title: "Reset Password",
+          icon: Icons.password_rounded,
+          onTap: () {},
+          // TODO Implement reset password
+        ),
+        ProfileScreenListTile(
+          title: "Sign Out",
+          icon: Icons.exit_to_app_rounded,
+          onTap: () => Get.find<FirebaseAuthController>().signOutUser(),
+          color: Colors.redAccent,
+        ),
+      ],
     );
   }
 }

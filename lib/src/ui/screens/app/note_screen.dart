@@ -394,7 +394,7 @@ class _NoteScreenState extends State<NoteScreen> {
           },
           {
             'text': isLocked ? 'Delete Forever' : 'Send to Trash',
-            'iconData': isLocked ? Icons.delete_forever_rounded : Icons.delete_rounded,
+            'iconData': CupertinoIcons.trash_fill,
             'color': Colors.redAccent
           }
         }.map((Map<String, dynamic> choice) {

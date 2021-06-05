@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:notes_app/src/ui/widgets/profile_screen/biometric_list_tile.dart';
@@ -17,7 +18,7 @@ class PreferencesSection extends StatelessWidget {
           NightModeListTile(),
           ProfileScreenListTile(
             title: "Change Protected Space Pin",
-            icon: Icons.phonelink_lock_rounded,
+            icon: Icons.phonelink_lock_outlined,
             onTap: () {},
           ),
           BiometricListTile(

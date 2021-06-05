@@ -11,19 +11,19 @@ class UserSection extends GetView<UserController> {
       child: Column(
         children: [
           CircleAvatar(
-            foregroundImage: controller.userModel!.userData.profileUrl != null
-                ? NetworkImage(controller.userModel!.userData.profileUrl!)
+            foregroundImage: controller.user?.photoURL != null
+                ? NetworkImage(controller.user!.photoURL!)
                 : null,
             radius: 36,
           ),
           SizedBox(height: 5),
           Text(
-            controller.userModel!.userData.name,
+            controller.user!.displayName!,
             style: TextStyle(fontSize: 27),
           ),
           SizedBox(height: 3),
           Text(
-            controller.userModel!.userData.email,
+            controller.user!.email!,
             style: TextStyle(color: Colors.grey.shade700, fontSize: 16),
           ),
           SizedBox(height: 9),
@@ -31,6 +31,7 @@ class UserSection extends GetView<UserController> {
             padding: EdgeInsets.symmetric(horizontal: 115),
             child: ElevatedButton(
               style: ButtonStyle(
+                elevation: MaterialStateProperty.all(1.5),
                 padding: MaterialStateProperty.all(EdgeInsets.all(8.5)),
                 shape: MaterialStateProperty.all(
                   RoundedRectangleBorder(
