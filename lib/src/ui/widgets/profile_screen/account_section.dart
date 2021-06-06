@@ -1,12 +1,12 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:notes_app/src/controllers/firebase_auth_controller.dart';
 import 'package:notes_app/src/controllers/user_controller.dart';
+import 'package:notes_app/src/services/database.dart';
 import 'package:notes_app/src/ui/platform_aware_widgets/platform_alert_dialog.dart';
 import 'package:notes_app/src/ui/widgets/profile_screen/profile_screen_listtile.dart';
 
-class AccountSection extends StatelessWidget {
+class AccountSection extends GetWidget<UserController> {
   const AccountSection({
     Key? key,
   }) : super(key: key);
@@ -29,12 +29,14 @@ class AccountSection extends StatelessWidget {
             ).show(context);
 
             if (value) {
-              var user = Get.find<UserController>().user!;
-              try {
-                user.delete();
-              } on FirebaseAuthException {
-                // TODO Implement re Auth
-                // await user.reauthenticateWithCredential(credential);
+              var user = controller.user!;
+
+              // TODO Implement re Auth
+              // await user.reauthenticateWithCredential(credential);
+              var completed = false;
+              if (completed) {
+                // Database.dele
+                // controller.user!.delete();
               }
             }
           },

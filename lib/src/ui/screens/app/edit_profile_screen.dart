@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:notes_app/src/controllers/user_controller.dart';
 import 'package:notes_app/src/methods/show_custom_bottom_sheet.dart';
-import 'package:notes_app/src/services/database.dart';
-import 'package:notes_app/src/ui/ui_constants.dart';
 import 'package:notes_app/src/ui/widgets/custom_back_button.dart';
 import 'package:notes_app/src/ui/widgets/profile_screen/profile_screen_listtile.dart';
 
@@ -67,30 +65,6 @@ class EditProfileScreen extends GetView<UserController> {
                       context,
                       textController: _textController,
                       mode: "Name",
-                      onPressed: () async {
-                        try {
-                          controller.updateName(_textController.text);
-                          Database.updateName(controller.user!.uid, _textController.text);
-                          if (controller.user?.displayName != null) {
-                            controller.user!.updateProfile(displayName: _textController.text);
-                          }
-                          Get.back();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text("Update Successful"),
-                              // backgroundColor: Colors.amber.shade50,
-                            ),
-                          );
-                        } catch (e) {
-                          print(e);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text("Update Unsuccessful"),
-                              // backgroundColor: Colors.amber.shade50,
-                            ),
-                          );
-                        }
-                      },
                     );
                   },
                 ),
@@ -115,52 +89,59 @@ class EditProfileScreen extends GetView<UserController> {
                   ),
                   icon: Icons.email,
                   onTap: () {
-                    var _textController = TextEditingController(text: controller.user!.email);
+                    var _textController = TextEditingController();
                     showCustomModalBottomSheet(
                       context,
                       textController: _textController,
                       mode: "Email",
-                      onPressed: () {
-                        // TODO Change profile data in auth
-                        // TODO Verify email when changing
-                        controller.user!
-                            .updateEmail("user@example.com")
-                            .then((value) => print("done"), onError: (error) => print(error));
-                      },
                     );
                   },
                 ),
                 ProfileScreenListTile(
                   title: "Reset Password",
                   icon: Icons.password_rounded,
-                  onTap: () {},
+                  onTap: () {
+                    var _textController = TextEditingController();
+                    showCustomModalBottomSheet(context, textController: _textController, mode: "password");
+                  },
                   // TODO Implement reset password
                 ),
                 SizedBox(height: 35),
                 Obx(() => !controller.user!.emailVerified
                     ? Container(
-                        height: 130,
+                        height: 150,
                         width: double.infinity,
                         color: Colors.red.shade200,
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Spacer(
-                              flex: 3,
+                              flex: 7,
                             ),
                             Text(
                               "Your email is not verified yet.",
                               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
                             ),
                             Spacer(
-                              flex: 3,
+                              flex: 5,
                             ),
                             Text(
                               "You will not be able to use it to recover your forgotten passwords and pins. Please check your inbox and verify via the verification email.",
                               textAlign: TextAlign.center,
                               style: TextStyle(fontSize: 16),
                             ),
+                            Spacer(flex: 1),
+                            TextButton(
+                                onPressed: () {
+                                  controller.user!.sendEmailVerification();
+                                },
+                                child: Text(
+                                  "Cannot find the email? Resend here.",
+                                  style:
+                                      TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Colors.blue.shade800),
+                                )),
                             Spacer(
-                              flex: 4,
+                              flex: 2,
                             ),
                           ],
                         ),

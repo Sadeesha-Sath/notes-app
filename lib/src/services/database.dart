@@ -36,6 +36,21 @@ class Database {
     }
   }
 
+  static Future deleteUser(String uid) async {
+    try {
+      // TODO Implement delete user
+      var notes = _firestore.collection("users").doc(uid).collection('notes').limit(5).snapshots();
+
+      // for (var note in notes.docs) {
+      //   note.delete();
+      // }
+      // await _firestore.collection("users").doc(uid).delete();
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
+
   static Future<void> updateName(String uid, String name) async {
     try {
       await _firestore.collection("users").doc(uid).update({"name": name});
