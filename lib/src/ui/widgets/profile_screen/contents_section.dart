@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:notes_app/src/ui/screens/app/favourites_screen.dart';
 import 'package:notes_app/src/ui/screens/app/trash_screen.dart';
 import 'package:notes_app/src/ui/screens/app/unlock_locked_notes_screen.dart';
 import 'package:notes_app/src/ui/widgets/profile_screen/profile_screen_listtile.dart';
@@ -17,8 +18,8 @@ class ContentsSection extends StatelessWidget {
         children: [
           ProfileScreenListTile(
             title: "Favourites",
-            icon: Icons.favorite_outline_rounded,
-            onTap: () {},
+            icon: CupertinoIcons.heart,
+            onTap: () => Get.toNamed(FavouritesScreen.id),
           ),
           ProfileScreenListTile(
             title: "Protected Space",

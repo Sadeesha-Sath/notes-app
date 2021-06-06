@@ -7,6 +7,7 @@ import 'package:notes_app/src/controllers/firebase_auth_controller.dart';
 import 'package:notes_app/src/file_handlers/inherited_preferences.dart';
 import 'package:notes_app/src/file_handlers/preferences_handler.dart';
 import 'package:notes_app/src/ui/screens/app/edit_profile_screen.dart';
+import 'package:notes_app/src/ui/screens/app/favourites_screen.dart';
 import 'package:notes_app/src/ui/screens/app/locked_notes_screen.dart';
 import 'package:notes_app/src/ui/screens/app/home_screen.dart';
 import 'package:notes_app/src/ui/screens/app/pin_set_screen.dart';
@@ -69,6 +70,7 @@ class _AppState extends State<App> {
                 GetPage(name: UnlockLockedNotesScreen.id, page: () => UnlockLockedNotesScreen()),
                 GetPage(name: TrashScreen.id, page: () => TrashScreen()),
                 GetPage(name: EditProfileScreen.id, page: () => EditProfileScreen()),
+                GetPage(name: FavouritesScreen.id, page: () => FavouritesScreen()),
               ],
               theme: InheritedPreferences.of(context)!.preferences['isNightMode']!
                   ? ThemeData.dark()

@@ -219,7 +219,7 @@ class _NoteScreenState extends State<NoteScreen> {
         AppbarButton(icon: Icons.search_rounded, onTap: () {}),
         if (!isLocked)
           AppbarButton(
-              icon: noteModel.isFavourite ? Icons.favorite_rounded : Icons.favorite_outline_rounded,
+              icon: noteModel.isFavourite ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
               onTap: () {
                 setState(() {
                   noteModel.isFavourite = !noteModel.isFavourite;
@@ -262,7 +262,7 @@ class _NoteScreenState extends State<NoteScreen> {
       ),
       AppbarButton(
         customIcon: Icon(
-          Icons.delete_forever_rounded,
+          CupertinoIcons.trash_fill,
           color: Colors.red.shade200,
         ),
         onTap: () async {

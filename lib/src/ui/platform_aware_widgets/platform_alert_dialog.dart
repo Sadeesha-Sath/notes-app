@@ -4,12 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:notes_app/src/ui/platform_aware_widgets/platform_widget.dart';
 
 class PlatformAlertDialog extends PlatformWidget<AlertDialog, CupertinoAlertDialog> {
-  PlatformAlertDialog(
-      {required this.title,
-      this.cancelText,
-      required this.confirmText,
-      required this.content,
-      this.confirmColor,});
+  PlatformAlertDialog({
+    required this.title,
+    this.cancelText,
+    required this.confirmText,
+    required this.content,
+    this.confirmColor,
+  });
 
   final String title;
   final String content;
@@ -19,6 +20,7 @@ class PlatformAlertDialog extends PlatformWidget<AlertDialog, CupertinoAlertDial
 
   @override
   AlertDialog buildMaterialWidget(BuildContext context) {
+    // TODO Add animations for these dialogs
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       title: Text(title),
@@ -42,7 +44,12 @@ class PlatformAlertDialog extends PlatformWidget<AlertDialog, CupertinoAlertDial
       actions.add(PlatformAlertDialogAction(child: Text(cancelText), onPressed: () => _dismiss(context, false)));
     }
     actions.add(PlatformAlertDialogAction(
-        child: Text(confirmText, style: TextStyle(color: confirmColor),), onPressed: () => _dismiss(context, true),));
+      child: Text(
+        confirmText,
+        style: TextStyle(color: confirmColor),
+      ),
+      onPressed: () => _dismiss(context, true),
+    ));
     return actions;
   }
 
@@ -65,7 +72,10 @@ class PlatformAlertDialogAction extends PlatformWidget<TextButton, CupertinoDial
 
   @override
   TextButton buildMaterialWidget(BuildContext context) {
-    return TextButton(onPressed: onPressed, child: child,);
+    return TextButton(
+      onPressed: onPressed,
+      child: child,
+    );
   }
 
   @override

@@ -122,48 +122,64 @@ class TrashScreen extends GetView<NotesController> {
           ],
           leading: CustomBackButton(),
         ),
-        body: GetX<NotesController>(
-          init: Get.find<NotesController>(),
-          builder: (NotesController notesController) {
-            if (notesController.deletedNotes != null) {
-              if (notesController.deletedNotes!.isNotEmpty) {
-                return ListView.builder(
-                  itemBuilder: (context, index) {
-                    //TODO Add some drag support
-                    NoteModel note = notesController.deletedNotes![index];
-                    return ListTile(
-                      horizontalTitleGap: 25,
-                      leading: Obx(
-                        () => Checkbox(
-                            value: _trashScreenController.getBool(index),
-                            onChanged: (bool? value) => _trashScreenController.toggleCheckbox(value!, index)),
-                      ),
-                      contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 3) + EdgeInsets.only(right: 10),
-                      title: Text(
-                        ContentTrimmer.trimTitle(note.title) ?? ContentTrimmer.trimBody(note.body) ?? "[No Contents]",
-                        style: TextStyle(fontSize: 18.5, fontWeight: FontWeight.w600, color: Colors.grey.shade800),
-                      ),
-                      onTap: () {
-                        Get.to(() => NoteScreen(noteModel: note, collectionName: 'trash'));
-                      },
-                      onLongPress: () {
-                        _trashScreenController.toggleCheckbox(!_trashScreenController.getBool(index), index);
-                      },
-                      trailing: Icon(Icons.arrow_forward_ios_sharp),
-                    );
-                  },
-                  itemCount: notesController.deletedNotes!.length,
+        body: Container(
+          padding: EdgeInsets.all(10),
+          child: GetX<NotesController>(
+            init: Get.find<NotesController>(),
+            builder: (NotesController notesController) {
+              if (notesController.deletedNotes != null) {
+                if (notesController.deletedNotes!.isNotEmpty) {
+                  return ListView.builder(
+                    itemBuilder: (context, index) {
+                      //TODO Add some drag support
+                      NoteModel note = notesController.deletedNotes![index];
+                      return ListTile(
+                        horizontalTitleGap: 25,
+                        leading: Obx(
+                          () => Checkbox(
+                              value: _trashScreenController.getBool(index),
+                              onChanged: (bool? value) => _trashScreenController.toggleCheckbox(value!, index)),
+                        ),
+                        contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 3) + EdgeInsets.only(right: 10),
+                        title: Text(
+                          ContentTrimmer.trimTitle(note.title) ?? ContentTrimmer.trimBody(note.body) ?? "[No Contents]",
+                          style: TextStyle(fontSize: 18.5, fontWeight: FontWeight.w600, color: Colors.grey.shade800),
+                        ),
+                        onTap: () {
+                          Get.to(() => NoteScreen(noteModel: note, collectionName: 'trash'));
+                        },
+                        onLongPress: () {
+                          _trashScreenController.toggleCheckbox(!_trashScreenController.getBool(index), index);
+                        },
+                        trailing: Icon(Icons.arrow_forward_ios_sharp),
+                      );
+                    },
+                    itemCount: notesController.deletedNotes!.length,
+                  );
+                }
+                // TODO design this
+                return Container(
+                  padding: EdgeInsets.all(Get.height / 30),
+                  child: Center(
+                    child: Column(
+                      children: [
+                        CircleAvatar(
+                          radius: 100,
+                        ),
+                        SizedBox(height: 30),
+                        Text(
+                          "Looks like you are all cleaned up!",
+                          style: TextStyle(fontSize: 33, fontWeight: FontWeight.w600, color: Colors.grey.shade600),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
                 );
               }
-              // TODO design this
-              return Container(
-                child: Center(
-                  child: Text("Empty"),
-                ),
-              );
-            }
-            return Center(child: CircularProgressIndicator.adaptive());
-          },
+              return Center(child: CircularProgressIndicator.adaptive());
+            },
+          ),
         )
 
         // TODO Make a view to accomadate empty trash

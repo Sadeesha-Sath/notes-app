@@ -104,7 +104,6 @@ class EditProfileScreen extends GetView<UserController> {
                     var _textController = TextEditingController();
                     showCustomModalBottomSheet(context, textController: _textController, mode: "password");
                   },
-                  // TODO Implement reset password
                 ),
                 SizedBox(height: 35),
                 Obx(() => !controller.user!.emailVerified
@@ -116,21 +115,21 @@ class EditProfileScreen extends GetView<UserController> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Spacer(
-                              flex: 7,
+                              flex: 9,
                             ),
                             Text(
                               "Your email is not verified yet.",
                               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
                             ),
                             Spacer(
-                              flex: 5,
+                              flex: 6,
                             ),
                             Text(
                               "You will not be able to use it to recover your forgotten passwords and pins. Please check your inbox and verify via the verification email.",
                               textAlign: TextAlign.center,
                               style: TextStyle(fontSize: 16),
                             ),
-                            Spacer(flex: 1),
+                            Spacer(),
                             TextButton(
                                 onPressed: () {
                                   controller.user!.sendEmailVerification();
@@ -140,9 +139,7 @@ class EditProfileScreen extends GetView<UserController> {
                                   style:
                                       TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Colors.blue.shade800),
                                 )),
-                            Spacer(
-                              flex: 2,
-                            ),
+                            Spacer(),
                           ],
                         ),
                       )
