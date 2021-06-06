@@ -52,6 +52,7 @@ Future showCustomModalBottomSheet(
                 height: 30,
               ),
               TextField(
+                obscureText: mode == 'password' || (mode == 'Email') && (stage.value == 1) ? true : false,
                 controller: textController,
                 style: TextStyle(fontSize: 20),
                 decoration: textFieldDecoration.copyWith(hintText: ""),
@@ -202,10 +203,12 @@ class BottomSheetButton extends StatelessWidget {
     Key? key,
     required this.onPressed,
     required this.text,
+    this.color,
   }) : super(key: key);
 
   final VoidCallback onPressed;
   final String text;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -213,7 +216,7 @@ class BottomSheetButton extends StatelessWidget {
       onPressed: onPressed,
       child: Text(
         text,
-        style: TextStyle(fontSize: 18),
+        style: TextStyle(fontSize: 18, color: color),
       ),
       style: ButtonStyle(
         padding: MaterialStateProperty.all(
@@ -224,16 +227,3 @@ class BottomSheetButton extends StatelessWidget {
     );
   }
 }
-
-// class GetButton extends StatelessWidget {
-//   const GetButton({ Key? key }) : super(key: key);
-//   this.mode
-
-//   @override
-//   Widget build(BuildContext context) {
-//     i
-//     return Container(
-      
-//     );
-//   }
-// }

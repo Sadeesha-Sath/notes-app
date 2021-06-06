@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:notes_app/src/ui/widgets/profile_screen/biometric_list_tile.dart';
 import 'package:notes_app/src/ui/widgets/profile_screen/night_mode_listtile.dart';
 import 'package:notes_app/src/ui/widgets/profile_screen/profile_screen_listtile.dart';

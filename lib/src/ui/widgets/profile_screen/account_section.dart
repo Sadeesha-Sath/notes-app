@@ -1,9 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:notes_app/src/controllers/firebase_auth_controller.dart';
 import 'package:notes_app/src/controllers/user_controller.dart';
-import 'package:notes_app/src/services/database.dart';
+import 'package:notes_app/src/methods/show_custom_bottom_sheet.dart';
 import 'package:notes_app/src/ui/platform_aware_widgets/platform_alert_dialog.dart';
+import 'package:notes_app/src/ui/widgets/auth/password_field.dart';
 import 'package:notes_app/src/ui/widgets/profile_screen/profile_screen_listtile.dart';
 
 class AccountSection extends GetWidget<UserController> {
@@ -29,15 +31,70 @@ class AccountSection extends GetWidget<UserController> {
             ).show(context);
 
             if (value) {
-              var user = controller.user!;
+              var _textController = TextEditingController();
+              RxBool hasError = false.obs;
+              RxString error = "".obs;
+              showModalBottomSheet(
+                useRootNavigator: true,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20),
+                  ),
+                ),
+                context: context,
+                builder: (context) => Container(
+                  padding: EdgeInsets.all(25),
+                  // height: 250,
+                  child: Column(
+                    children: [
+                      Text("Enter your Password to Continue", style: TextStyle(fontSize: 20)),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      PasswordTextField(
+                        controller: _textController,
+                        key: ValueKey("password"),
+                        hintText: "",
+                      ),
+                      Obx(
+                        () => hasError.value
+                            ? Container(
+                                margin: EdgeInsets.only(top: 25),
+                                child: Text(
+                                  error.value,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(fontSize: 16, color: Colors.redAccent),
+                                ),
+                              )
+                            : Container(),
+                      ),
+                      SizedBox(
+                        height: 45,
+                      ),
+                      BottomSheetButton(
+                        text: "Delete Account",
+                        color: Colors.redAccent,
+                        onPressed: () async {
+                          try {
+                            var user = Get.find<UserController>().user!;
+                            var credential =
+                                EmailAuthProvider.credential(email: user.email!, password: _textController.text);
+                            await user.reauthenticateWithCredential(credential);
+                            // TODO Delete User here (Maybe add a email auth too)
+                          } catch (e) {
+                            print(e);
+                            hasError(true);
+                            error(e.toString().split("]")[1]);
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              );
 
-              // TODO Implement re Auth
-              // await user.reauthenticateWithCredential(credential);
-              var completed = false;
-              if (completed) {
-                // Database.dele
-                // controller.user!.delete();
-              }
+             
             }
           },
           color: Colors.redAccent,

@@ -49,37 +49,49 @@ class _NoteScreenState extends State<NoteScreen> {
     bool isLocked = collectionName == 'locked';
     bool isInTrash = collectionName == 'trash';
 
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      bottomNavigationBar: isEditable
-          ? BottomAppBar(
-              color: Colors.red,
-              shape: CircularNotchedRectangle(),
-              child: Container(
-                height: 60,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 5,
-                  itemBuilder: (context, index) => Container(
-                    decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.blueAccent),
-                    width: 50,
-                    height: 50,
+    return WillPopScope(
+      onWillPop: () async {
+        if (isEditable && !isNewNote) {
+          setState(() {
+            isEditable = false;
+          });
+          return false;
+        }
+        return true;
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        bottomNavigationBar: isEditable
+            ? BottomAppBar(
+                color: Colors.grey.shade300,
+                child: Container(
+                  // decoration: BoxDecoration(borderRadius: BorderRadius.circular(50)),
+                  height: 70,
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: 10,
+                    itemBuilder: (context, index) => Container(
+                      margin: EdgeInsets.symmetric(horizontal: 10),
+                      decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.blueAccent),
+                      width: 50,
+                      height: 50,
+                    ),
                   ),
                 ),
-              ),
-            )
-          : null,
-      appBar: AppBar(
-        leading: CustomBackButton(),
-        backgroundColor: Colors.white,
-        actions: getAppbarActions(isLocked, isInTrash),
-      ),
-      body: Container(
-        padding: EdgeInsets.symmetric(horizontal: Get.width / 20, vertical: Get.height / 45),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: getBodyChildren(),
+              )
+            : null,
+        appBar: AppBar(
+          leading: CustomBackButton(onTap: () => Navigator.maybePop(context)),
+          backgroundColor: Colors.white,
+          actions: getAppbarActions(isLocked, isInTrash),
+        ),
+        body: Container(
+          padding: EdgeInsets.symmetric(horizontal: Get.width / 20, vertical: Get.height / 45),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: getBodyChildren(),
+          ),
         ),
       ),
     );
