@@ -4,16 +4,22 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:notes_app/src/controllers/user_controller.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
-import 'package:notes_app/src/services/database.dart';
 
 class EncrypterClass {
   static String protectedSpacePin = Get.find<UserController>().userModel!.protectedSpacePin!;
-  static final key1 = encrypt.Key.fromUtf8(hashGenerator(string: protectedSpacePin));
+  static var key1 = encrypt.Key.fromUtf8(hashGenerator(string: protectedSpacePin));
   static final key2 = encrypt.Key.fromUtf8(dotenv.env['APP_SPECIFIC_SECRET_KEY']!);
   static var iv = Get.find<UserController>().userModel!.iv;
-  static final masterKey =
+  static var masterKey =
       encrypt.Key.fromBase16(encrypt.Key.fromUtf8(key1.base64 + key2.base64).base16.substring(111, 143));
-  static final encrypter = encrypt.Encrypter(encrypt.AES(masterKey));
+  static var encrypter = encrypt.Encrypter(encrypt.AES(masterKey));
+
+  static changePin() {
+    protectedSpacePin = Get.find<UserController>().userModel!.protectedSpacePin!;
+    key1 = encrypt.Key.fromUtf8(hashGenerator(string: protectedSpacePin));
+    masterKey = encrypt.Key.fromBase16(encrypt.Key.fromUtf8(key1.base64 + key2.base64).base16.substring(111, 143));
+    encrypter = encrypt.Encrypter(encrypt.AES(masterKey));
+  }
 
   static String hashGenerator({int? pin, String? string}) {
     late var bytes;
@@ -44,8 +50,6 @@ class EncrypterClass {
     else
       iv = newIv;
   }
-
-
 
   String encryptText({required String string}) {
     final encrypted = encrypter.encrypt(string, iv: encrypt.IV.fromBase64(iv!));

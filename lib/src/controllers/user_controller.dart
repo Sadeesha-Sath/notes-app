@@ -2,6 +2,7 @@ import 'package:encrypt/encrypt.dart' as enc;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:notes_app/src/controllers/firebase_auth_controller.dart';
+import 'package:notes_app/src/controllers/notes_controller.dart';
 import 'package:notes_app/src/models/user.dart';
 import 'package:notes_app/src/services/database.dart';
 import 'package:notes_app/src/services/encrypter_class.dart';
@@ -68,8 +69,8 @@ class UserController extends GetxController {
     return true;
   }
 
-  bool isPinCorrect(String pin) {
-    if (pin == _userModel.value!.protectedSpacePin) return true;
+  bool isPinCorrect(int? pin) {
+    if (EncrypterClass.hashGenerator(pin: pin) == _userModel.value!.protectedSpacePin) return true;
     return false;
   }
 
@@ -89,18 +90,26 @@ class UserController extends GetxController {
       await Database.updateIV(uid: userModel!.uid, iv: iv.base64);
       updatePin(hashedPin);
       return true;
-    } else if (isPinCorrect(hashedPin)) {
-      _userModel.update((val) {
-        val!.protectedSpacePin = hashedPin;
-      });
-      updatePin(hashedPin);
-      return true;
     }
-    return false;
+    _userModel.update((val) {
+      val!.protectedSpacePin = hashedPin;
+    });
+    var _notesController = Get.find<NotesController>();
+    if (_notesController.lockedNotes != null) {
+      print("Changing encrypter");
+      await EncrypterClass.changePin();
+      print('re-encrypting locked notes');
+      for (var note in _notesController.lockedNotes!) {
+        Database.updateNote(
+            uid: _userModel.value!.uid, collectionName: 'locked', oldModel: note, newModel: note, isForced: true);
+      }
+    }
+    updatePin(hashedPin);
+    return true;
   }
 
   void updatePin(String pin) async {
     print("got in to update pin");
-    await Database.updateprotectedSpacePin(uid: _userModel.value!.uid, newPin: pin);
+    await Database.updateProtectedSpacePin(uid: _userModel.value!.uid, newPin: pin);
   }
 }

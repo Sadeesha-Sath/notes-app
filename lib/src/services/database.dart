@@ -60,9 +60,9 @@ class Database {
       print("locked:- ${_notesController.lockedNotes}");
       if (_notesController.lockedNotes!.isNotEmpty) {
         print(_notesController.lockedNotes?.length);
-      for (NoteModel note in _notesController.lockedNotes!) {
-        Database.deleteNote(uid: uid, noteId: note.noteId!);
-      }
+        for (NoteModel note in _notesController.lockedNotes!) {
+          Database.deleteNote(uid: uid, noteId: note.noteId!);
+        }
       }
       await _firestore.collection("users").doc(uid).delete();
       print("delete Completed");
@@ -86,7 +86,7 @@ class Database {
     }
   }
 
-  static Future<void> updateprotectedSpacePin({required String uid, required String newPin}) async {
+  static Future<void> updateProtectedSpacePin({required String uid, required String newPin}) async {
     try {
       await _firestore.collection('users').doc(uid).update({"protectedSpacePin": newPin});
     } catch (e) {
@@ -138,16 +138,22 @@ class Database {
       {required String uid,
       required String collectionName,
       required NoteModel oldModel,
-      required NoteModel newModel}) async {
+      required NoteModel newModel,
+      bool? isForced}) async {
     try {
       Map<String, dynamic> updateFields = {};
-      if (oldModel.body != newModel.body) {
-        updateFields['body'] =
-            collectionName == 'locked' ? EncrypterClass().encryptText(string: newModel.body ?? "") : newModel.body;
-      }
-      if (oldModel.title != newModel.title) {
-        updateFields['title'] =
-            collectionName == 'locked' ? EncrypterClass().encryptText(string: newModel.title ?? "") : newModel.title;
+      if (isForced != null && isForced) {
+        updateFields['body'] = EncrypterClass().encryptText(string: newModel.body ?? "");
+        updateFields['title'] = EncrypterClass().encryptText(string: newModel.title ?? "");
+      } else {
+        if (oldModel.body != newModel.body) {
+          updateFields['body'] =
+              collectionName == 'locked' ? EncrypterClass().encryptText(string: newModel.body ?? "") : newModel.body;
+        }
+        if (oldModel.title != newModel.title) {
+          updateFields['title'] =
+              collectionName == 'locked' ? EncrypterClass().encryptText(string: newModel.title ?? "") : newModel.title;
+        }
       }
       _firestore.collection("users").doc(uid).collection(collectionName).doc(oldModel.noteId).update(updateFields);
     } catch (e) {
