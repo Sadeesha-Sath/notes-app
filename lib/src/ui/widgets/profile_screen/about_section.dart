@@ -16,7 +16,6 @@ class AboutSection extends StatelessWidget {
             title: "About Us",
             icon: Icons.info_outline_rounded,
             onTap: () {
-              // TODO Make this a bottom Sheet
               showAboutDialog(context: context);
             },
           ),

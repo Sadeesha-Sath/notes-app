@@ -329,10 +329,10 @@ class _NoteScreenState extends State<NoteScreen> {
                 Get.snackbar("Locking Successful", "The note was locked in the Protected-Space successfully.",
                     snackPosition: SnackPosition.BOTTOM);
               } else {
-                Get.toNamed(UnlockLockedNotesScreen.id, arguments: noteModel);
                 Get.snackbar("Protcted-Space not initialized yet",
                     "Initialize Protected-Space to lock your note. Don't worry, your note will be saved and transferred when you finsh setting up",
-                    duration: Duration(seconds: 3), snackPosition: SnackPosition.BOTTOM);
+                     snackPosition: SnackPosition.BOTTOM);
+                Get.toNamed(UnlockLockedNotesScreen.id, arguments: noteModel);
               }
             }
 

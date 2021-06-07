@@ -77,7 +77,7 @@ class TrashScreen extends GetView<NotesController> {
             ),
             AppbarButton(
               customIcon: Icon(
-                // Icons.delete_forever_rounded,
+             
                 CupertinoIcons.trash_fill,
                 color: Colors.red.shade200,
               ),

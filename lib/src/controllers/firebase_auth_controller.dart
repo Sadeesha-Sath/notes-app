@@ -36,7 +36,7 @@ class FirebaseAuthController extends GetxController {
   void registerUser(String email, String password, String name) async {
     try {
       var response = await _auth.createUserWithEmailAndPassword(email: email.trim(), password: password);
-      await response.user!.updateProfile(displayName:name == "" ? email.trim().split("@")[0]: name);
+      await response.user!.updateProfile(displayName: name == "" ? email.trim().split("@")[0] : name);
     } catch (e) {
       print(e);
       Get.snackbar("Creating User Account was Unsuccessful", e.toString(), snackPosition: SnackPosition.BOTTOM);
@@ -56,10 +56,10 @@ class FirebaseAuthController extends GetxController {
     try {
       print("User ${_firebaseUser.value?.email}");
       await _auth.signOut();
-      Get.find<UserController>().clear();
+
       print("Signed out user");
-      Get.find<DragController>().dispose();
       Get.offAllNamed(StartScreen.id);
+      // Get.find<UserController>().clear();
     } catch (e) {
       print(e);
       Get.snackbar("Unable to Sign Out", "$e", snackPosition: SnackPosition.BOTTOM);

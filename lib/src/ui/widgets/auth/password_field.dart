@@ -62,7 +62,7 @@ class PasswordTextField extends StatelessWidget {
             prefixIcon: Icon(Icons.password),
             suffixIcon: IconButton(
               splashRadius: 20,
-              onPressed: () => updater,
+              onPressed: () => updater(!isHidden),
               icon: Icon(isHidden ? Icons.visibility_off_rounded : Icons.visibility_rounded),
             ),
             hintText: hintText ?? "Enter a password",

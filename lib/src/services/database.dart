@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
+import 'package:notes_app/src/controllers/notes_controller.dart';
 import 'package:notes_app/src/models/note_model.dart';
 import 'package:notes_app/src/models/user.dart';
 import 'package:notes_app/src/services/encrypter_class.dart';
@@ -38,13 +41,31 @@ class Database {
 
   static Future deleteUser(String uid) async {
     try {
-      // TODO Implement delete user
-      var notes = _firestore.collection("users").doc(uid).collection('notes').limit(5).snapshots();
+      NotesController _notesController = Get.find<NotesController>();
 
-      // for (var note in notes.docs) {
-      //   note.delete();
-      // }
-      // await _firestore.collection("users").doc(uid).delete();
+      if (_notesController.notes != null && _notesController.notes!.isNotEmpty) {
+        for (NoteModel note in _notesController.notes!) {
+          Database.deleteNote(uid: uid, noteId: note.noteId!, collectionName: 'notes');
+        }
+      }
+
+      print("deleted:- ${_notesController.deletedNotes}");
+      if (_notesController.deletedNotes!.isNotEmpty) {
+        print(_notesController.deletedNotes?.length);
+        for (NoteModel note in _notesController.deletedNotes!) {
+          Database.deleteNote(uid: uid, noteId: note.noteId!);
+        }
+      }
+
+      print("locked:- ${_notesController.lockedNotes}");
+      if (_notesController.lockedNotes!.isNotEmpty) {
+        print(_notesController.lockedNotes?.length);
+      for (NoteModel note in _notesController.lockedNotes!) {
+        Database.deleteNote(uid: uid, noteId: note.noteId!);
+      }
+      }
+      await _firestore.collection("users").doc(uid).delete();
+      print("delete Completed");
     } catch (e) {
       print(e);
       rethrow;

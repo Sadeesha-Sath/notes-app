@@ -91,11 +91,17 @@ class RegisterScreen extends StatelessWidget {
                         Get.find<FirebaseAuthController>()
                             .registerUser(_emailField.text, _password1Field.text, _nameField.text);
                       else
-                        Get.snackbar("Passwords don't match", "Please check the passwords and try again",
-                            snackPosition: SnackPosition.BOTTOM, duration: Duration(seconds: 3));
+                        Get.snackbar(
+                          "Passwords don't match",
+                          "Please check the passwords and try again",
+                          snackPosition: SnackPosition.BOTTOM,
+                        );
                     } else {
-                      Get.snackbar("Password is too short", "The password must be at least 8 characters long.",
-                          snackPosition: SnackPosition.BOTTOM, duration: Duration(seconds: 3));
+                      Get.snackbar(
+                        "Password is too short",
+                        "The password must be at least 8 characters long.",
+                        snackPosition: SnackPosition.BOTTOM,
+                      );
                     }
                   },
                   child: Center(

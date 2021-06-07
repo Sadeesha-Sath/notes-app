@@ -4,6 +4,7 @@ import 'package:notes_app/src/controllers/user_controller.dart';
 import 'package:notes_app/src/services/database.dart';
 import 'package:notes_app/src/ui/ui_constants.dart';
 import 'package:get/get.dart';
+import 'package:notes_app/src/ui/widgets/auth/password_field.dart';
 
 Future showCustomModalBottomSheet(
   BuildContext context, {
@@ -51,6 +52,7 @@ Future showCustomModalBottomSheet(
               SizedBox(
                 height: 30,
               ),
+              mode != "Name" && stage.value == 1 ? PasswordTextField(controller: textController, key: ValueKey('passwordfield'), hintText: "",) :
               TextField(
                 obscureText: mode == 'password' || (mode == 'Email') && (stage.value == 1) ? true : false,
                 controller: textController,
@@ -216,9 +218,10 @@ class BottomSheetButton extends StatelessWidget {
       onPressed: onPressed,
       child: Text(
         text,
-        style: TextStyle(fontSize: 18, color: color),
+        style: TextStyle(fontSize: 18),
       ),
       style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all(color),
         padding: MaterialStateProperty.all(
           EdgeInsets.symmetric(horizontal: 20, vertical: 12.5),
         ),

@@ -12,6 +12,7 @@ class LockedNotesInit extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("notemodel : --  $noteModel");
     return SingleChildScrollView(
       child: Container(
         height: 42 * Get.height / 45,

@@ -2,9 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:notes_app/src/controllers/firebase_auth_controller.dart';
+import 'package:notes_app/src/controllers/notes_controller.dart';
 import 'package:notes_app/src/controllers/user_controller.dart';
 import 'package:notes_app/src/methods/show_custom_bottom_sheet.dart';
+import 'package:notes_app/src/services/database.dart';
 import 'package:notes_app/src/ui/platform_aware_widgets/platform_alert_dialog.dart';
+import 'package:notes_app/src/ui/screens/auth/start_screen.dart';
 import 'package:notes_app/src/ui/widgets/auth/password_field.dart';
 import 'package:notes_app/src/ui/widgets/profile_screen/profile_screen_listtile.dart';
 
@@ -78,14 +81,25 @@ class AccountSection extends GetWidget<UserController> {
                         onPressed: () async {
                           try {
                             var user = Get.find<UserController>().user!;
+                            var _notesController = Get.find<NotesController>();
+                            if (_notesController.lockedNotes == null) _notesController.bindLocked();
+                            if (_notesController.deletedNotes == null) _notesController.bindTrash();
                             var credential =
                                 EmailAuthProvider.credential(email: user.email!, password: _textController.text);
                             await user.reauthenticateWithCredential(credential);
+                            await Database.deleteUser(user.uid);
+                            await user.delete();
+                            Get.offAllNamed(StartScreen.id);
                             // TODO Delete User here (Maybe add a email auth too)
+                            print("deleting user");
                           } catch (e) {
                             print(e);
                             hasError(true);
-                            error(e.toString().split("]")[1]);
+                            try {
+                              error(e.toString().split("]")[1]);
+                            } on RangeError {
+                              error(e.toString());
+                            }
                           }
                         },
                       ),
@@ -93,8 +107,6 @@ class AccountSection extends GetWidget<UserController> {
                   ),
                 ),
               );
-
-             
             }
           },
           color: Colors.redAccent,

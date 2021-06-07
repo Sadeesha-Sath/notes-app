@@ -10,6 +10,7 @@ class UnlockLockedNotesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(arguments);
     return Scaffold(
       body: SafeArea(
         child: Get.find<UserController>().isPinSet()

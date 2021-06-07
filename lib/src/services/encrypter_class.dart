@@ -4,6 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:notes_app/src/controllers/user_controller.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
+import 'package:notes_app/src/services/database.dart';
 
 class EncrypterClass {
   static String protectedSpacePin = Get.find<UserController>().userModel!.protectedSpacePin!;
@@ -43,6 +44,8 @@ class EncrypterClass {
     else
       iv = newIv;
   }
+
+
 
   String encryptText({required String string}) {
     final encrypted = encrypter.encrypt(string, iv: encrypt.IV.fromBase64(iv!));

@@ -17,6 +17,7 @@ class PinSetScreen extends StatelessWidget {
   final NoteModel? noteModel = Get.arguments;
   @override
   Widget build(BuildContext context) {
+    print("pin set args : $noteModel");
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: kToolbarHeight + 20,
@@ -66,22 +67,17 @@ class PinSetScreen extends StatelessWidget {
                           key: ValueKey('biometrics'),
                         ),
                         Spacer(),
-                        ContinueButton(onPressed: () {
+                        ContinueButton(onPressed: () async {
+                          print(noteModel);
                           if (noteModel != null) {
-                            if (noteModel!.noteId != null) {
-                              Database.transferNote(
-                                  uid: Get.find<UserController>().user!.uid,
-                                  toCollection: 'locked',
-                                  fromCollection: 'notes',
-                   
-                                  noteModel: noteModel!);
-                            } else {
-                              // ? IS this necessory
-                              Database.addNote(
-                                  uid: Get.find<UserController>().user!.uid,
-                                  note: noteModel!,
-                                  collectionName: 'locked');
-                            }
+                            print(noteModel?.noteId);
+                            print('transferring');
+
+                            Database.transferNote(
+                                uid: Get.find<UserController>().user!.uid,
+                                toCollection: 'locked',
+                                fromCollection: 'notes',
+                                noteModel: noteModel!);
                           }
                           Get.offNamedUntil(LockedNotesScreen.id, ModalRoute.withName(HomeScreen.id));
                         })

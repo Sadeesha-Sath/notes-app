@@ -101,7 +101,7 @@ class LoginScreen extends StatelessWidget {
                       Get.find<FirebaseAuthController>().loginUser(_emailField.text, _passwordField.text);
                     else {
                       Get.snackbar("Password is too short", "The password must be at least 8 characters long.",
-                          snackPosition: SnackPosition.BOTTOM, duration: Duration(seconds: 3));
+                          snackPosition: SnackPosition.BOTTOM,);
                     }
                   },
                   child: Center(

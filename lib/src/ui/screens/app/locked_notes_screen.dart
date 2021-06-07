@@ -34,7 +34,7 @@ class LockedNotesScreen extends GetView<NotesController> {
                   AppbarButton(
                     onTap: () {},
                     customIcon: Icon(
-                      Icons.delete_forever_rounded,
+                      CupertinoIcons.trash_fill,
                       size: 27,
                       color: Colors.red.shade200,
                     ),
@@ -47,43 +47,27 @@ class LockedNotesScreen extends GetView<NotesController> {
                     init: Get.find<NotesController>(),
                     builder: (NotesController notesController) {
                       if (notesController.lockedNotes != null) {
-                        if (notesController.lockedNotes!.isNotEmpty) {
-                          return Row(
-                            crossAxisAlignment: CrossAxisAlignment.baseline,
-                            textBaseline: TextBaseline.alphabetic,
-                            children: [
-                              Text(
-                                "${notesController.lockedNotes!.length} Notes",
-                                style: TextStyle(color: Colors.black, fontSize: 33),
-                              ),
-                              SizedBox(
-                                width: 2,
-                              ),
-                              Icon(
-                                CupertinoIcons.lock_fill,
-                                size: 32,
-                              )
-                            ],
-                          );
-                        } else {
-                          return Row(
-                            crossAxisAlignment: CrossAxisAlignment.baseline,
-                            textBaseline: TextBaseline.alphabetic,
-                            children: [
-                              Text(
-                                "No Secrets Yet ",
-                                style: TextStyle(color: Colors.black, fontSize: 27),
-                              ),
-                              SizedBox(
-                                width: 2,
-                              ),
-                              Icon(
-                                CupertinoIcons.lock_fill,
-                                size: 29,
-                              )
-                            ],
-                          );
-                        }
+                        return Row(
+                          crossAxisAlignment: CrossAxisAlignment.baseline,
+                          textBaseline: TextBaseline.alphabetic,
+                          children: [
+                            Text(
+                              (notesController.lockedNotes!.isNotEmpty)
+                                  ? notesController.lockedNotes!.length == 1
+                                      ? "1 Note"
+                                      : "${notesController.lockedNotes!.length} Notes"
+                                  : "No Secrets",
+                              style: TextStyle(color: Colors.black, fontSize: 33),
+                            ),
+                            SizedBox(
+                              width: 2,
+                            ),
+                            Icon(
+                              CupertinoIcons.lock_fill,
+                              size: (notesController.lockedNotes!.isNotEmpty) ? 32 : 29,
+                            )
+                          ],
+                        );
                       } else {
                         return Container();
                       }

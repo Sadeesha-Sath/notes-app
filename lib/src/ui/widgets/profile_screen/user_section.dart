@@ -19,14 +19,14 @@ class UserSection extends GetView<UserController> {
           SizedBox(height: 5),
           Obx(
             () => Text(
-              controller.userModel!.name,
+              controller.userModel?.name ?? "Name",
               style: TextStyle(fontSize: 27),
             ),
           ),
           SizedBox(height: 3),
           Obx(
             () => Text(
-              controller.user!.email!,
+              controller.user?.email ?? "email",
               style: TextStyle(color: Colors.grey.shade700, fontSize: 16),
             ),
           ),
@@ -68,14 +68,18 @@ class UserSection extends GetView<UserController> {
                   ),
                 ),
                 Obx(
-                  () => !controller.user!.emailVerified
+                  () => getVerified()
                       ? Positioned(
-                          right: 2,
+                          right: 3,
                           top: 2,
-                          child: Container(
-                            width: 14,
-                            height: 14,
-                            decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.redAccent),
+                          child: Material(
+                            shape: CircleBorder(),
+                            color: Colors.redAccent,
+                            elevation: 1,
+                            child: Container(
+                              width: 14,
+                              height: 14,
+                            ),
                           ),
                         )
                       : Container(),
@@ -86,5 +90,10 @@ class UserSection extends GetView<UserController> {
         ],
       ),
     );
+  }
+
+  bool getVerified() {
+    if (controller.user == null) return true;
+    return !controller.user!.emailVerified;
   }
 }

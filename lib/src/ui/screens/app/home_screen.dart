@@ -67,6 +67,12 @@ class HomeScreen extends StatelessWidget {
                       builder: (NotesController notesController) {
                         if (notesController.notes != null) {
                           if (notesController.notes!.isNotEmpty) {
+                            if (notesController.notes!.length == 1) {
+                              return Text(
+                                "1 Note",
+                                style: TextStyle(color: Colors.black, fontSize: 33),
+                              );
+                            }
                             return Text(
                               "${notesController.notes!.length} Notes",
                               style: TextStyle(color: Colors.black, fontSize: 33),
