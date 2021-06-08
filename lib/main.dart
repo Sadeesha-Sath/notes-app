@@ -82,6 +82,8 @@ class _AppState extends State<App> {
 
           return MaterialApp(home: Loading());
         });
+
   }
 }
-// TODO MAybe get rid of user data section in the database and use the current user method in auth, and since it is binded to UserController.user getter, then use its fields instead of database
+// TODO Use dismissable widget instead of the drag controller
+// TODO Implement search functionality

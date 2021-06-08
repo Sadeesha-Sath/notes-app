@@ -97,6 +97,7 @@ class UserController extends GetxController {
     var _notesController = Get.find<NotesController>();
     if (_notesController.lockedNotes != null) {
       print("Changing encrypter");
+      // Changing encrypter for re-encryption
       await EncrypterClass.changePin();
       print('re-encrypting locked notes');
       for (var note in _notesController.lockedNotes!) {

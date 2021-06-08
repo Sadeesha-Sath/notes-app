@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:notes_app/src/controllers/notes_controller.dart';
@@ -114,14 +112,8 @@ class Database {
     }
   }
 
-  static Stream<List<NoteModel>> noteStream({required String uid, required String collectionName}) {
-    return _firestore
-        .collection("users")
-        .doc(uid)
-        .collection(collectionName)
-        .orderBy("dateCreated", descending: true)
-        .snapshots()
-        .map((QuerySnapshot query) {
+  static Stream<List<NoteModel>> noteStream({required String uid, String collectionName = 'notes'}) {
+    List<NoteModel> getNotes(QuerySnapshot query) {
       List<NoteModel> retVal = [];
       query.docs.forEach((element) {
         if (collectionName == 'locked') {
@@ -131,7 +123,25 @@ class Database {
         }
       });
       return retVal;
-    });
+    }
+
+    // if (favourites == null || favourites == false)
+      return _firestore
+          .collection("users")
+          .doc(uid)
+          .collection(collectionName)
+          .orderBy("dateCreated", descending: true)
+          .snapshots()
+          .map((QuerySnapshot query) => getNotes(query));
+
+    // return _firestore
+    //     .collection("users")
+    //     .doc(uid)
+    //     .collection(collectionName)
+    //     .where("isFavourite", isEqualTo: true)
+    //     .orderBy("dateCreated", descending: true)
+    //     .snapshots()
+    //     .map((QuerySnapshot query) => getNotes(query));
   }
 
   static Future<void> updateNote(

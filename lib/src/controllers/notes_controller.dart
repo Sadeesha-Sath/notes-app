@@ -7,10 +7,12 @@ class NotesController extends GetxController {
   Rx<List<NoteModel>?> noteList = Rx<List<NoteModel>?>(null);
   Rx<List<NoteModel>?> lockedNoteList = Rx<List<NoteModel>?>(null);
   Rx<List<NoteModel>?> deletedNoteList = Rx<List<NoteModel>?>(null);
+  // Rx<List<NoteModel>?> favouritesList = Rx<List<NoteModel>?>(null);
 
   List<NoteModel>? get notes => noteList.value;
   List<NoteModel>? get lockedNotes => lockedNoteList.value;
   List<NoteModel>? get deletedNotes => deletedNoteList.value;
+  // List<NoteModel>? get favourites => favouritesList.value;
 
   @override
   void onInit() {
@@ -38,6 +40,10 @@ class NotesController extends GetxController {
     String uid = Get.find<UserController>().user!.uid;
     deletedNoteList.bindStream(Database.noteStream(uid: uid, collectionName: "trash"));
   }
+  // void bindFavourites() {
+  //   String uid = Get.find<UserController>().user!.uid;
+  //   favouritesList.bindStream(Database.noteStream(uid: uid, favourites: true));
+  // }
 
   @override
   void onClose() {

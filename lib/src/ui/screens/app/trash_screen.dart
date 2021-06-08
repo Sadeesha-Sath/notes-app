@@ -131,7 +131,6 @@ class TrashScreen extends GetView<NotesController> {
                 if (notesController.deletedNotes!.isNotEmpty) {
                   return ListView.builder(
                     itemBuilder: (context, index) {
-                      //TODO Add some drag support
                       NoteModel note = notesController.deletedNotes![index];
                       return ListTile(
                         horizontalTitleGap: 25,
@@ -157,7 +156,6 @@ class TrashScreen extends GetView<NotesController> {
                     itemCount: notesController.deletedNotes!.length,
                   );
                 }
-                // TODO design this
                 return Container(
                   padding: EdgeInsets.all(Get.height / 30),
                   child: Center(

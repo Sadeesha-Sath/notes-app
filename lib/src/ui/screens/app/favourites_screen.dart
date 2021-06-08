@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:notes_app/src/controllers/favourite_controller.dart';
-import 'package:notes_app/src/controllers/notes_controller.dart';
 import 'package:notes_app/src/controllers/user_controller.dart';
 import 'package:notes_app/src/helpers/content_trimmer.dart';
 import 'package:notes_app/src/models/note_model.dart';
@@ -12,14 +11,18 @@ import 'package:notes_app/src/ui/screens/app/note_screen.dart';
 import 'package:notes_app/src/ui/widgets/app_bar_button.dart';
 import 'package:notes_app/src/ui/widgets/custom_back_button.dart';
 
-class FavouritesScreen extends GetView<NotesController> {
+GlobalKey<ScaffoldState> _key = GlobalKey();
+
+class FavouritesScreen extends StatelessWidget {
   static final String id = "/favourites";
-  final FavouritesController _favouritesController = Get.put(FavouritesController());
+
+  final controller = Get.put(FavouritesController());
 
   @override
   Widget build(BuildContext context) {
-    var favourites = controller.notes!.where((element) => element.isFavourite == true).toList();
+    var favourites = controller.favourites;
     return Scaffold(
+      key: _key,
       appBar: AppBar(
         leading: CustomBackButton(),
         backgroundColor: Colors.white,
@@ -42,105 +45,201 @@ class FavouritesScreen extends GetView<NotesController> {
             child: AppbarButton(
               icon: CupertinoIcons.heart_slash,
               onTap: () async {
-                if (_favouritesController.selectedItems.isNotEmpty) {
-                  if (_favouritesController.selectedItems.isNotEmpty) {
+                if (controller.selectedItems.isNotEmpty) {
+                  if (controller.selectedItems.isNotEmpty) {
                     var value = await PlatformAlertDialog(
                       title: "Confirm Remove from Favourites",
                       cancelText: "Cancel",
                       confirmText: "Remove",
-                      content: _favouritesController.selectedItems.length > 1
+                      content: controller.selectedItems.length > 1
                           ? "Do you want to remove these notes from favourites?"
                           : "Do you want to remove this note from favourites?",
                       confirmColor: Colors.redAccent,
                     ).show(context);
 
                     if (value) {
-                      var selectedList = _favouritesController.selectedItems.toList();
+                      var selectedList = controller.selectedItems.toList();
 
                       selectedList.sort();
                       for (int index in selectedList.reversed) {
-                        Database.updateFavourite(
+                        await Database.updateFavourite(
                           uid: Get.find<UserController>().userModel!.uid,
                           isFavourite: false,
                           noteId: favourites[index].noteId!,
                         );
+                        controller.removeNote(index);
                       }
+                      controller.clearSelectedItems();
                     }
                   }
                 } else {
                   if (favourites.isEmpty)
-                    Get.snackbar("No notes in Trash", "There are no notes in trash to restore.",
-                        snackPosition: SnackPosition.BOTTOM);
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("No Favourite Notes")));
                   else
-                    Get.snackbar("No Items Selected", "There is no selected item to restore.",
-                        snackPosition: SnackPosition.BOTTOM);
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("No notes selected")));
                 }
               },
             ),
           )
         ],
       ),
-      body: Container(
-        padding: EdgeInsets.all(10),
-        child: (favourites.isNotEmpty)
-            ? ListView.builder(
-                itemBuilder: (context, index) {
-                  NoteModel note = favourites[index];
-                  return ListTile(
-                    horizontalTitleGap: 25,
-                    leading: Obx(
-                      () =>
-                          // Checkbox(
-                          //     value: _favouritesController.getBool(index),
-                          //     onChanged: (bool? value) => _favouritesController.toggleCheckbox(value!, index)),
-                          IconButton(
-                        splashRadius: 28,
-                        onPressed: () {
-                          _favouritesController.toggleCheckbox(index);
-                        },
-                        icon: Icon(
-                          _favouritesController.getBool(index) ? CupertinoIcons.heart_slash_fill : CupertinoIcons.heart,
-                          color: Colors.grey.shade700,
+      body: Obx(
+        () => Container(
+          padding: EdgeInsets.all(10),
+          child: (favourites.isNotEmpty)
+              ? ListView.builder(
+                  itemBuilder: (context, index) {
+                    NoteModel note = favourites[index];
+                    return Dismissible(
+                      dismissThresholds: {DismissDirection.endToStart: 0.45, DismissDirection.startToEnd: 0.45},
+                      onDismissed: (direction) async {
+                        var noteId = note.noteId!;
+                        if (direction == DismissDirection.startToEnd) {
+                          controller.removeNote(index);
+                          await Database.updateFavourite(
+                            uid: Get.find<UserController>().user!.uid,
+                            noteId: noteId,
+                            isFavourite: false,
+                          );
+                          restoreFavouriteSnackbar(
+                              context,
+                              NoteModel(
+                                noteId: noteId,
+                                dateCreated: note.dateCreated,
+                                isFavourite: note.isFavourite,
+                                body: note.body,
+                                title: note.title,
+                              ),
+                              index);
+                        } else if (direction == DismissDirection.endToStart) {
+                          controller.removeNote(index);
+                          await Database.transferNote(
+                              uid: Get.find<UserController>().user!.uid,
+                              toCollection: 'trash',
+                              fromCollection: 'notes',
+                              noteModel: note);
+
+                          moveToNotesSnackbar(
+                              context,
+                              NoteModel(
+                                  noteId: noteId,
+                                  dateCreated: note.dateCreated,
+                                  isFavourite: note.isFavourite,
+                                  body: note.body,
+                                  title: note.title),
+                              index);
+                        }
+                      },
+                      key: ValueKey(note),
+                      background: Container(
+                        color: Colors.green,
+                        child: ListTile(
+                          leading: Icon(
+                            CupertinoIcons.heart_slash_fill,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
-                    ),
-                    contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 3) + EdgeInsets.only(right: 10),
-                    title: Text(
-                      ContentTrimmer.trimTitle(note.title) ?? ContentTrimmer.trimBody(note.body) ?? "[No Contents]",
-                      style: TextStyle(fontSize: 18.5, fontWeight: FontWeight.w600, color: Colors.grey.shade800),
-                    ),
-                    onTap: () {
-                      Get.to(() => NoteScreen(noteModel: note));
-                    },
-                    onLongPress: () {
-                      _favouritesController.toggleCheckbox(index);
-                    },
-                    trailing: Icon(Icons.arrow_forward_ios_sharp),
-                  );
-                },
-                itemCount: favourites.length,
-              )
-            :
+                      secondaryBackground: Container(
+                        color: Colors.redAccent,
+                        child: ListTile(
+                          trailing: Icon(
+                            CupertinoIcons.trash_fill,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      child: ListTile(
+                        horizontalTitleGap: 25,
+                        leading: Obx(
+                          () => IconButton(
+                            splashRadius: 28,
+                            onPressed: () {
+                              controller.toggleCheckbox(index);
+                            },
+                            icon: Icon(
+                              controller.getBool(index) ? CupertinoIcons.heart_slash_fill : CupertinoIcons.heart,
+                              color: Colors.grey.shade700,
+                            ),
+                          ),
+                        ),
+                        contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 3) + EdgeInsets.only(right: 10),
+                        title: Text(
+                          ContentTrimmer.trimTitle(note.title) ?? ContentTrimmer.trimBody(note.body) ?? "[No Contents]",
+                          style: TextStyle(fontSize: 18.5, fontWeight: FontWeight.w600, color: Colors.grey.shade800),
+                        ),
+                        onTap: () {
+                          Get.to(() => NoteScreen(noteModel: note));
+                        },
+                        onLongPress: () {
+                          controller.toggleCheckbox(index);
+                        },
+                        trailing: Icon(Icons.arrow_forward_ios_sharp),
+                      ),
+                    );
+                  },
+                  itemCount: favourites.length,
+                )
+              :
 
-            // TODO design this
-            Container(
-                padding: EdgeInsets.all(Get.height / 30),
-                child: Center(
-                  child: Column(
-                    children: [
-                      CircleAvatar(
-                        radius: 100,
-                      ),
-                      SizedBox(height: 30),
-                      Text(
-                        "Looks like you are all cleaned up!",
-                        style: TextStyle(fontSize: 33, fontWeight: FontWeight.w600, color: Colors.grey.shade600),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
+              // TODO design this
+              Container(
+                  padding: EdgeInsets.all(Get.height / 30),
+                  child: Center(
+                    child: Column(
+                      children: [
+                        CircleAvatar(
+                          radius: 100,
+                        ),
+                        SizedBox(height: 30),
+                        Text(
+                          "Looks like you are all cleaned up!",
+                          style: TextStyle(fontSize: 33, fontWeight: FontWeight.w600, color: Colors.grey.shade600),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
+        ),
+      ),
+    );
+  }
+
+  void restoreFavouriteSnackbar(BuildContext context, NoteModel note, int index) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("Note removed from Favourites"),
+        action: SnackBarAction(
+          onPressed: () async {
+            controller.addNote(note, index);
+            Database.updateFavourite(
+              uid: Get.find<UserController>().user!.uid,
+              noteId: note.noteId!,
+              isFavourite: true,
+            );
+          },
+          label: "Undo",
+        ),
+      ),
+    );
+  }
+
+  void moveToNotesSnackbar(BuildContext context, NoteModel note, int index) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("Note moved to Trash"),
+        action: SnackBarAction(
+          onPressed: () async {
+            controller.addNote(note, index);
+            Database.transferNote(
+                uid: Get.find<UserController>().user!.uid,
+                toCollection: 'notes',
+                fromCollection: 'trash',
+                noteModel: note);
+          },
+          label: "Undo",
+        ),
       ),
     );
   }
