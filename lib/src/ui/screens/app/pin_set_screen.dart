@@ -120,7 +120,6 @@ class FirstTwoTimes extends StatelessWidget {
             textAlign: TextAlign.center,
             keyboardType: TextInputType.number,
             decoration: textFieldDecoration.copyWith(
-           
               suffixIcon: IconButton(
                 splashRadius: 20,
                 onPressed: () {
@@ -135,13 +134,14 @@ class FirstTwoTimes extends StatelessWidget {
           height: 25,
         ),
         Obx(
-          () => _pinSetController.invalidInput.value
-              ? Text(
-                  _pinSetController.errorMessage.value,
-                  style: TextStyle(color: Colors.redAccent, fontSize: 17),
-                  textAlign: TextAlign.center,
-                )
-              : Container(),
+          () => Visibility(
+            visible: _pinSetController.invalidInput.value,
+            child: Text(
+              _pinSetController.errorMessage.value,
+              style: TextStyle(color: Colors.redAccent, fontSize: 17),
+              textAlign: TextAlign.center,
+            ),
+          ),
         ),
         Spacer(
           flex: 6,

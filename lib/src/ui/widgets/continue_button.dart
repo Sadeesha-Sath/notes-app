@@ -3,13 +3,14 @@ import 'package:get/get.dart';
 
 class ContinueButton extends StatelessWidget {
   final VoidCallback onPressed;
+  final double paddingVal;
 
-  ContinueButton({required this.onPressed});
+  ContinueButton({required this.onPressed, this.paddingVal = 107});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 107 + Get.width / 60),
+      padding: EdgeInsets.symmetric(horizontal: paddingVal + Get.width / 60),
       child: ElevatedButton(
         style: ButtonStyle(
           shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(30))),
@@ -19,7 +20,9 @@ class ContinueButton extends StatelessWidget {
           padding: EdgeInsets.symmetric(vertical: 15),
           child: Row(
             children: [
-              Spacer(),
+              Spacer(
+                flex: 5,
+              ),
               Text(
                 "Continue",
                 style: TextStyle(fontSize: 17),
@@ -28,6 +31,7 @@ class ContinueButton extends StatelessWidget {
                 Icons.arrow_forward_ios_rounded,
                 size: 22,
               ),
+              Spacer(),
             ],
           ),
         ),

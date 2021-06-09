@@ -15,13 +15,22 @@ class FirebaseAuthController extends GetxController {
   @override
   void onInit() {
     _firebaseUser = _auth.currentUser.obs;
-    _firebaseUser.bindStream(_auth.authStateChanges());
+    _firebaseUser.bindStream(_auth.userChanges());
 
     ever(_firebaseUser, checkUser);
 
     Get.lazyPut(() => UserController());
 
     super.onInit();
+  }
+
+  Future sendPasswordResetEmail(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+    } catch (e) {
+      print(e);
+      return e;
+    }
   }
 
   void checkUser(User? user) async {
@@ -32,7 +41,7 @@ class FirebaseAuthController extends GetxController {
     }
   }
 
-  void registerUser(String email, String password, String name) async {
+  Future<void> registerUser(String email, String password, String name) async {
     try {
       var response = await _auth.createUserWithEmailAndPassword(email: email.trim(), password: password);
       await response.user!.updateProfile(displayName: name == "" ? email.trim().split("@")[0] : name);
@@ -42,7 +51,7 @@ class FirebaseAuthController extends GetxController {
     }
   }
 
-  void loginUser(String email, String password) async {
+  Future<void> loginUser(String email, String password) async {
     try {
       await _auth.signInWithEmailAndPassword(email: email.trim(), password: password);
     } catch (e) {

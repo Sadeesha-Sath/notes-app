@@ -13,11 +13,6 @@ Future showCustomModalBottomSheet(
   required TextEditingController textController,
   required String mode,
 }) {
-  RxInt stage = 1.obs;
-  RxBool hasError = false.obs;
-  RxString error = "".obs;
-  RxString password = "".obs;
-  UserController controller = Get.find<UserController>();
   return showModalBottomSheet(
       useRootNavigator: true,
       shape: RoundedRectangleBorder(
@@ -29,202 +24,224 @@ Future showCustomModalBottomSheet(
       // isScrollControlled: true,
       context: context,
       builder: (context) {
-        return Container(
-          padding: EdgeInsets.all(25),
-          // height: 250,
-          child: Column(
-            children: [
-              if (mode == "Name")
-                Text("Enter New Name", style: TextStyle(fontSize: 20))
-              else if (mode == "pin")
-                Text(
-                  "Enter your Current Pin to Continue",
-                  style: TextStyle(fontSize: 20),
-                )
-              else
-                Obx(
-                  () => (stage.value == 1)
-                      ? Text("Enter your Password to Continue", style: TextStyle(fontSize: 20))
-                      : (mode == "Email")
-                          ? Text("Enter your Email", style: TextStyle(fontSize: 20))
-                          : stage.value == 2
-                              ? Text(
-                                  "Enter New Password",
-                                  style: TextStyle(fontSize: 20),
-                                )
-                              : Text(
-                                  "Confirm New Password",
-                                  style: TextStyle(fontSize: 20),
-                                ),
-                ),
-              SizedBox(
-                height: 30,
-              ),
-              if ((mode == "Email" && stage.value == 1) || mode == 'password')
-                PasswordTextField(
-                  controller: textController,
-                  key: ValueKey('passwordfield'),
-                  hintText: "",
-                )
-              else
-                TextField(
-                  keyboardType: mode == "pin" ? TextInputType.number : null,
-                  obscureText: mode == 'pin' ? true : false,
-                  controller: textController,
-                  style: TextStyle(fontSize: 20),
-                  textAlign: mode == 'pin' ? TextAlign.center : TextAlign.start,
-                  decoration: textFieldDecoration,
-                ),
-              Obx(
-                () => hasError.value
-                    ? Container(
-                        margin: EdgeInsets.only(top: 25),
-                        child: Text(
-                          error.value,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 16, color: Colors.redAccent),
-                        ),
-                      )
-                    : Container(),
-              ),
-              SizedBox(
-                height: 45,
-              ),
-              if (mode == "Name")
-                BottomSheetButton(
-                  onPressed: () async {
-                    try {
-                      controller.updateName(textController.text);
-                      Database.updateName(controller.user!.uid, textController.text);
-                      if (controller.user?.displayName != null) {
-                        controller.user!.updateProfile(displayName: textController.text);
-                      }
-                      Get.back();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text("Update Successful"),
-                          backgroundColor: Colors.blue.shade900,
-                        ),
-                      );
-                    } catch (e) {
-                      print(e);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text("Update Unsuccessful"),
-                          backgroundColor: Colors.red.shade900,
-                        ),
-                      );
-                    }
-                  },
-                  text: "Update Name",
-                )
-              else if (mode == 'pin')
-                BottomSheetButton(
-                  text: "Continue",
-                  onPressed: () {
-                    if (controller.isPinCorrect(int.tryParse(textController.text))) {
-                      hasError(false);
-                      Get.toNamed(PinSetScreen.id);
-                    } else {
-                      textController.clear();
-                      hasError(true);
-                      error("Used Pin is Incorrect.");
-                    }
-                  },
-                )
-              else
-                Obx(
-                  () => stage.value == 1
-                      ? ContinueButton(
-                          onPressed: () async {
-                            try {
-                              var credentials = EmailAuthProvider.credential(
-                                email: controller.user!.email!,
-                                password: textController.text,
-                              );
-                              await controller.user!.reauthenticateWithCredential(credentials);
-                              textController.clear();
-                              hasError(false);
-                              ++stage;
-                            } catch (e) {
-                              print(e);
-                              hasError(true);
-                              error("${e.toString().split(']')[1]}");
-                            }
-                          },
-                        )
-                      : (mode == "Email")
-                          ? BottomSheetButton(
-                              onPressed: () async {
-                                try {
-                                  if (RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
-                                          caseSensitive: false)
-                                      .hasMatch(textController.text)) {
-                                    await controller.user!.updateEmail(textController.text);
-                                    hasError(false);
-                                    textController.clear();
-
-                                    Get.back();
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text("Update Successful"),
-                                        backgroundColor: Colors.blue.shade900,
-                                      ),
-                                    );
-                                  } else {
-                                    hasError(true);
-                                    error("Invalid Email. Please enter a valid email address.");
-                                  }
-                                } catch (e) {
-                                  print(e);
-                                  Get.snackbar(
-                                    "Update Unsuccessful",
-                                    e.toString(),
-                                    snackPosition: SnackPosition.BOTTOM,
-                                    backgroundColor: Colors.red.shade900,
-                                  );
-                                }
-                              },
-                              text: "Update Email",
-                            )
-                          : (stage.value == 2)
-                              ? ContinueButton(onPressed: () {
-                                  password(textController.text);
-                                  hasError(false);
-                                  textController.clear();
-                                  ++stage;
-                                })
-                              : BottomSheetButton(
-                                  onPressed: () async {
-                                    try {
-                                      if (password.value == textController.text) {
-                                        await controller.user!.updatePassword(password.value);
-                                        textController.clear();
-                                        hasError(false);
-                                        Get.back();
-                                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                          content: Text("Update Successful"),
-                                          backgroundColor: Colors.green,
-                                        ));
-                                      } else {
-                                        hasError(true);
-                                        error("Passwords don't match. Please try again.");
-                                        textController.clear();
-                                      }
-                                    } catch (e) {
-                                      print(e);
-                                      hasError(true);
-                                      error("${e.toString().split(']')[1]}");
-                                      textController.clear();
-                                    }
-                                  },
-                                  text: "Update Password",
-                                ),
-                ),
-            ],
-          ),
-        );
+        return BottomSheet(mode, textController);
       });
+}
+
+class BottomSheet extends GetView<UserController> {
+  BottomSheet(this.mode, this.textController);
+
+  final String mode;
+  final TextEditingController textController;
+  final RxInt stage = 1.obs;
+
+  final Rx<String?> error = Rx(null);
+  final RxString password = "".obs;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(25),
+      // height: 250,
+      child: Column(
+        children: [
+          getTitle(),
+          SizedBox(
+            height: 30,
+          ),
+          getTextField(),
+          Obx(() => Visibility(
+                visible: error.value != null,
+                child: Container(
+                  margin: EdgeInsets.only(top: 25),
+                  child: Text(
+                    error.value.toString(),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 16, color: Colors.redAccent),
+                  ),
+                ),
+              )),
+          SizedBox(
+            height: 45,
+          ),
+          getButton(context),
+        ],
+      ),
+    );
+  }
+
+  Widget getTitle() {
+    if (mode == "Name")
+      return Text("Enter New Name", style: TextStyle(fontSize: 20));
+    else if (mode == "pin")
+      return Text(
+        "Enter your Current Pin to Continue",
+        style: TextStyle(fontSize: 20),
+      );
+    else
+      return Obx(
+        () => (stage.value == 1)
+            ? Text("Enter your Password to Continue", style: TextStyle(fontSize: 20))
+            : (mode == "Email")
+                ? Text("Enter your Email", style: TextStyle(fontSize: 20))
+                : stage.value == 2
+                    ? Text(
+                        "Enter New Password",
+                        style: TextStyle(fontSize: 20),
+                      )
+                    : Text(
+                        "Confirm New Password",
+                        style: TextStyle(fontSize: 20),
+                      ),
+      );
+  }
+
+  Widget getTextField() {
+    if ((mode == "Email" && stage.value == 1) || mode == 'password')
+      return PasswordTextField(
+        controller: textController,
+        key: ValueKey('passwordfield'),
+        hintText: "",
+      );
+    else
+      return TextField(
+        keyboardType: mode == "pin" ? TextInputType.number : null,
+        obscureText: mode == 'pin' ? true : false,
+        controller: textController,
+        style: TextStyle(fontSize: 20),
+        textAlign: mode == 'pin' ? TextAlign.center : TextAlign.start,
+        decoration: textFieldDecoration,
+      );
+  }
+
+  Widget getButton(BuildContext context) {
+    if (mode == "Name")
+      return BottomSheetButton(
+        onPressed: () async {
+          try {
+            controller.updateName(textController.text);
+            Database.updateName(controller.user!.uid, textController.text);
+            if (controller.user?.displayName != null) {
+              controller.user!.updateProfile(displayName: textController.text);
+            }
+            Get.back();
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("Update Successful"),
+                backgroundColor: Colors.blue.shade900,
+              ),
+            );
+          } catch (e) {
+            print(e);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("Update Unsuccessful"),
+                backgroundColor: Colors.red.shade900,
+              ),
+            );
+          }
+        },
+        text: "Update Name",
+      );
+    else if (mode == 'pin')
+      return BottomSheetButton(
+        text: "Continue",
+        onPressed: () {
+          if (controller.isPinCorrect(int.tryParse(textController.text))) {
+            error(null);
+            Get.toNamed(PinSetScreen.id);
+          } else {
+            textController.clear();
+
+            error("Used Pin is Incorrect.");
+          }
+        },
+      );
+    else
+      return Obx(
+        () => stage.value == 1
+            ? ContinueButton(
+                onPressed: () async {
+                  try {
+                    var credentials = EmailAuthProvider.credential(
+                      email: controller.user!.email!,
+                      password: textController.text,
+                    );
+                    await controller.user!.reauthenticateWithCredential(credentials);
+                    textController.clear();
+                    error(null);
+                    ++stage.value;
+                  } catch (e) {
+                    print(e);
+                    error("${e.toString().split(']')[1]}");
+                  }
+                },
+              )
+            : (mode == "Email")
+                ? BottomSheetButton(
+                    onPressed: () async {
+                      try {
+                        if (RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
+                                caseSensitive: false)
+                            .hasMatch(textController.text)) {
+                          await controller.user!.updateEmail(textController.text);
+                          error(null);
+                          textController.clear();
+
+                          Get.back();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text("Update Successful"),
+                              backgroundColor: Colors.blue.shade900,
+                            ),
+                          );
+                        } else {
+                          error("Invalid Email. Please enter a valid email address.");
+                        }
+                      } catch (e) {
+                        print(e);
+                        Get.snackbar(
+                          "Update Unsuccessful",
+                          e.toString(),
+                          snackPosition: SnackPosition.BOTTOM,
+                          backgroundColor: Colors.red.shade900,
+                        );
+                      }
+                    },
+                    text: "Update Email",
+                  )
+                : (stage.value == 2)
+                    ? ContinueButton(onPressed: () {
+                        password(textController.text);
+                        error(null);
+                        textController.clear();
+                        ++stage.value;
+                      })
+                    : BottomSheetButton(
+                        onPressed: () async {
+                          try {
+                            if (password.value == textController.text) {
+                              await controller.user!.updatePassword(password.value);
+                              textController.clear();
+                              Get.back();
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text("Update Successful"),
+                                backgroundColor: Colors.green,
+                              ));
+                            } else {
+                              error("Passwords don't match. Please try again.");
+                              textController.clear();
+                            }
+                          } catch (e) {
+                            print(e);
+                            error("${e.toString().split(']')[1]}");
+                            textController.clear();
+                          }
+                        },
+                        text: "Update Password",
+                      ),
+      );
+  }
 }
 
 class BottomSheetButton extends StatelessWidget {

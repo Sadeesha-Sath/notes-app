@@ -42,11 +42,13 @@ class EditProfileScreen extends GetView<UserController> {
                 ProfileScreenListTile(
                   titleWidget: Padding(
                     padding: const EdgeInsets.only(right: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    child: Wrap(
+                      alignment: WrapAlignment.spaceBetween,
+                      runAlignment: WrapAlignment.start,
+                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "Name",
+                          "Name:  ",
                           style: TextStyle(fontSize: 16, color: Color(0xFF070707)),
                         ),
                         Obx(
@@ -71,11 +73,13 @@ class EditProfileScreen extends GetView<UserController> {
                 ProfileScreenListTile(
                   titleWidget: Padding(
                     padding: const EdgeInsets.only(right: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    child: Wrap(
+                      alignment: WrapAlignment.spaceBetween,
+                      runAlignment: WrapAlignment.start,
+                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "Email",
+                          "Email:  ",
                           style: TextStyle(fontSize: 16, color: Color(0xFF070707)),
                         ),
                         Obx(
@@ -106,44 +110,68 @@ class EditProfileScreen extends GetView<UserController> {
                   },
                 ),
                 SizedBox(height: 35),
-                Obx(() => !controller.user!.emailVerified
-                    ? Container(
-                        height: 150,
-                        width: double.infinity,
-                        color: Colors.red.shade200,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Spacer(
-                              flex: 9,
-                            ),
-                            Text(
-                              "Your email is not verified yet.",
-                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-                            ),
-                            Spacer(
-                              flex: 6,
-                            ),
-                            Text(
-                              "You will not be able to use it to recover your forgotten passwords and pins. Please check your inbox and verify via the verification email.",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(fontSize: 16),
-                            ),
-                            Spacer(),
-                            TextButton(
-                                onPressed: () {
-                                  controller.user!.sendEmailVerification();
+                Obx(
+                  () => Visibility(
+                    visible: !controller.user!.emailVerified,
+                    child: Column(
+                      children: [
+                        Container(
+                          height: 150,
+                          width: double.infinity,
+                          color: Colors.red.shade200,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Spacer(
+                                flex: 9,
+                              ),
+                              Text(
+                                "Your email is not verified yet.",
+                                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                              ),
+                              Spacer(
+                                flex: 6,
+                              ),
+                              Text(
+                                "You will not be able to use it to recover your forgotten passwords and pins. Please check your inbox and verify via the verification email.",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontSize: 16),
+                              ),
+                              Spacer(),
+                              TextButton(
+                                onPressed: () async {
+                                  try {
+                                    controller.user!.sendEmailVerification();
+                                    print("sending email");
+                                  } catch (e) {
+                                    print(e);
+                                  }
                                 },
                                 child: Text(
                                   "Cannot find the email? Resend here.",
                                   style:
                                       TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Colors.blue.shade800),
-                                )),
-                            Spacer(),
-                          ],
+                                ),
+                              ),
+                              Spacer(),
+                            ],
+                          ),
                         ),
-                      )
-                    : Container()),
+                        Container(
+                          child: TextButton(
+                            child: Text(
+                              "Already Verified?",
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
+                            ),
+                            onPressed: () {
+                              controller.user!.reload();
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
           ),

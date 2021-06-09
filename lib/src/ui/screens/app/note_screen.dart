@@ -134,9 +134,20 @@ class _NoteScreenState extends State<NoteScreen> {
     }
     return [
       SizedBox(height: 15),
-      Text(
-        noteModel.title ?? "[No Title]",
-        style: TextStyle(fontSize: 27, fontWeight: FontWeight.bold),
+      GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () {
+          setState(() {
+            isEditable = true;
+          });
+        },
+        child: Container(
+          width: double.infinity,
+          child: Text(
+            noteModel.title ?? "[No Title]",
+            style: TextStyle(fontSize: 27, fontWeight: FontWeight.bold),
+          ),
+        ),
       ),
       SizedBox(height: 15),
       Text(
@@ -144,11 +155,22 @@ class _NoteScreenState extends State<NoteScreen> {
         style: TextStyle(fontSize: 18, color: Colors.black54, fontWeight: FontWeight.w500),
       ),
       SizedBox(height: 30),
-      Text(
-        noteModel.body ?? "[No Text]",
-        style: TextStyle(fontSize: 18, color: Colors.grey.shade900),
-        maxLines: null,
-        strutStyle: StrutStyle(fontSize: 21.5),
+      GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () {
+          setState(() {
+            isEditable = true;
+          });
+        },
+        child: Container(
+          width: double.infinity,
+          child: Text(
+            noteModel.body ?? "[No Text]",
+            style: TextStyle(fontSize: 18, color: Colors.grey.shade900),
+            maxLines: null,
+            strutStyle: StrutStyle(fontSize: 21.5),
+          ),
+        ),
       ),
     ];
   }
@@ -331,7 +353,7 @@ class _NoteScreenState extends State<NoteScreen> {
               } else {
                 Get.snackbar("Protcted-Space not initialized yet",
                     "Initialize Protected-Space to lock your note. Don't worry, your note will be saved and transferred when you finsh setting up",
-                     snackPosition: SnackPosition.BOTTOM);
+                    snackPosition: SnackPosition.BOTTOM);
                 Get.toNamed(UnlockLockedNotesScreen.id, arguments: noteModel);
               }
             }

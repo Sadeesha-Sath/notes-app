@@ -68,21 +68,22 @@ class UserSection extends GetView<UserController> {
                   ),
                 ),
                 Obx(
-                  () => getVerified()
-                      ? Positioned(
-                          right: 3,
-                          top: 2,
-                          child: Material(
-                            shape: CircleBorder(),
-                            color: Colors.redAccent,
-                            elevation: 1,
-                            child: Container(
-                              width: 14,
-                              height: 14,
-                            ),
-                          ),
-                        )
-                      : Container(),
+                  () => Visibility(
+                    visible: getVerified(),
+                    child: Positioned(
+                      right: 3,
+                      top: 2,
+                      child: Material(
+                        shape: CircleBorder(),
+                        color: Colors.redAccent,
+                        elevation: 1,
+                        child: Container(
+                          width: 14,
+                          height: 14,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),

@@ -14,6 +14,7 @@ import 'package:notes_app/src/ui/screens/app/pin_set_screen.dart';
 import 'package:notes_app/src/ui/screens/app/profile_screen.dart';
 import 'package:notes_app/src/ui/screens/app/trash_screen.dart';
 import 'package:notes_app/src/ui/screens/app/unlock_locked_notes_screen.dart';
+import 'package:notes_app/src/ui/screens/auth/forgot_password_screen.dart';
 import 'package:notes_app/src/ui/screens/auth/login_screen.dart';
 import 'package:notes_app/src/ui/screens/auth/register_screen.dart';
 import 'package:notes_app/src/ui/screens/auth/start_screen.dart';
@@ -71,6 +72,7 @@ class _AppState extends State<App> {
                 GetPage(name: TrashScreen.id, page: () => TrashScreen()),
                 GetPage(name: EditProfileScreen.id, page: () => EditProfileScreen()),
                 GetPage(name: FavouritesScreen.id, page: () => FavouritesScreen()),
+                GetPage(name: ForgotPasswordScreen.id, page: () => ForgotPasswordScreen()),
               ],
               theme: InheritedPreferences.of(context)!.preferences['isNightMode']!
                   ? ThemeData.dark()
@@ -82,8 +84,7 @@ class _AppState extends State<App> {
 
           return MaterialApp(home: Loading());
         });
-
   }
 }
-// TODO Use dismissable widget instead of the drag controller
+// TODO Add some loading indicators for auth
 // TODO Implement search functionality

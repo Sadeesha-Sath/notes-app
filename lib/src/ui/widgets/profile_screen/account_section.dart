@@ -61,16 +61,19 @@ class AccountSection extends GetWidget<UserController> {
                         hintText: "",
                       ),
                       Obx(
-                        () => hasError.value
-                            ? Container(
-                                margin: EdgeInsets.only(top: 25),
-                                child: Text(
-                                  error.value,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(fontSize: 16, color: Colors.redAccent),
+                        () => 
+                             Visibility(
+                               visible: hasError.value,
+                               child: Container(
+                                  margin: EdgeInsets.only(top: 25),
+                                  child: Text(
+                                    error.value,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(fontSize: 16, color: Colors.redAccent),
+                                  ),
                                 ),
-                              )
-                            : Container(),
+                             )
+                           ,
                       ),
                       SizedBox(
                         height: 45,

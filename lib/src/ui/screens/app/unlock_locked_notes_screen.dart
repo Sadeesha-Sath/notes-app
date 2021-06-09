@@ -76,7 +76,8 @@ class UnlockWithBiometricOrPin extends StatelessWidget {
                         ? TextField(
                             controller: textController,
                             style: TextStyle(fontSize: 20),
-                            decoration: textFieldDecoration,
+                            decoration: textFieldDecoration.copyWith(
+                                hintText: "Enter Your Protected Space Pin", hintStyle: TextStyle(fontSize: 17)),
                             textAlign: TextAlign.center,
                             keyboardType: TextInputType.number,
                           )
@@ -127,24 +128,26 @@ class UnlockWithBiometricOrPin extends StatelessWidget {
                                 ),
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                               )
-                            : Spacer(
-                                flex: 2,
-                              ),
+                            : Spacer(flex: 2),
                   ),
                   Obx(
-                    () => usePin.value ? Spacer(flex: 2) : Container(),
+                    () => Visibility(
+                      visible: usePin.value,
+                      child: Spacer(flex: 2),
+                    ),
                   ),
-                  Obx(() => error.value != null
-                      ? Text(
-                          error.value!,
+                  Obx(() => Visibility(
+                        visible: error.value != null,
+                        child: Text(
+                          error.value.toString(),
                           strutStyle: StrutStyle(fontSize: 20),
                           style: TextStyle(
                             fontSize: 17,
                             color: Colors.redAccent,
                           ),
                           textAlign: TextAlign.center,
-                        )
-                      : Container()),
+                        ),
+                      )),
                   Obx(
                     () => error.value == null ? Spacer(flex: 3) : Spacer(flex: 5),
                   ),
