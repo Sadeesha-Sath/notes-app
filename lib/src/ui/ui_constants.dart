@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 const textFieldDecoration = InputDecoration(
-  hintText: "Enter a value",
   contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 22.0),
   border: OutlineInputBorder(
     borderRadius: BorderRadius.all(Radius.circular(20)),

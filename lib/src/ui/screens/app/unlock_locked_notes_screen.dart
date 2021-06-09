@@ -4,6 +4,7 @@ import 'package:local_auth/local_auth.dart';
 import 'package:notes_app/src/controllers/user_controller.dart';
 import 'package:notes_app/src/file_handlers/inherited_preferences.dart';
 import 'package:notes_app/src/ui/screens/app/locked_notes_screen.dart';
+import 'package:notes_app/src/ui/ui_constants.dart';
 import 'package:notes_app/src/ui/widgets/locked_notes_init.dart';
 
 class UnlockLockedNotesScreen extends StatelessWidget {
@@ -12,7 +13,7 @@ class UnlockLockedNotesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(arguments);
+    // print(arguments);
     return Scaffold(
       body: SafeArea(
         child: Get.find<UserController>().isPinSet()
@@ -25,20 +26,15 @@ class UnlockLockedNotesScreen extends StatelessWidget {
   }
 }
 
-class UnlockWithBiometricOrPin extends StatefulWidget {
-  const UnlockWithBiometricOrPin({Key? key}) : super(key: key);
-
-  @override
-  _UnlockWithBiometricOrPinState createState() => _UnlockWithBiometricOrPinState();
-}
-
-class _UnlockWithBiometricOrPinState extends State<UnlockWithBiometricOrPin> {
-  late Future<bool> isBiometric;
+class UnlockWithBiometricOrPin extends StatelessWidget {
+  late final Future<bool> isBiometric;
   final _localAuth = LocalAuthentication();
-  var usePin = false.obs;
+  final textController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    var usePin = false.obs;
+    Rx<String?> error = Rx(null);
     isBiometric = _localAuth.canCheckBiometrics;
 
     return Container(
@@ -52,10 +48,14 @@ class _UnlockWithBiometricOrPinState extends State<UnlockWithBiometricOrPin> {
               if (isBioEnabled) {
                 isBioEnabled = InheritedPreferences.of(context)!.preferences['isBiometricEnabled'] ?? false;
               }
+              if (isBioEnabled)
+                usePin(false);
+              else
+                usePin(true);
               return Column(
                 children: [
                   Spacer(
-                    flex: 3,
+                    flex: 2,
                   ),
                   CircleAvatar(
                     radius: 110,
@@ -71,53 +71,82 @@ class _UnlockWithBiometricOrPinState extends State<UnlockWithBiometricOrPin> {
                   Spacer(
                     flex: 4,
                   ),
-                  if (isBioEnabled)
-                    Card(
-                      elevation: 1,
-                      color: Color(0xFFA2D1F6),
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular(20),
-                        onTap: () async {
-                          bool isAuthenticated = await _localAuth.authenticate(
-                            localizedReason: "Access your Vault",
-                            biometricOnly: true,
-                            stickyAuth: true,
-                          );
-                          if (isAuthenticated) {
-                            Get.off(LockedNotesScreen.id);
-                          } else {
-                            usePin(true);
-                          }
-                        },
-                        child: Container(
-                          width: Get.width - 100,
-                          height: 160,
-                          child: Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.fingerprint_rounded,
-                                  size: 40,
+                  Obx(
+                    () => (usePin.value)
+                        ? TextField(
+                            controller: textController,
+                            style: TextStyle(fontSize: 20),
+                            decoration: textFieldDecoration,
+                            textAlign: TextAlign.center,
+                            keyboardType: TextInputType.number,
+                          )
+                        : (isBioEnabled)
+                            ? Card(
+                                elevation: 1,
+                                color: Color(0xFFA2D1F6),
+                                child: InkWell(
+                                  borderRadius: BorderRadius.circular(20),
+                                  onTap: () async {
+                                    try {
+                                      bool isAuthenticated = await _localAuth.authenticate(
+                                        localizedReason: "Access your Vault",
+                                        biometricOnly: true,
+                                        stickyAuth: true,
+                                      );
+                                      if (isAuthenticated) {
+                                        Get.off(LockedNotesScreen.id);
+                                      } else {
+                                        error("Look like your biometrics don't match. Please use the pin to continue.");
+                                        usePin(true);
+                                      }
+                                    } catch (e) {
+                                      error("Look like your biometrics don't work. Please use the pin to continue.");
+                                      usePin(true);
+                                    }
+                                  },
+                                  child: Container(
+                                    width: Get.width - 100,
+                                    height: 160,
+                                    child: Center(
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            Icons.fingerprint_rounded,
+                                            size: 40,
+                                          ),
+                                          SizedBox(height: 20),
+                                          Text(
+                                            "Use Biometrics",
+                                            style: TextStyle(fontSize: 19),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                                SizedBox(height: 20),
-                                Text(
-                                  "Use Biometrics",
-                                  style: TextStyle(fontSize: 19),
-                                ),
-                              ],
-                            ),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                              )
+                            : Spacer(
+                                flex: 2,
+                              ),
+                  ),
+                  Obx(
+                    () => usePin.value ? Spacer(flex: 2) : Container(),
+                  ),
+                  Obx(() => error.value != null
+                      ? Text(
+                          error.value!,
+                          strutStyle: StrutStyle(fontSize: 20),
+                          style: TextStyle(
+                            fontSize: 17,
+                            color: Colors.redAccent,
                           ),
-                        ),
-                      ),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                    )
-                  else
-                    Spacer(
-                      flex: 2,
-                    ),
-                  Spacer(
-                    flex: 2,
+                          textAlign: TextAlign.center,
+                        )
+                      : Container()),
+                  Obx(
+                    () => error.value == null ? Spacer(flex: 3) : Spacer(flex: 5),
                   ),
                   ElevatedButton(
                     style: ButtonStyle(
@@ -127,11 +156,20 @@ class _UnlockWithBiometricOrPinState extends State<UnlockWithBiometricOrPin> {
                     onPressed: () {
                       if (!usePin.value)
                         usePin(true);
-                      else {}
+                      else {
+                        final int? value = int.tryParse(textController.text);
+                        if (value != null && Get.find<UserController>().isPinCorrect(value)) {
+                          Get.offNamed(LockedNotesScreen.id);
+                        } else {
+                          error("The pin doesn't seem to match. Please try again.");
+                        }
+                      }
                     },
-                    child: Text(
-                      usePin.value ? "Show me" : "Use Pin Instead",
-                      style: TextStyle(fontSize: 19),
+                    child: Obx(
+                      () => Text(
+                        usePin.value ? "Continue" : "Use Pin Instead",
+                        style: TextStyle(fontSize: 19),
+                      ),
                     ),
                   ),
                   Spacer(

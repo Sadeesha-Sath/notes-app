@@ -19,7 +19,7 @@ Future showCustomModalBottomSheet(
   RxString password = "".obs;
   UserController controller = Get.find<UserController>();
   return showModalBottomSheet(
-      // useRootNavigator: true,
+      useRootNavigator: true,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(20),
@@ -73,7 +73,7 @@ Future showCustomModalBottomSheet(
                   controller: textController,
                   style: TextStyle(fontSize: 20),
                   textAlign: mode == 'pin' ? TextAlign.center : TextAlign.start,
-                  decoration: textFieldDecoration.copyWith(hintText: ""),
+                  decoration: textFieldDecoration,
                 ),
               Obx(
                 () => hasError.value

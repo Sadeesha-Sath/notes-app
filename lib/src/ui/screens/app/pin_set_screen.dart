@@ -120,7 +120,7 @@ class FirstTwoTimes extends StatelessWidget {
             textAlign: TextAlign.center,
             keyboardType: TextInputType.number,
             decoration: textFieldDecoration.copyWith(
-              hintText: "",
+           
               suffixIcon: IconButton(
                 splashRadius: 20,
                 onPressed: () {
