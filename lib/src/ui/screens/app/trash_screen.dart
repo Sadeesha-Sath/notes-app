@@ -40,29 +40,27 @@ class TrashScreen extends GetView<NotesController> {
               icon: Icons.restore_page_rounded,
               onTap: () async {
                 if (_trashScreenController.selectedItems.isNotEmpty) {
-                  if (_trashScreenController.selectedItems.isNotEmpty) {
-                    var value = await PlatformAlertDialog(
-                      title: "Confirm Restore",
-                      cancelText: "Cancel",
-                      confirmText: "Restore",
-                      content: _trashScreenController.selectedItems.length > 1
-                          ? "Do you want to restore these notes?"
-                          : "Do you want to restore this note?",
-                      confirmColor: Colors.greenAccent.shade700,
-                    ).show(context);
+                  var value = await PlatformAlertDialog(
+                    title: "Confirm Restore",
+                    cancelText: "Cancel",
+                    confirmText: "Restore",
+                    content: _trashScreenController.selectedItems.length > 1
+                        ? "Do you want to restore these notes?"
+                        : "Do you want to restore this note?",
+                    confirmColor: Colors.greenAccent.shade700,
+                  ).show(context);
 
-                    if (value) {
-                      var trashList = _trashScreenController.selectedItems.toList();
+                  if (value) {
+                    var trashList = _trashScreenController.selectedItems.toList();
 
-                      trashList.sort();
-                      for (int index in trashList.reversed) {
-                        Database.transferNote(
-                          uid: Get.find<UserController>().userModel!.uid,
-                          toCollection: 'notes',
-                          fromCollection: 'trash',
-                          noteModel: controller.deletedNotes![index],
-                        );
-                      }
+                    trashList.sort();
+                    for (int index in trashList.reversed) {
+                      Database.transferNote(
+                        uid: Get.find<UserController>().userModel!.uid,
+                        toCollection: 'notes',
+                        fromCollection: 'trash',
+                        noteModel: controller.deletedNotes![index],
+                      );
                     }
                   }
                 } else {
@@ -77,34 +75,31 @@ class TrashScreen extends GetView<NotesController> {
             ),
             AppbarButton(
               customIcon: Icon(
-             
                 CupertinoIcons.trash_fill,
                 color: Colors.red.shade200,
               ),
               onTap: () async {
                 if (_trashScreenController.selectedItems.isNotEmpty) {
-                  if (_trashScreenController.selectedItems.isNotEmpty) {
-                    var value = await PlatformAlertDialog(
-                      title: "Confirm Delete",
-                      cancelText: "Cancel",
-                      confirmText: "Delete",
-                      content: _trashScreenController.selectedItems.length > 1
-                          ? "Do you want to delete these notes permenently?"
-                          : "Do you want to delete this note permenently?",
-                      confirmColor: Colors.redAccent,
-                    ).show(context);
+                  var value = await PlatformAlertDialog(
+                    title: "Confirm Delete",
+                    cancelText: "Cancel",
+                    confirmText: "Delete",
+                    content: _trashScreenController.selectedItems.length > 1
+                        ? "Do you want to delete these notes permenently?"
+                        : "Do you want to delete this note permenently?",
+                    confirmColor: Colors.redAccent,
+                  ).show(context);
 
-                    if (value) {
-                      var trashList = _trashScreenController.selectedItems.toList();
-                      trashList.sort();
-                      for (int index in trashList.reversed) {
-                        Database.deleteNote(
-                          uid: Get.find<UserController>().userModel!.uid,
-                          noteId: controller.deletedNotes![index].noteId!,
-                        );
-                      }
-                      _trashScreenController.selectedItems.clear();
+                  if (value) {
+                    var trashList = _trashScreenController.selectedItems.toList();
+                    trashList.sort();
+                    for (int index in trashList.reversed) {
+                      Database.deleteNote(
+                        uid: Get.find<UserController>().userModel!.uid,
+                        noteId: controller.deletedNotes![index].noteId!,
+                      );
                     }
+                    _trashScreenController.selectedItems.clear();
                   }
                 } else {
                   if (controller.deletedNotes!.isEmpty)

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:notes_app/src/controllers/user_controller.dart';
+import 'package:notes_app/src/methods/show_custom_bottom_sheet.dart';
+import 'package:notes_app/src/models/mode_enum.dart';
 import 'package:notes_app/src/models/note_model.dart';
 import 'package:notes_app/src/services/database.dart';
 import 'package:notes_app/src/ui/platform_aware_widgets/platform_alert_dialog.dart';
@@ -361,17 +363,30 @@ class _NoteScreenState extends State<NoteScreen> {
             break;
           case "Unlock Note":
             // Remove from Protected-Space
-            // TODO Add confirmation and biometric auth
-            setState(() {
-              collectionName = 'notes';
-            });
-            await Database.transferNote(
-              uid: Get.find<UserController>().user!.uid,
-              toCollection: 'notes',
-              fromCollection: 'locked',
-              noteModel: noteModel,
-            );
-            Get.snackbar("Unlock Successful", "Note was unlocked successfully", snackPosition: SnackPosition.BOTTOM);
+
+            var value = await PlatformAlertDialog(
+              title: "Confirm Moving",
+              cancelText: "Cancel",
+              confirmText: "Move",
+              content: "Do you want to unlock this note? Anyone using your device will be able to see it.",
+              confirmColor: Colors.greenAccent.shade700,
+            ).show(context);
+            if (value) {
+              var response = await showCustomModalBottomSheet(context, mode: Mode.pinWithBiometrics);
+              if (response != null && response) {
+                setState(() {
+                  collectionName = 'notes';
+                });
+                await Database.transferNote(
+                  uid: Get.find<UserController>().user!.uid,
+                  toCollection: 'notes',
+                  fromCollection: 'locked',
+                  noteModel: noteModel,
+                );
+                Get.snackbar("Unlock Successful", "Note was unlocked successfully",
+                    snackPosition: SnackPosition.BOTTOM);
+              }
+            }
             break;
           case "Send to Trash":
             // Add to Trash
@@ -407,14 +422,17 @@ class _NoteScreenState extends State<NoteScreen> {
             ).show(context);
 
             if (value) {
-              Database.deleteNote(
-                uid: Get.find<UserController>().user!.uid,
-                collectionName: 'locked',
-                noteId: noteModel.noteId!,
-              );
-              Get.back();
-              Get.snackbar("Delete Completed", "The note was deleted permenently.",
-                  snackPosition: SnackPosition.BOTTOM);
+              var response = await showCustomModalBottomSheet(context, mode: Mode.pinWithBiometrics);
+              if (response != null && response) {
+                Database.deleteNote(
+                  uid: Get.find<UserController>().user!.uid,
+                  collectionName: 'locked',
+                  noteId: noteModel.noteId!,
+                );
+                Get.back();
+                Get.snackbar("Delete Completed", "The note was deleted permenently.",
+                    snackPosition: SnackPosition.BOTTOM);
+              }
             }
             break;
         }

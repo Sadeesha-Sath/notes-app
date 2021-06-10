@@ -86,5 +86,5 @@ class _AppState extends State<App> {
         });
   }
 }
-// TODO Add some loading indicators for auth
+
 // TODO Implement search functionality

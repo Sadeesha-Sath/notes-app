@@ -7,16 +7,18 @@ import 'package:notes_app/src/ui/screens/auth/start_screen.dart';
 class FirebaseAuthController extends GetxController {
   FirebaseAuth _auth = FirebaseAuth.instance;
   late Rx<User?> _firebaseUser;
+  Rx<User?> _userIdchanges = Rx(null);
 
   // User? get user => _firebaseUser.value;
   Rx<User?> get user => _firebaseUser;
+  User? get userTokenChanges => _userIdchanges.value;
   // FirebaseAuth get auth => _auth;
 
   @override
   void onInit() {
     _firebaseUser = _auth.currentUser.obs;
-    _firebaseUser.bindStream(_auth.userChanges());
-
+    _firebaseUser.bindStream(_auth.authStateChanges());
+    _userIdchanges.bindStream(_auth.idTokenChanges());
     ever(_firebaseUser, checkUser);
 
     Get.lazyPut(() => UserController());

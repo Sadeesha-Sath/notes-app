@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:notes_app/src/controllers/firebase_auth_controller.dart';
 import 'package:notes_app/src/controllers/user_controller.dart';
 import 'package:notes_app/src/methods/show_custom_bottom_sheet.dart';
+import 'package:notes_app/src/models/mode_enum.dart';
 import 'package:notes_app/src/ui/widgets/custom_back_button.dart';
 import 'package:notes_app/src/ui/widgets/profile_screen/profile_screen_listtile.dart';
 
@@ -24,7 +26,7 @@ class EditProfileScreen extends GetView<UserController> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Container(
-            padding: EdgeInsets.symmetric(vertical: Get.height / 25),
+            padding: EdgeInsets.only(top: Get.height / 25, bottom: Get.height / 55),
             child: Column(
               children: [
                 CircleAvatar(
@@ -66,7 +68,7 @@ class EditProfileScreen extends GetView<UserController> {
                     showCustomModalBottomSheet(
                       context,
                       textController: _textController,
-                      mode: "Name",
+                      mode: Mode.name,
                     );
                   },
                 ),
@@ -97,7 +99,7 @@ class EditProfileScreen extends GetView<UserController> {
                     showCustomModalBottomSheet(
                       context,
                       textController: _textController,
-                      mode: "Email",
+                      mode: Mode.email,
                     );
                   },
                 ),
@@ -106,13 +108,13 @@ class EditProfileScreen extends GetView<UserController> {
                   icon: Icons.password_rounded,
                   onTap: () {
                     var _textController = TextEditingController();
-                    showCustomModalBottomSheet(context, textController: _textController, mode: "password");
+                    showCustomModalBottomSheet(context, textController: _textController, mode: Mode.password);
                   },
                 ),
                 SizedBox(height: 35),
                 Obx(
                   () => Visibility(
-                    visible: !controller.user!.emailVerified,
+                    visible: getVerified(),
                     child: Column(
                       children: [
                         Container(
@@ -178,5 +180,10 @@ class EditProfileScreen extends GetView<UserController> {
         ),
       ),
     );
+  }
+
+  bool getVerified() {
+    if (controller.user == null) return true;
+    return !Get.find<FirebaseAuthController>().userTokenChanges!.emailVerified;
   }
 }

@@ -93,7 +93,6 @@ class AccountSection extends GetWidget<UserController> {
                             await Database.deleteUser(user.uid);
                             await user.delete();
                             Get.offAllNamed(StartScreen.id);
-                            // TODO Delete User here (Maybe add a email auth too)
                             print("deleting user");
                           } catch (e) {
                             print(e);
