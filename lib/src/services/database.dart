@@ -126,13 +126,13 @@ class Database {
     }
 
     // if (favourites == null || favourites == false)
-      return _firestore
-          .collection("users")
-          .doc(uid)
-          .collection(collectionName)
-          .orderBy("dateCreated", descending: true)
-          .snapshots()
-          .map((QuerySnapshot query) => getNotes(query));
+    return _firestore
+        .collection("users")
+        .doc(uid)
+        .collection(collectionName)
+        .orderBy("dateCreated", descending: true)
+        .snapshots()
+        .map((QuerySnapshot query) => getNotes(query));
 
     // return _firestore
     //     .collection("users")
@@ -190,6 +190,19 @@ class Database {
       rethrow;
     }
   }
+  static Future<void> updateColor({required String uid, required String noteId, required String color}) async {
+    try {
+      _firestore.collection('users').doc(uid).collection('notes').doc(noteId).update({"color": color});
+    } catch (e) {
+      print(e);
+      Get.snackbar(
+        "Updating the note color failed",
+        e.toString(),
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      rethrow;
+    }
+  }
 
   static Future<void> transferNote(
       {required String uid,
@@ -217,7 +230,8 @@ class Database {
         "title": collectionName == "locked" ? EncrypterClass().encryptText(string: note.title ?? "") : note.title,
         "body": collectionName == "locked" ? EncrypterClass().encryptText(string: note.body ?? "") : note.body,
         "dateCreated": note.dateCreated,
-        "isFavourite": note.isFavourite
+        "isFavourite": note.isFavourite,
+        "color": note.color,
       };
       if (note.noteId == null) {
         var noteResponse = await _firestore.collection('users').doc(uid).collection(collectionName).add(data);

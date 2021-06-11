@@ -136,7 +136,7 @@ class TrashScreen extends GetView<NotesController> {
                         ),
                         contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 3) + EdgeInsets.only(right: 10),
                         title: Text(
-                          ContentTrimmer.trimTitle(note.title) ?? ContentTrimmer.trimBody(note.body) ?? "[No Contents]",
+                          ContentTrimmer.trimmer(note.title) ?? ContentTrimmer.trimmer(note.body) ?? "[No Contents]",
                           style: TextStyle(fontSize: 18.5, fontWeight: FontWeight.w600, color: Colors.grey.shade800),
                         ),
                         onTap: () {

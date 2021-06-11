@@ -23,10 +23,6 @@ class HomeScreenAppbar extends StatelessWidget {
       backgroundColor: Color(0xFFFAFAFA),
       actions: [
         AppbarButton(
-          onTap: () {},
-          icon: Icons.search_rounded,
-        ),
-        AppbarButton(
           onTap: () => Get.toNamed(UnlockLockedNotesScreen.id),
           icon: CupertinoIcons.lock_fill,
         ),

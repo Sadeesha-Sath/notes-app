@@ -43,11 +43,13 @@ class DismissableNoteCard extends StatelessWidget {
                       toCollection: 'notes',
                       fromCollection: 'locked',
                       noteModel: NoteModel(
-                          noteId: model.noteId,
-                          dateCreated: model.dateCreated,
-                          isFavourite: model.isFavourite,
-                          body: model.body,
-                          title: model.title),
+                        noteId: model.noteId,
+                        dateCreated: model.dateCreated,
+                        isFavourite: model.isFavourite,
+                        body: model.body,
+                        title: model.title,
+                        color: model.color,
+                      ),
                     );
                   },
                 ),
@@ -72,11 +74,13 @@ class DismissableNoteCard extends StatelessWidget {
                       toCollection: 'notes',
                       fromCollection: 'trash',
                       noteModel: NoteModel(
-                          noteId: model.noteId,
-                          dateCreated: model.dateCreated,
-                          isFavourite: model.isFavourite,
-                          body: model.body,
-                          title: model.title),
+                        noteId: model.noteId,
+                        dateCreated: model.dateCreated,
+                        isFavourite: model.isFavourite,
+                        body: model.body,
+                        title: model.title,
+                        color: model.color,
+                      ),
                     );
                   },
                 ),
@@ -111,7 +115,7 @@ class DismissableNoteCard extends StatelessWidget {
               Container(
                 alignment: Alignment.topLeft,
                 child: Text(
-                  ContentTrimmer.trimTitle(model.title) ?? ContentTrimmer.trimBody(model.body) ?? "[No Content]",
+                  ContentTrimmer.trimmer(model.title) ?? ContentTrimmer.trimmer(model.body) ?? "[No Content]",
                   strutStyle: StrutStyle(fontSize: 22),
                   style: TextStyle(fontSize: 21, fontWeight: FontWeight.w600),
                 ),

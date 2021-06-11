@@ -7,23 +7,31 @@ class NoteModel {
   Timestamp dateCreated;
   bool isFavourite;
   String? noteId;
+  String color;
 
-  NoteModel({required this.noteId, this.body, this.title, required this.dateCreated, required this.isFavourite});
+  NoteModel(
+      {required this.noteId,
+      this.body,
+      this.title,
+      required this.dateCreated,
+      required this.isFavourite,
+      required this.color});
 
   NoteModel.fromDocSnapshotEncrypted(DocumentSnapshot documentSnapshot)
       : noteId = documentSnapshot.id,
         title = EncrypterClass().decryptText(string: documentSnapshot['title']),
         body = EncrypterClass().decryptText(string: documentSnapshot['body']),
         dateCreated = documentSnapshot['dateCreated'],
-        isFavourite = documentSnapshot['isFavourite'];
+        isFavourite = documentSnapshot['isFavourite'],
+        color = documentSnapshot['color'];
 
   NoteModel.fromDocumentSnapshot(DocumentSnapshot documentSnapshot)
       : noteId = documentSnapshot.id,
         title = documentSnapshot['title'],
         body = documentSnapshot['body'],
         dateCreated = documentSnapshot['dateCreated'],
-        isFavourite = documentSnapshot['isFavourite'];
-
+        isFavourite = documentSnapshot['isFavourite'],
+        color = documentSnapshot['color'];
 
   String get getDateCreated {
     var date = dateCreated.toDate();

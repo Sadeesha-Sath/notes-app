@@ -86,5 +86,3 @@ class _AppState extends State<App> {
         });
   }
 }
-
-// TODO Implement search functionality

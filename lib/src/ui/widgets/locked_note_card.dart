@@ -23,10 +23,12 @@ class NoteCard extends StatelessWidget {
           padding: EdgeInsets.all(15),
           child: Column(
             children: [
-              Container( 
+              Container(
                 alignment: Alignment.topLeft,
                 child: Text(
-                  ContentTrimmer.trimTitle(model.title) ?? ContentTrimmer.trimBody(model.body) ?? "[No Content]",
+                  ContentTrimmer.trimmer(model.title, size != null ? 27 : null) ??
+                      ContentTrimmer.trimmer(model.body, size != null ? 27 : null) ??
+                      "[No Content]",
                   strutStyle: StrutStyle(fontSize: 22),
                   style: TextStyle(fontSize: 21, fontWeight: FontWeight.w600),
                 ),

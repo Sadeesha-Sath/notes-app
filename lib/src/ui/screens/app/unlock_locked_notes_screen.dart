@@ -82,6 +82,15 @@ class UnlockWithBiometricOrPin extends StatelessWidget {
                                   hintText: "Enter Your Protected Space Pin", hintStyle: TextStyle(fontSize: 17)),
                               textAlign: TextAlign.center,
                               keyboardType: TextInputType.number,
+                              onSubmitted: (text) {
+                                final int? value = int.tryParse(text);
+                                if (value != null && Get.find<UserController>().isPinCorrect(value)) {
+                                  error(null);
+                                  Get.offNamed(LockedNotesScreen.id);
+                                } else {
+                                  error("The pin doesn't seem to match. Please try again.");
+                                }
+                              },
                             )
                           : (isBioEnabled)
                               ? BiometricCard(error: error, usePin: usePin)

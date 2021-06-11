@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:notes_app/src/controllers/user_controller.dart';
+import 'package:notes_app/src/helpers/color_converter.dart';
 import 'package:notes_app/src/methods/show_custom_bottom_sheet.dart';
 import 'package:notes_app/src/models/mode_enum.dart';
 import 'package:notes_app/src/models/note_model.dart';
@@ -24,7 +25,7 @@ class NoteScreen extends StatefulWidget {
   NoteScreen.newNote({
     this.isNewNote = true,
     this.collectionName = 'notes',
-  }) : noteModel = NoteModel(noteId: null, dateCreated: Timestamp.now(), isFavourite: false);
+  }) : noteModel = NoteModel(noteId: null, dateCreated: Timestamp.now(), isFavourite: false, color: 'white');
 
   @override
   _NoteScreenState createState() => _NoteScreenState(
@@ -63,32 +64,45 @@ class _NoteScreenState extends State<NoteScreen> {
       },
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        bottomNavigationBar: isEditable
-            ? BottomAppBar(
-                color: Colors.grey.shade300,
+        bottomNavigationBar: BottomAppBar(
+          color: ColorConverter.convertColor(noteModel.color, Get.isDarkMode),
+          child: Container(
+            // decoration: BoxDecoration(borderRadius: BorderRadius.circular(50)),
+            height: 70,
+            child: ListView.builder(
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              itemCount: kLightColorList.length,
+              itemBuilder: (context, index) => GestureDetector(
+                onTap: () async {
+                  setState(() {
+                    noteModel.color = ColorConverter.convertToString(kLightColorList[index]);
+                  });
+                  Database.updateColor(
+                      uid: Get.find<UserController>().user!.uid, noteId: noteModel.noteId!, color: noteModel.color);
+                },
                 child: Container(
-                  // decoration: BoxDecoration(borderRadius: BorderRadius.circular(50)),
-                  height: 70,
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    itemCount: 10,
-                    itemBuilder: (context, index) => Container(
-                      margin: EdgeInsets.symmetric(horizontal: 10),
-                      decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.blueAccent),
-                      width: 50,
-                      height: 50,
-                    ),
-                  ),
+                  margin: EdgeInsets.symmetric(horizontal: 10),
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: kLightColorList[index],
+                      border: kLightColorList[index] == ColorConverter.convertColor(noteModel.color, Get.isDarkMode)
+                          ? Border.all(color: Colors.black, width: 3)
+                          : null),
+                  width: 50,
+                  height: 50,
                 ),
-              )
-            : null,
+              ),
+            ),
+          ),
+        ),
         appBar: AppBar(
           leading: CustomBackButton(onTap: () => Navigator.maybePop(context)),
-          backgroundColor: Colors.white,
+          backgroundColor: ColorConverter.convertColor(noteModel.color, Get.isDarkMode),
           actions: getAppbarActions(isLocked, isInTrash),
         ),
         body: Container(
+          color: ColorConverter.convertColor(noteModel.color, Get.isDarkMode),
           padding: EdgeInsets.symmetric(horizontal: Get.width / 20, vertical: Get.height / 45),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -208,6 +222,7 @@ class _NoteScreenState extends State<NoteScreen> {
                     isFavourite: noteModel.isFavourite,
                     title: _titleController.text,
                     body: _bodyController.text,
+                    color: noteModel.color,
                   ),
                 );
                 setState(() {
@@ -252,7 +267,6 @@ class _NoteScreenState extends State<NoteScreen> {
                 isEditable = true;
               });
             }),
-        AppbarButton(icon: Icons.search_rounded, onTap: () {}),
         if (!isLocked)
           AppbarButton(
               icon: noteModel.isFavourite ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
