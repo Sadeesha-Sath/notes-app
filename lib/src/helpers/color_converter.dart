@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:notes_app/src/ui/ui_constants.dart';
 
 class ColorConverter {
@@ -20,7 +21,8 @@ class ColorConverter {
   };
   static Map<Color?, String> _reverseMap = {};
 
-  static Color convertColor(String colorCode, bool isDarkMode) {
+  static Color convertColor(String colorCode) {
+    var isDarkMode = Get.isDarkMode;
     if (_colorMap.containsKey(colorCode)) {
       if (!isDarkMode) {
         return _colorMap[colorCode]!['light']!;

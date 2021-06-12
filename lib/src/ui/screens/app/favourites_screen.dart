@@ -104,13 +104,12 @@ class FavouritesScreen extends StatelessWidget {
                           restoreFavouriteSnackbar(
                               context,
                               NoteModel(
-                                noteId: noteId,
-                                dateCreated: note.dateCreated,
-                                isFavourite: note.isFavourite,
-                                body: note.body,
-                                title: note.title,
-                                color: note.color
-                              ),
+                                  noteId: noteId,
+                                  dateCreated: note.dateCreated,
+                                  isFavourite: note.isFavourite,
+                                  body: note.body,
+                                  title: note.title,
+                                  color: note.color),
                               index);
                         } else if (direction == DismissDirection.endToStart) {
                           controller.removeNote(index);

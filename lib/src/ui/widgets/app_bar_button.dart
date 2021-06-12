@@ -14,7 +14,6 @@ class AppbarButton extends StatelessWidget {
       margin: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
       width: 45,
       child: Material(
-        //TODO Find a good Color
         color: Colors.grey.shade800,
         clipBehavior: Clip.hardEdge,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),

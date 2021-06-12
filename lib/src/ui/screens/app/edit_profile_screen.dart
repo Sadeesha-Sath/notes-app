@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:notes_app/src/controllers/firebase_auth_controller.dart';
 import 'package:notes_app/src/controllers/user_controller.dart';
 import 'package:notes_app/src/methods/show_custom_bottom_sheet.dart';
@@ -35,7 +36,70 @@ class EditProfileScreen extends GetView<UserController> {
                 ),
                 SizedBox(height: 10),
                 TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      var _picker = ImagePicker();
+                      showModalBottomSheet(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(20),
+                            topRight: Radius.circular(20),
+                          ),
+                        ),
+                        context: context,
+                        builder: (context) => Container(
+                          padding: EdgeInsets.all(25),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Choose a Source",
+                                style: TextStyle(fontSize: 30),
+                              ),
+                              SizedBox(height: 20),
+                              Container(
+                                child: Wrap(
+                                  crossAxisAlignment: WrapCrossAlignment.start,
+                                  children: [
+                                    InkWell(
+                                      onTap: () async {
+                                        // TODO Add permission check
+                                        var response = await _picker.getImage(source: ImageSource.gallery);
+                                        // TODO Upload to cloud
+                                        
+                                      },
+                                      child: Container(
+                                        height: 100,
+                                        width: 100,
+                                        decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.lightBlue),
+                                        child: Center(
+                                          child: Text("Gallery"),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(width: 20),
+                                    InkWell(
+                                      onTap: () async {
+                                        var response = await _picker.getImage(
+                                            source: ImageSource.camera, preferredCameraDevice: CameraDevice.front);
+                                        // TODO Upload to cloud
+                                      },
+                                      child: Container(
+                                        height: 100,
+                                        width: 100,
+                                        decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.amber),
+                                        child: Center(
+                                          child: Text("Camera"),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
                     child: Text(
                       "Change Profile Picture",
                       style: TextStyle(fontSize: 17),

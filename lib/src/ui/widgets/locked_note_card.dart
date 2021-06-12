@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:notes_app/src/helpers/color_converter.dart';
 import 'package:notes_app/src/helpers/content_trimmer.dart';
 import 'package:notes_app/src/models/note_model.dart';
 
@@ -17,7 +18,7 @@ class NoteCard extends StatelessWidget {
       child: Material(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         clipBehavior: Clip.hardEdge,
-        color: Colors.blue,
+        color: ColorConverter.convertColor(model.color),
         elevation: 1,
         child: Padding(
           padding: EdgeInsets.all(15),

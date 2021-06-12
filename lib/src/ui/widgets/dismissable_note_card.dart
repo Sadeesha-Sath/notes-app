@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:notes_app/src/controllers/user_controller.dart';
+import 'package:notes_app/src/helpers/color_converter.dart';
 import 'package:notes_app/src/helpers/content_trimmer.dart';
 import 'package:notes_app/src/models/note_model.dart';
 import 'package:notes_app/src/services/database.dart';
@@ -19,7 +20,7 @@ class DismissableNoteCard extends StatelessWidget {
     return Material(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       clipBehavior: Clip.hardEdge,
-      color: Colors.blue,
+      color: ColorConverter.convertColor(model.color),
       elevation: 1,
       child: Dismissible(
         key: ValueKey(model),

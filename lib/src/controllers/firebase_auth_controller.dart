@@ -58,6 +58,7 @@ class FirebaseAuthController extends GetxController {
       await _auth.signInWithEmailAndPassword(email: email.trim(), password: password);
     } catch (e) {
       print(e);
+      // TODO Add error displaying if the password or username is wrong. ( Not network issues )
       Get.snackbar("Logging In was Unsuccessful", "$e", snackPosition: SnackPosition.BOTTOM);
     }
   }

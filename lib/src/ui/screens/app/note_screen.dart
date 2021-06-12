@@ -42,6 +42,7 @@ class _NoteScreenState extends State<NoteScreen> {
   String collectionName;
   late TextEditingController _titleController;
   late TextEditingController _bodyController;
+  late Widget _body;
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +50,7 @@ class _NoteScreenState extends State<NoteScreen> {
       _titleController = TextEditingController(text: noteModel.title);
       _bodyController = TextEditingController(text: noteModel.body);
     }
+    _body = switchBody();
     bool isLocked = collectionName == 'locked';
     bool isInTrash = collectionName == 'trash';
 
@@ -65,9 +67,10 @@ class _NoteScreenState extends State<NoteScreen> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         bottomNavigationBar: BottomAppBar(
-          color: ColorConverter.convertColor(noteModel.color, Get.isDarkMode),
+          // color: ColorConverter.convertColor(noteModel.color),
+
+          color: Colors.grey.shade300,
           child: Container(
-            // decoration: BoxDecoration(borderRadius: BorderRadius.circular(50)),
             height: 70,
             child: ListView.builder(
               shrinkWrap: true,
@@ -86,8 +89,8 @@ class _NoteScreenState extends State<NoteScreen> {
                   decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: kLightColorList[index],
-                      border: kLightColorList[index] == ColorConverter.convertColor(noteModel.color, Get.isDarkMode)
-                          ? Border.all(color: Colors.black, width: 3)
+                      border: kLightColorList[index] == ColorConverter.convertColor(noteModel.color)
+                          ? Border.all(color: Colors.black, width: 2.5)
                           : null),
                   width: 50,
                   height: 50,
@@ -98,97 +101,119 @@ class _NoteScreenState extends State<NoteScreen> {
         ),
         appBar: AppBar(
           leading: CustomBackButton(onTap: () => Navigator.maybePop(context)),
-          backgroundColor: ColorConverter.convertColor(noteModel.color, Get.isDarkMode),
+          backgroundColor: ColorConverter.convertColor(noteModel.color),
           actions: getAppbarActions(isLocked, isInTrash),
         ),
         body: Container(
-          color: ColorConverter.convertColor(noteModel.color, Get.isDarkMode),
+          // color: ColorConverter.convertColor(noteModel.color, Get.isDarkMode),
           padding: EdgeInsets.symmetric(horizontal: Get.width / 20, vertical: Get.height / 45),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: getBodyChildren(),
+          child: AnimatedSwitcher(
+            duration: Duration(milliseconds: 180),
+            transitionBuilder: (Widget child, Animation<double> animation) {
+              return ScaleTransition(
+                alignment: Alignment.topLeft,
+                scale: animation,
+                child: child,
+              );
+            },
+            child: _body,
           ),
         ),
       ),
     );
   }
 
+  Widget switchBody() {
+    if (isEditable) {
+      return Column(
+        key: ValueKey<bool>(isEditable),
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 15),
+          TextField(
+            style: TextStyle(fontSize: 27, fontWeight: FontWeight.w600),
+            textAlignVertical: TextAlignVertical.top,
+            controller: _titleController,
+            textCapitalization: TextCapitalization.sentences,
+            decoration: textFieldDecoration.copyWith(
+                contentPadding: EdgeInsets.symmetric(horizontal: 22, vertical: 16),
+                hintText: "Title",
+                hintStyle: TextStyle(fontSize: 27, fontWeight: FontWeight.w600)),
+            autocorrect: true,
+            maxLines: null,
+          ),
+          SizedBox(height: 15),
+          TextField(
+            style: TextStyle(fontSize: 18, color: Colors.grey.shade900),
+            strutStyle: StrutStyle(fontSize: 21.5),
+            controller: _bodyController,
+            textAlignVertical: TextAlignVertical.top,
+            textCapitalization: TextCapitalization.sentences,
+            decoration: textFieldDecoration.copyWith(
+              contentPadding: EdgeInsets.symmetric(horizontal: 22, vertical: 16),
+              hintText: "Text",
+              hintStyle: TextStyle(fontSize: 18),
+            ),
+            autocorrect: true,
+            maxLines: null,
+          ),
+        ],
+      );
+    } else {
+      return Column(
+        key: ValueKey<bool>(isEditable),
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 15),
+          GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTap: () {
+              setState(() {
+                isEditable = true;
+              });
+            },
+            child: Container(
+              width: double.infinity,
+              child: Text(
+                noteModel.title ?? "[No Title]",
+                style: TextStyle(fontSize: 27, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+          SizedBox(height: 15),
+          Text(
+            noteModel.getDateCreated,
+            style: TextStyle(fontSize: 18, color: Colors.black54, fontWeight: FontWeight.w500),
+          ),
+          SizedBox(height: 30),
+          GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTap: () {
+              setState(() {
+                isEditable = true;
+              });
+            },
+            child: Container(
+              width: double.infinity,
+              child: Text(
+                noteModel.body ?? "[No Text]",
+                style: TextStyle(fontSize: 18, color: Colors.grey.shade900),
+                maxLines: null,
+                strutStyle: StrutStyle(fontSize: 21.5),
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+  }
+
   List<Widget> getBodyChildren() {
     if (isEditable) {
       // Editable body
-      // TODO Add some ease in animations to smooth out the transition
-      return [
-        SizedBox(height: 15),
-        TextField(
-          style: TextStyle(fontSize: 27, fontWeight: FontWeight.w600),
-          textAlignVertical: TextAlignVertical.top,
-          controller: _titleController,
-          textCapitalization: TextCapitalization.sentences,
-          decoration: textFieldDecoration.copyWith(
-              contentPadding: EdgeInsets.symmetric(horizontal: 22, vertical: 16),
-              hintText: "Title",
-              hintStyle: TextStyle(fontSize: 27, fontWeight: FontWeight.w600)),
-          autocorrect: true,
-          maxLines: null,
-        ),
-        SizedBox(height: 15),
-        TextField(
-          style: TextStyle(fontSize: 18, color: Colors.grey.shade900),
-          strutStyle: StrutStyle(fontSize: 21.5),
-          controller: _bodyController,
-          textAlignVertical: TextAlignVertical.top,
-          textCapitalization: TextCapitalization.sentences,
-          decoration: textFieldDecoration.copyWith(
-            contentPadding: EdgeInsets.symmetric(horizontal: 22, vertical: 16),
-            hintText: "Text",
-            hintStyle: TextStyle(fontSize: 18),
-          ),
-          autocorrect: true,
-          maxLines: null,
-        ),
-      ];
+      return [];
     }
-    return [
-      SizedBox(height: 15),
-      GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onTap: () {
-          setState(() {
-            isEditable = true;
-          });
-        },
-        child: Container(
-          width: double.infinity,
-          child: Text(
-            noteModel.title ?? "[No Title]",
-            style: TextStyle(fontSize: 27, fontWeight: FontWeight.bold),
-          ),
-        ),
-      ),
-      SizedBox(height: 15),
-      Text(
-        noteModel.getDateCreated,
-        style: TextStyle(fontSize: 18, color: Colors.black54, fontWeight: FontWeight.w500),
-      ),
-      SizedBox(height: 30),
-      GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onTap: () {
-          setState(() {
-            isEditable = true;
-          });
-        },
-        child: Container(
-          width: double.infinity,
-          child: Text(
-            noteModel.body ?? "[No Text]",
-            style: TextStyle(fontSize: 18, color: Colors.grey.shade900),
-            maxLines: null,
-            strutStyle: StrutStyle(fontSize: 21.5),
-          ),
-        ),
-      ),
-    ];
+    return [];
   }
 
   List<Widget> getAppbarActions(
@@ -261,7 +286,7 @@ class _NoteScreenState extends State<NoteScreen> {
     if (!isInTrash) {
       return [
         AppbarButton(
-            icon: Icons.edit,
+            customIcon: Icon(Icons.edit, color: ColorConverter.convertColor(noteModel.color)),
             onTap: () {
               setState(() {
                 isEditable = true;
@@ -269,7 +294,10 @@ class _NoteScreenState extends State<NoteScreen> {
             }),
         if (!isLocked)
           AppbarButton(
-              icon: noteModel.isFavourite ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
+              customIcon: Icon(
+                noteModel.isFavourite ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
+                color: ColorConverter.convertColor(noteModel.color),
+              ),
               onTap: () {
                 setState(() {
                   noteModel.isFavourite = !noteModel.isFavourite;
@@ -338,8 +366,13 @@ class _NoteScreenState extends State<NoteScreen> {
     ];
   }
 
-  PopupMenuButton _popupMenuButton(bool isLocked) {
+  PopupMenuButton<String> _popupMenuButton(bool isLocked) {
     return PopupMenuButton<String>(
+      icon: Icon(
+        Icons.more_vert_rounded,
+        color: ColorConverter.convertColor(noteModel.color),
+      ),
+      color: ColorConverter.convertColor(noteModel.color),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       onSelected: (value) async {
         switch (value) {

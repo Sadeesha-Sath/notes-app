@@ -19,8 +19,6 @@ class UnlockLockedNotesScreen extends StatelessWidget {
       body: SafeArea(
         child: Get.find<UserController>().isPinSet()
             ? UnlockWithBiometricOrPin()
-
-            // TODO Implement locked pin/biometrics
             : LockedNotesInit(noteModel: arguments),
       ),
     );

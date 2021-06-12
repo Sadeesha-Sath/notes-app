@@ -20,7 +20,6 @@ class PlatformAlertDialog extends PlatformWidget<AlertDialog, CupertinoAlertDial
 
   @override
   AlertDialog buildMaterialWidget(BuildContext context) {
-    // TODO Add animations for these dialogs
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       title: Text(title),
@@ -54,8 +53,18 @@ class PlatformAlertDialog extends PlatformWidget<AlertDialog, CupertinoAlertDial
   }
 
   Future<bool> show(BuildContext context) async {
-    final result =
-        await showDialog<bool>(context: context, barrierDismissible: !Platform.isIOS, builder: (context) => this);
+    final result = await showGeneralDialog<bool>(
+      context: context,
+      barrierDismissible: !Platform.isIOS,
+      barrierLabel: "",
+      pageBuilder: (context, animation, animation2) => this,
+      transitionDuration: Duration(milliseconds: 300),
+      transitionBuilder: (context, animation1, animation2, child) => ScaleTransition(
+        alignment: Alignment.topRight,
+        scale: CurvedAnimation(parent: animation1, curve: Curves.easeInOutQuart),
+        child: this,
+      ),
+    );
     return Future.value(result ?? false);
   }
 
