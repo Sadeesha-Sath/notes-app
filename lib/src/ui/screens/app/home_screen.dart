@@ -19,7 +19,7 @@ class HomeScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Color(0xFF303030),
         onPressed: () {
-          Get.to(() => NoteScreen.newNote());
+          Get.to(() => NoteScreen.newNote(), transition: Transition.downToUp);
         },
         child: Icon(
           Icons.add,
@@ -100,6 +100,7 @@ class BodyGrid extends StatelessWidget {
                 () => NoteScreen(
                   noteModel: model,
                 ),
+                transition: Transition.downToUp,
               );
             },
             child: DismissableNoteCard(model),
@@ -109,6 +110,3 @@ class BodyGrid extends StatelessWidget {
     );
   }
 }
-
-
-

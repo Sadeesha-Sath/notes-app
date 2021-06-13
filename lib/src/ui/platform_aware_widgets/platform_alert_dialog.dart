@@ -52,7 +52,7 @@ class PlatformAlertDialog extends PlatformWidget<AlertDialog, CupertinoAlertDial
     return actions;
   }
 
-  Future<bool> show(BuildContext context, {Alignment? alignment}) async {
+  Future<bool> show(BuildContext context, {Alignment? alignment, Curve? opacityCurves}) async {
     final result = await showGeneralDialog<bool>(
       context: context,
       barrierDismissible: !Platform.isIOS,
@@ -60,7 +60,7 @@ class PlatformAlertDialog extends PlatformWidget<AlertDialog, CupertinoAlertDial
       pageBuilder: (context, animation, animation2) => this,
       transitionDuration: Duration(milliseconds: 260),
       transitionBuilder: (context, animation1, animation2, child) => FadeTransition(
-        opacity: CurvedAnimation(parent: animation1, curve: Curves.easeOutCubic),
+        opacity: CurvedAnimation(parent: animation1, curve: opacityCurves ?? Curves.easeOutCubic),
         child: ScaleTransition(
           alignment: alignment ?? Alignment.topRight,
           scale: CurvedAnimation(parent: animation1, curve: Curves.easeOutCubic),

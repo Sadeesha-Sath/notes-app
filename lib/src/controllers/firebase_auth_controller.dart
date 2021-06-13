@@ -46,20 +46,32 @@ class FirebaseAuthController extends GetxController {
   Future<void> registerUser(String email, String password, String name) async {
     try {
       var response = await _auth.createUserWithEmailAndPassword(email: email.trim(), password: password);
-      await response.user!.updateProfile(displayName: name == "" ? email.trim().split("@")[0] : name);
+      await response.user!.updateDisplayName(name == "" ? email.trim().split("@")[0] : name);
     } catch (e) {
       print(e);
       Get.snackbar("Creating User Account was Unsuccessful", e.toString(), snackPosition: SnackPosition.BOTTOM);
     }
   }
 
-  Future<void> loginUser(String email, String password) async {
+  Future<void> loginUser(String email, String password, Rx<String?> error) async {
     try {
       await _auth.signInWithEmailAndPassword(email: email.trim(), password: password);
     } catch (e) {
-      print(e);
-      // TODO Add error displaying if the password or username is wrong. ( Not network issues )
-      Get.snackbar("Logging In was Unsuccessful", "$e", snackPosition: SnackPosition.BOTTOM);
+      var errorType = e.toString().split("]").first.split("/").last;
+
+      if (errorType == "invalid-email")
+        error.value = "The email you entered is invalid. Please enter a valid email address.";
+      else if (errorType == "wrong-password")
+        error.value = "The password is invalid or the user does not have a password.";
+      else if (errorType == "user-disabled")
+        error.value = "This user has disabled the account. Please enable it to continue.";
+      else if (errorType == "user-not-found")
+        error.value =
+            "There are no accounts connected to this email. Please check your email address or register a new account.";
+      else {
+        error.value = e.toString();
+        Get.snackbar("Logging In was Unsuccessful", "$e", snackPosition: SnackPosition.BOTTOM);
+      }
     }
   }
 
@@ -70,7 +82,6 @@ class FirebaseAuthController extends GetxController {
 
       print("Signed out user");
       Get.offAllNamed(StartScreen.id);
-      // Get.find<UserController>().clear();
     } catch (e) {
       print(e);
       Get.snackbar("Unable to Sign Out", "$e", snackPosition: SnackPosition.BOTTOM);

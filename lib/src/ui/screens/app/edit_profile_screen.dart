@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -14,8 +13,9 @@ import 'package:notes_app/src/ui/widgets/profile_screen/profile_screen_listtile.
 import 'package:permission_handler/permission_handler.dart';
 
 class EditProfileScreen extends GetView<UserController> {
-  const EditProfileScreen({Key? key}) : super(key: key);
+  EditProfileScreen({Key? key}) : super(key: key);
   static final String id = "/profile/edit";
+  final RxBool showIndicator = RxBool(false);
 
   @override
   Widget build(BuildContext context) {
@@ -46,8 +46,6 @@ class EditProfileScreen extends GetView<UserController> {
                 SizedBox(height: 10),
                 TextButton(
                     onPressed: () {
-                      var _picker = ImagePicker();
-                      var _showLoading = RxBool(false);
                       showModalBottomSheet(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.only(
@@ -56,134 +54,7 @@ class EditProfileScreen extends GetView<UserController> {
                           ),
                         ),
                         context: context,
-                        builder: (context) => Container(
-                          height: 300,
-                          padding: EdgeInsets.all(25),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Choose a Source",
-                                style: TextStyle(fontSize: 30),
-                              ),
-                              SizedBox(height: 40),
-                              Container(
-                                child: Wrap(
-                                  crossAxisAlignment: WrapCrossAlignment.start,
-                                  children: [
-                                    Container(
-                                      child: Column(
-                                        children: [
-                                          GestureDetector(
-                                            onTap: () async {
-                                              if (await Permission.photos.isDenied) {
-                                                await Permission.photos.request();
-                                              }
-                                              if (await Permission.photos.isGranted ||
-                                                  await Permission.photos.isLimited) {
-                                                try {
-                                                  var pickedFile = await _picker.getImage(source: ImageSource.gallery);
-                                                  print(pickedFile);
-                                                  if (pickedFile != null) {
-                                                    _showLoading(true);
-                                                    await Storage.addProfileImage(File(pickedFile.path));
-                                                    _showLoading(false);
-                                                    Get.back();
-                                                  }
-                                                } catch (e) {
-                                                  print("this is an error     $e");
-                                                }
-                                              }
-                                            },
-                                            child: Container(
-                                              height: 90,
-                                              width: 90,
-                                              decoration:
-                                                  BoxDecoration(shape: BoxShape.circle, color: Colors.lightBlue),
-                                              child: Center(
-                                                child: Icon(
-                                                  Platform.isIOS
-                                                      ? CupertinoIcons.photo_fill_on_rectangle_fill
-                                                      : Icons.photo_library_rounded,
-                                                  size: 35,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(height: 15),
-                                          Text(
-                                            "Gallery",
-                                            style: TextStyle(fontSize: 18),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(width: 25),
-                                    Container(
-                                      child: Column(
-                                        children: [
-                                          GestureDetector(
-                                            onTap: () async {
-                                              if (await Permission.camera.isDenied) {
-                                                await Permission.camera.request();
-                                              }
-                                              if (await Permission.camera.isGranted ||
-                                                  await Permission.camera.isLimited) {
-                                                try {
-                                                  var pickedFile = await _picker.getImage(
-                                                      source: ImageSource.camera,
-                                                      preferredCameraDevice: CameraDevice.front);
-                                                  if (pickedFile != null) {
-                                                    _showLoading(true);
-                                                    await Storage.addProfileImage(File(pickedFile.path));
-                                                    _showLoading(false);
-                                                    Get.back();
-                                                  }
-                                                } catch (e) {
-                                                  print(e);
-                                                }
-                                              }
-                                            },
-                                            child: Container(
-                                              height: 90,
-                                              width: 90,
-                                              decoration:
-                                                  BoxDecoration(shape: BoxShape.circle, color: Colors.lightBlue),
-                                              child: Center(
-                                                child: Icon(
-                                                  Platform.isIOS
-                                                      ? CupertinoIcons.photo_camera_solid
-                                                      : Icons.photo_camera,
-                                                  size: 35,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(height: 15),
-                                          Text(
-                                            "Camera",
-                                            style: TextStyle(fontSize: 18),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Spacer(),
-                              Obx(
-                                () => Visibility(
-                                  visible: _showLoading.value,
-                                  child: Container(
-                                    child: Center(
-                                      child: LinearProgressIndicator(),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                        builder: (context) => BottomSheet(),
                       );
                     },
                     child: Text(
@@ -315,13 +186,21 @@ class EditProfileScreen extends GetView<UserController> {
                               "Already Verified?",
                               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
                             ),
-                            onPressed: () {
-                              controller.user!.reload();
+                            onPressed: () async {
+                              showIndicator(true);
+                              await controller.user!.reload();
+                              showIndicator(false);
                             },
                           ),
                         ),
                       ],
                     ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    child: LinearProgressIndicator(),
+                    visible: showIndicator.value,
                   ),
                 ),
               ],
@@ -335,5 +214,138 @@ class EditProfileScreen extends GetView<UserController> {
   bool getVerified() {
     if (controller.user == null) return true;
     return !Get.find<FirebaseAuthController>().userTokenChanges!.emailVerified;
+  }
+}
+
+class BottomSheet extends StatelessWidget {
+  BottomSheet({
+    Key? key,
+  }) : super(key: key);
+
+  final _picker = ImagePicker();
+  final _showLoading = RxBool(false);
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 300,
+      padding: EdgeInsets.all(25),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Choose a Source",
+            style: TextStyle(fontSize: 30),
+          ),
+          SizedBox(height: 40),
+          Container(
+            child: Wrap(
+              crossAxisAlignment: WrapCrossAlignment.start,
+              children: [
+                Container(
+                  child: Column(
+                    children: [
+                      GestureDetector(
+                        onTap: () async {
+                          if (await Permission.photos.isDenied) {
+                            await Permission.photos.request();
+                          }
+                          if (await Permission.photos.isGranted || await Permission.photos.isLimited) {
+                            try {
+                              var pickedFile = await _picker.getImage(source: ImageSource.gallery);
+                              print(pickedFile);
+                              if (pickedFile != null) {
+                                _showLoading(true);
+                                await Storage.addProfileImage(File(pickedFile.path));
+                                _showLoading(false);
+                                Get.back();
+                              }
+                            } catch (e) {
+                              print("this is an error     $e");
+                            }
+                          }
+                        },
+                        child: Container(
+                          height: 90,
+                          width: 90,
+                          decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.lightBlue),
+                          child: Center(
+                            child: Icon(
+                              Platform.isIOS
+                                  ? CupertinoIcons.photo_fill_on_rectangle_fill
+                                  : Icons.photo_library_rounded,
+                              size: 35,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 15),
+                      Text(
+                        "Gallery",
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(width: 25),
+                Container(
+                  child: Column(
+                    children: [
+                      GestureDetector(
+                        onTap: () async {
+                          if (await Permission.camera.isDenied) {
+                            await Permission.camera.request();
+                          }
+                          if (await Permission.camera.isGranted || await Permission.camera.isLimited) {
+                            try {
+                              var pickedFile = await _picker.getImage(
+                                  source: ImageSource.camera, preferredCameraDevice: CameraDevice.front);
+                              if (pickedFile != null) {
+                                _showLoading(true);
+                                await Storage.addProfileImage(File(pickedFile.path));
+                                _showLoading(false);
+                                Get.back();
+                              }
+                            } catch (e) {
+                              print(e);
+                            }
+                          }
+                        },
+                        child: Container(
+                          height: 90,
+                          width: 90,
+                          decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.lightBlue),
+                          child: Center(
+                            child: Icon(
+                              Platform.isIOS ? CupertinoIcons.photo_camera_solid : Icons.photo_camera,
+                              size: 35,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 15),
+                      Text(
+                        "Camera",
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Spacer(),
+          Obx(
+            () => Visibility(
+              visible: _showLoading.value,
+              child: Container(
+                child: Center(
+                  child: LinearProgressIndicator(),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

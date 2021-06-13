@@ -14,7 +14,7 @@ class ForgotPasswordScreen extends GetView<FirebaseAuthController> {
     Rx<String?> error = Rx(null);
     RxBool showSpinner = false.obs;
     return Scaffold(
-      // resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Container(
@@ -47,7 +47,7 @@ class ForgotPasswordScreen extends GetView<FirebaseAuthController> {
                 Spacer(
                   flex: 5,
                 ),
-                EmailTextField(controller: _textEditingController, autofocus: true),
+                EmailTextField(controller: _textEditingController),
                 Spacer(),
                 Obx(
                   () => Visibility(

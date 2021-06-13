@@ -13,6 +13,7 @@ class LoginScreen extends StatelessWidget {
   final TextEditingController _emailField = TextEditingController();
   final TextEditingController _passwordField = TextEditingController();
   final showSpinner = false.obs;
+  final Rx<String?> error = Rx(null);
 
   @override
   Widget build(BuildContext context) {
@@ -80,11 +81,21 @@ class LoginScreen extends StatelessWidget {
                     ),
                   ),
                 ),
+                SizedBox(height: 10),
+                Obx(() => Visibility(
+                      visible: error.value != null,
+                      child: Text(
+                        error.value.toString(),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 16.5, color: Colors.redAccent),
+                      ),
+                    )),
                 Spacer(),
                 Obx(() => Visibility(
                     visible: showSpinner.value,
                     child: Container(
                         margin: EdgeInsets.symmetric(vertical: 10), child: CircularProgressIndicator.adaptive()))),
+                SizedBox(height: 10),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 40),
                   child: ElevatedButton(
@@ -95,14 +106,11 @@ class LoginScreen extends StatelessWidget {
                     onPressed: () async {
                       if (_passwordField.text.length > 8) {
                         showSpinner(true);
-                        await Get.find<FirebaseAuthController>().loginUser(_emailField.text, _passwordField.text);
+                        await Get.find<FirebaseAuthController>()
+                            .loginUser(_emailField.text, _passwordField.text, error);
                         showSpinner(false);
                       } else {
-                        Get.snackbar(
-                          "Password is too short",
-                          "The password must be at least 8 characters long.",
-                          snackPosition: SnackPosition.BOTTOM,
-                        );
+                        error.value = "Password is too short. The password must be at least 8 characters long.";
                       }
                     },
                     child: Center(

@@ -82,7 +82,11 @@ class _NoteScreenState extends State<NoteScreen> {
                     noteModel.color = ColorConverter.convertToString(kLightColorList[index]);
                   });
                   Database.updateColor(
-                      uid: Get.find<UserController>().user!.uid, noteId: noteModel.noteId!, color: noteModel.color);
+                    uid: Get.find<UserController>().user!.uid,
+                    noteId: noteModel.noteId!,
+                    color: noteModel.color,
+                    collectionName: collectionName,
+                  );
                 },
                 child: Container(
                   margin: EdgeInsets.symmetric(horizontal: 10),

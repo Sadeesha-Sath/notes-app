@@ -140,7 +140,12 @@ class TrashScreen extends GetView<NotesController> {
                           style: TextStyle(fontSize: 18.5, fontWeight: FontWeight.w600, color: Colors.grey.shade800),
                         ),
                         onTap: () {
-                          Get.to(() => NoteScreen(noteModel: note, collectionName: 'trash'));
+                          Get.to(
+                            () => NoteScreen(noteModel: note, collectionName: 'trash'),
+                            transition: Transition.rightToLeft,
+                            duration: Duration(milliseconds: 330),
+                            curve: Curves.easeInOut,
+                          );
                         },
                         onLongPress: () {
                           _trashScreenController.toggleCheckbox(!_trashScreenController.getBool(index), index);

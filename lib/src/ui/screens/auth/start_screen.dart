@@ -31,57 +31,29 @@ class StartScreen extends StatelessWidget {
                 Text(
                   "A Platform-independent Note taking software. Access and manage your notes, regardless of the Platform, including the Web.",
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 15),
+                  style: TextStyle(fontSize: 16),
                 ),
                 Spacer(
                   flex: 3,
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                      shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
-                    ),
-                    onPressed: () {
-                      Get.toNamed(RegisterScreen.id);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 13.5),
-                      child: Center(
-                        child: Text(
-                          "Register",
-                          style: TextStyle(fontSize: 16),
-                        ),
-                      ),
-                    ),
-                  ),
+                StartScreenButton(
+                  onPressed: () {
+                    Get.toNamed(RegisterScreen.id);
+                  },
+                  text: "Register",
+                  backgroundColor: Colors.blue,
                 ),
-                // TODO Refractor
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Colors.black54),
-                      shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
-                    ),
-                    onPressed: () {
-                      showModalBottomSheet(
-                          context: context,
-                          shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30))),
-                          builder: (context) => SocialMedialoginBottomSheet());
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 13.5),
-                      child: Center(
-                        child: Text(
-                          "Get Started With Social Accounts",
-                          style: TextStyle(fontSize: 16),
-                        ),
-                      ),
-                    ),
-                  ),
+                StartScreenButton(
+                  text: "Get Started With Social Accounts",
+                  onPressed: () {
+                    showModalBottomSheet(
+                        context: context,
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30))),
+                        builder: (context) => SocialMedialoginBottomSheet());
+                  },
+                  backgroundColor: Colors.black54,
                 ),
                 Spacer(),
                 Text.rich(
@@ -101,6 +73,42 @@ class StartScreen extends StatelessWidget {
                   style: TextStyle(fontSize: 15.5),
                 ),
               ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class StartScreenButton extends StatelessWidget {
+  StartScreenButton({
+    Key? key,
+    required this.onPressed,
+    required this.text,
+    required this.backgroundColor,
+  }) : super(key: key);
+
+  final String text;
+  final VoidCallback onPressed;
+  final Color backgroundColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+      child: ElevatedButton(
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(backgroundColor),
+          shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
+        ),
+        onPressed: onPressed,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 13.5),
+          child: Center(
+            child: Text(
+              text,
+              style: TextStyle(fontSize: 16),
             ),
           ),
         ),

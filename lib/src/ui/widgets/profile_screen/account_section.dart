@@ -31,7 +31,7 @@ class AccountSection extends GetWidget<UserController> {
               content:
                   "Are you sure about deleting your account? All your data will be deleted and you won't be able to recover them.",
               confirmColor: Colors.redAccent,
-            ).show(context, alignment: Alignment.bottomCenter);
+            ).show(context, alignment: Alignment.bottomCenter, opacityCurves: Curves.easeOutExpo);
 
             if (value) {
               var _textController = TextEditingController();
@@ -121,7 +121,7 @@ class AccountSection extends GetWidget<UserController> {
               confirmText: "Sign out",
               content: "Are you sure about signing out from this device?",
               confirmColor: Colors.redAccent,
-            ).show(context);
+            ).show(context, alignment: Alignment.bottomCenter);
 
             if (value) {
               Get.find<FirebaseAuthController>().signOutUser();

@@ -10,76 +10,60 @@ class SocialMedialoginBottomSheet extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
-            child: ElevatedButton(
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Color(0xFF4285F4)),
-                shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
-              ),
-              onPressed: () {},
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
-                child: Row(
-                  children: [
-                    FaIcon(FontAwesomeIcons.google),
-                    Spacer(),
-                    Text("Continue With Google", style: TextStyle(fontSize: 15)),
-                    Spacer()
-                  ],
-                ),
-              ),
-            ),
+          SocialMediaButton(
+            text: "Google",
+            icon: FontAwesomeIcons.google,
+            color: Color(0xFF4285F4),
+            onPressed: () {},
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
-            child: ElevatedButton(
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Colors.black54),
-                shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
-              ),
-              onPressed: () {},
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
-                child: Row(
-                  children: [
-                    FaIcon(FontAwesomeIcons.apple),
-                    Spacer(),
-                    Text(
-                      "Continue With Apple",
-                      style: TextStyle(fontSize: 15),
-                    ),
-                    Spacer()
-                  ],
-                ),
-              ),
-            ),
+          SocialMediaButton(
+            text: "Apple",
+            icon: FontAwesomeIcons.apple,
+            color: Colors.black54,
+            onPressed: () {},
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
-            child: ElevatedButton(
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Color(0xFF3B5998)),
-                shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
-              ),
-              onPressed: () {},
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
-                child: Row(
-                  children: [
-                    FaIcon(FontAwesomeIcons.facebookF),
-                    Spacer(),
-                    Text(
-                      "Continue With Facebook",
-                      style: TextStyle(fontSize: 15),
-                    ),
-                    Spacer()
-                  ],
-                ),
-              ),
-            ),
+          SocialMediaButton(
+            text: "Facebook",
+            icon: FontAwesomeIcons.facebookF,
+            color: Color(0xFF3B5998),
+            onPressed: () {},
           ),
         ],
+      ),
+    );
+  }
+}
+
+class SocialMediaButton extends StatelessWidget {
+  SocialMediaButton({
+    Key? key,
+    required this.icon,
+    required this.onPressed,
+    required this.text,
+    required this.color,
+  }) : super(key: key);
+
+  final IconData icon;
+  final VoidCallback onPressed;
+  final String text;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
+      child: ElevatedButton(
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(color),
+          shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
+        ),
+        onPressed: onPressed,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+          child: Row(
+            children: [FaIcon(icon), Spacer(), Text("Continue With $text", style: TextStyle(fontSize: 15)), Spacer()],
+          ),
+        ),
       ),
     );
   }

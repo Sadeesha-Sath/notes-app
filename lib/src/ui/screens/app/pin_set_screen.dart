@@ -15,9 +15,9 @@ class PinSetScreen extends StatelessWidget {
   static final String id = "/archives_init/pin_set";
   final PinSetController _pinSetController = Get.put(PinSetController());
   final NoteModel? noteModel = Get.arguments;
+
   @override
   Widget build(BuildContext context) {
-    print("pin set args : $noteModel");
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: kToolbarHeight + 20,
@@ -34,12 +34,11 @@ class PinSetScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         shadowColor: Colors.transparent,
       ),
-      // TODO Add Animation
-      body: Obx(
-        () => Container(
-          alignment: Alignment.center,
-          padding: EdgeInsets.symmetric(horizontal: Get.width / 20, vertical: Get.height / 45),
-          child: _pinSetController.stage.value == 3
+      body: Container(
+        alignment: Alignment.center,
+        padding: EdgeInsets.symmetric(horizontal: Get.width / 20, vertical: Get.height / 45),
+        child: Obx(
+          () => _pinSetController.stage.value == 3
               ? SingleChildScrollView(
                   child: Container(
                     height: 35 * Get.height / 45,
@@ -93,6 +92,8 @@ class PinSetScreen extends StatelessWidget {
 }
 
 class FirstTwoTimes extends StatelessWidget {
+  FirstTwoTimes({Key? key}) : super(key: key);
+
   final PinSetController _pinSetController = Get.find<PinSetController>();
   final _focusNode = FocusNode();
 
@@ -115,6 +116,9 @@ class FirstTwoTimes extends StatelessWidget {
           () => TextField(
             style: TextStyle(fontSize: 22),
             controller: _pinSetController.stage.value == 1 ? _pinSetController.pin1 : _pinSetController.pin2,
+            onSubmitted: (String string) {
+              _pinSetController.isInt(string);
+            },
             obscureText: _pinSetController.hidePin.value,
             focusNode: _focusNode,
             textAlign: TextAlign.center,

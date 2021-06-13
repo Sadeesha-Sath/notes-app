@@ -183,6 +183,7 @@ class LockedNotesScreen extends GetView<NotesController> {
                                       noteModel: model,
                                       collectionName: 'locked',
                                     ),
+                                    transition: Transition.downToUp,
                                   );
                                 }
                               },

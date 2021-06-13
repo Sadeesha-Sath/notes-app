@@ -190,9 +190,11 @@ class Database {
       rethrow;
     }
   }
-  static Future<void> updateColor({required String uid, required String noteId, required String color}) async {
+
+  static Future<void> updateColor(
+      {required String uid, required String noteId, required String color, String collectionName = 'notes'}) async {
     try {
-      _firestore.collection('users').doc(uid).collection('notes').doc(noteId).update({"color": color});
+      _firestore.collection('users').doc(uid).collection(collectionName).doc(noteId).update({"color": color});
     } catch (e) {
       print(e);
       Get.snackbar(

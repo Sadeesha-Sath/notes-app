@@ -171,7 +171,12 @@ class FavouritesScreen extends StatelessWidget {
                           style: TextStyle(fontSize: 18.5, fontWeight: FontWeight.w600, color: Colors.grey.shade800),
                         ),
                         onTap: () {
-                          Get.to(() => NoteScreen(noteModel: note));
+                          Get.to(
+                            () => NoteScreen(noteModel: note),
+                            transition: Transition.rightToLeft,
+                            duration: Duration(milliseconds: 330),
+                            curve: Curves.easeInOut,
+                          );
                         },
                         onLongPress: () {
                           controller.toggleCheckbox(index);
