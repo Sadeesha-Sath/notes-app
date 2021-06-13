@@ -18,7 +18,6 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var kSizedBox20;
     return Scaffold(
       // resizeToAvoidBottomInset: false,
       body: SafeArea(
