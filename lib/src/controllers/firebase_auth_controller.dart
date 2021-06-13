@@ -18,7 +18,7 @@ class FirebaseAuthController extends GetxController {
   void onInit() {
     _firebaseUser = _auth.currentUser.obs;
     _firebaseUser.bindStream(_auth.authStateChanges());
-    _userIdchanges.bindStream(_auth.idTokenChanges());
+    _userIdchanges.bindStream(_auth.userChanges());
     ever(_firebaseUser, checkUser);
 
     Get.lazyPut(() => UserController());

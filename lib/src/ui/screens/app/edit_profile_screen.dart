@@ -35,16 +35,19 @@ class EditProfileScreen extends GetView<UserController> {
             padding: EdgeInsets.only(top: Get.height / 25, bottom: Get.height / 55),
             child: Column(
               children: [
-                CircleAvatar(
-                  foregroundImage: Get.find<FirebaseAuthController>().userTokenChanges?.photoURL != null
-                      ? NetworkImage(Get.find<FirebaseAuthController>().userTokenChanges!.photoURL!)
-                      : null,
-                  radius: 110,
+                Obx(
+                  () => CircleAvatar(
+                    foregroundImage: Get.find<FirebaseAuthController>().userTokenChanges?.photoURL != null
+                        ? NetworkImage(Get.find<FirebaseAuthController>().userTokenChanges!.photoURL!)
+                        : null,
+                    radius: 110,
+                  ),
                 ),
                 SizedBox(height: 10),
                 TextButton(
                     onPressed: () {
                       var _picker = ImagePicker();
+                      var _showLoading = RxBool(false);
                       showModalBottomSheet(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.only(
@@ -82,7 +85,9 @@ class EditProfileScreen extends GetView<UserController> {
                                                   var pickedFile = await _picker.getImage(source: ImageSource.gallery);
                                                   print(pickedFile);
                                                   if (pickedFile != null) {
+                                                    _showLoading(true);
                                                     await Storage.addProfileImage(File(pickedFile.path));
+                                                    _showLoading(false);
                                                     Get.back();
                                                   }
                                                 } catch (e) {
@@ -129,7 +134,10 @@ class EditProfileScreen extends GetView<UserController> {
                                                       source: ImageSource.camera,
                                                       preferredCameraDevice: CameraDevice.front);
                                                   if (pickedFile != null) {
+                                                    _showLoading(true);
                                                     await Storage.addProfileImage(File(pickedFile.path));
+                                                    _showLoading(false);
+                                                    Get.back();
                                                   }
                                                 } catch (e) {
                                                   print(e);
@@ -160,6 +168,17 @@ class EditProfileScreen extends GetView<UserController> {
                                       ),
                                     ),
                                   ],
+                                ),
+                              ),
+                              Spacer(),
+                              Obx(
+                                () => Visibility(
+                                  visible: _showLoading.value,
+                                  child: Container(
+                                    child: Center(
+                                      child: LinearProgressIndicator(),
+                                    ),
+                                  ),
                                 ),
                               ),
                             ],
@@ -217,7 +236,7 @@ class EditProfileScreen extends GetView<UserController> {
                         ),
                         Obx(
                           () => Text(
-                            controller.user!.email!,
+                            Get.find<FirebaseAuthController>().userTokenChanges!.email!,
                             style: TextStyle(fontSize: 16, color: Colors.grey.shade700),
                           ),
                         ),

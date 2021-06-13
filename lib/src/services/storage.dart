@@ -13,14 +13,14 @@ class Storage {
       final fileExt = imageFile.fileType;
       try {
         await deleteProfileImage();
+        var user = Get.find<UserController>().user;
 
-        var response = await _storage
-            .ref('users/${Get.find<UserController>().user!.uid}/profileImage.$fileExt')
-            .putFile(imageFile);
+        var response = await _storage.ref('users/${user!.uid}/profileImage.$fileExt').putFile(imageFile);
 
         var url = await response.ref.getDownloadURL();
 
-        Get.find<FirebaseAuthController>().userTokenChanges!.updatePhotoURL(url);
+        await user.updatePhotoURL(url);
+        await user.reload();
       } catch (e) {
         print('Hello this is an error $e');
       }
