@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:notes_app/src/ui/ui_constants.dart';
 import 'package:notes_app/src/ui/widgets/profile_screen/about_section.dart';
 import 'package:notes_app/src/ui/widgets/custom_back_button.dart';
 import 'package:notes_app/src/ui/widgets/profile_screen/account_section.dart';
@@ -30,13 +31,13 @@ class ProfileScreen extends StatelessWidget {
                 SizedBox(height: 22),
                 SectionSeparator("CONTENTS"),
                 ContentsSection(),
-                SizedBox(height: 15),
+                kSizedBox15,
                 SectionSeparator("PREFERENCES"),
                 PreferencesSection(),
-                SizedBox(height: 15),
+                kSizedBox15,
                 SectionSeparator("ABOUT"),
                 AboutSection(),
-                SizedBox(height: 15),
+                kSizedBox15,
                 SectionSeparator("ACCOUNT"),
                 AccountSection(),
               ],

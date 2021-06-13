@@ -15,6 +15,19 @@ const textFieldDecoration = InputDecoration(
   ),
 );
 
+// SizedBoxes
+
+const SizedBox kSizedBox15 = SizedBox(height: 15, width: 15);
+const SizedBox kSizedBox10 = SizedBox(height: 10, width: 10);
+const SizedBox kSizedBox25 = SizedBox(height: 25, width: 25);
+const SizedBox kSizedBox12 = SizedBox(height: 12, width: 12);
+const SizedBox kSizedBox35 = SizedBox(height: 35, width: 35);
+const SizedBox kSizedBox40 = SizedBox(height: 40, width: 40);
+const SizedBox kSizedBox30 = SizedBox(height: 30, width: 30);
+const SizedBox kSizedBox5 = SizedBox(height: 5, width: 5);
+const SizedBox kSizedBox3 = SizedBox(height: 3, width: 3);
+const SizedBox kSizedBox20 = SizedBox(height: 20, width: 20);
+
 // light mode colors
 
 const Color kPeachColorLight = Color(0xFFFACDC6);

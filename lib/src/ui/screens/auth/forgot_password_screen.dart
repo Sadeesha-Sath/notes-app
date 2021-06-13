@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:notes_app/src/controllers/firebase_auth_controller.dart';
+import 'package:notes_app/src/ui/ui_constants.dart';
 import 'package:notes_app/src/ui/widgets/auth/email_text_field.dart';
 import 'package:notes_app/src/ui/widgets/continue_button.dart';
 import 'package:notes_app/src/ui/widgets/custom_back_button.dart';
@@ -33,9 +34,7 @@ class ForgotPasswordScreen extends GetView<FirebaseAuthController> {
                         "Forgot Your Password?",
                         style: TextStyle(fontSize: 39, fontWeight: FontWeight.bold),
                       ),
-                      SizedBox(
-                        height: 20,
-                      ),
+                      kSizedBox20,
                       Text(
                         "No Worries. Let's get Your Data to Your Hand...",
                         style: TextStyle(fontSize: 25),

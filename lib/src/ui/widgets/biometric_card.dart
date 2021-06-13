@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:get/get.dart';
 import 'package:notes_app/src/ui/screens/app/locked_notes_screen.dart';
+import 'package:notes_app/src/ui/ui_constants.dart';
 
 class BiometricCard extends StatelessWidget {
   BiometricCard({
@@ -57,7 +58,7 @@ class BiometricCard extends StatelessWidget {
                   Icons.fingerprint_rounded,
                   size: 40,
                 ),
-                SizedBox(height: 20),
+                kSizedBox20,
                 Text(
                   "Use Biometrics",
                   style: TextStyle(fontSize: 19),

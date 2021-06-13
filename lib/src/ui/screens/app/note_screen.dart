@@ -137,7 +137,7 @@ class _NoteScreenState extends State<NoteScreen> {
         key: ValueKey<bool>(isEditable),
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 15),
+          kSizedBox15,
           TextField(
             style: TextStyle(fontSize: 27, fontWeight: FontWeight.w600),
             textAlignVertical: TextAlignVertical.top,
@@ -150,7 +150,7 @@ class _NoteScreenState extends State<NoteScreen> {
             autocorrect: true,
             maxLines: null,
           ),
-          SizedBox(height: 15),
+          kSizedBox15,
           TextField(
             style: TextStyle(fontSize: 18, color: Colors.grey.shade900),
             strutStyle: StrutStyle(fontSize: 21.5),
@@ -172,7 +172,7 @@ class _NoteScreenState extends State<NoteScreen> {
         key: ValueKey<bool>(isEditable),
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 15),
+          kSizedBox15,
           GestureDetector(
             behavior: HitTestBehavior.translucent,
             onTap: () {
@@ -188,12 +188,12 @@ class _NoteScreenState extends State<NoteScreen> {
               ),
             ),
           ),
-          SizedBox(height: 15),
+          kSizedBox15,
           Text(
             noteModel.getDateCreated,
             style: TextStyle(fontSize: 18, color: Colors.black54, fontWeight: FontWeight.w500),
           ),
-          SizedBox(height: 30),
+          kSizedBox30,
           GestureDetector(
             behavior: HitTestBehavior.translucent,
             onTap: () {
@@ -312,7 +312,7 @@ class _NoteScreenState extends State<NoteScreen> {
                 }
               }),
         AppbarButton(popupMenuButton: _popupMenuButton(isLocked)),
-        SizedBox(width: 5),
+        kSizedBox5,
       ];
     }
     return [
@@ -362,7 +362,7 @@ class _NoteScreenState extends State<NoteScreen> {
           Get.back();
         },
       ),
-      SizedBox(width: 5),
+      kSizedBox5,
     ];
   }
 

@@ -37,9 +37,7 @@ class RegisterScreen extends StatelessWidget {
                         "Let's sign you up.",
                         style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
                       ),
-                      SizedBox(
-                        height: 20,
-                      ),
+                      kSizedBox20,
                       Text(
                         "Welcome Onboard!",
                         style: TextStyle(fontSize: 30),

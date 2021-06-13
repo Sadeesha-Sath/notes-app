@@ -38,53 +38,59 @@ class PinSetScreen extends StatelessWidget {
         alignment: Alignment.center,
         padding: EdgeInsets.symmetric(horizontal: Get.width / 20, vertical: Get.height / 45),
         child: Obx(
-          () => _pinSetController.stage.value == 3
-              ? SingleChildScrollView(
-                  child: Container(
-                    height: 35 * Get.height / 45,
-                    child: Column(
-                      children: [
-                        CircleAvatar(
-                          radius: 130,
-                        ),
-                        SizedBox(
-                          height: 25,
-                        ),
-                        Text(
-                          "Congratulations",
-                          style: TextStyle(fontSize: 35, fontWeight: FontWeight.w600),
-                        ),
-                        SizedBox(
-                          height: 8,
-                        ),
-                        Text(
-                          "Your All set!",
-                          style: TextStyle(fontSize: 22),
-                        ),
-                        Spacer(),
-                        BiometricBox(
-                          key: ValueKey('biometrics'),
-                        ),
-                        Spacer(),
-                        ContinueButton(onPressed: () async {
-                          print(noteModel);
-                          if (noteModel != null) {
-                            print(noteModel?.noteId);
-                            print('transferring');
+          () => AnimatedSwitcher(
+            duration: Duration(milliseconds: 350),
+            transitionBuilder: (Widget child, Animation<double> animation) {
+              return FadeTransition(
+                opacity:
+                    CurvedAnimation(curve: Curves.easeInOutQuad, parent: animation, reverseCurve: Curves.easeInCubic),
+                child: child,
+              );
+            },
+            child: _pinSetController.stage.value == 3
+                ? SingleChildScrollView(
+                    child: Container(
+                      height: 35 * Get.height / 45,
+                      child: Column(
+                        children: [
+                          CircleAvatar(
+                            radius: 130,
+                          ),
+                          kSizedBox25,
+                          Text(
+                            "Congratulations",
+                            style: TextStyle(fontSize: 35, fontWeight: FontWeight.w600),
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            "Your All set!",
+                            style: TextStyle(fontSize: 22),
+                          ),
+                          Spacer(),
+                          BiometricBox(
+                            key: ValueKey('biometrics'),
+                          ),
+                          Spacer(),
+                          ContinueButton(onPressed: () async {
+                            print(noteModel);
+                            if (noteModel != null) {
+                              print(noteModel?.noteId);
+                              print('transferring');
 
-                            Database.transferNote(
-                                uid: Get.find<UserController>().user!.uid,
-                                toCollection: 'locked',
-                                fromCollection: 'notes',
-                                noteModel: noteModel!);
-                          }
-                          Get.offNamedUntil(LockedNotesScreen.id, ModalRoute.withName(HomeScreen.id));
-                        })
-                      ],
+                              Database.transferNote(
+                                  uid: Get.find<UserController>().user!.uid,
+                                  toCollection: 'locked',
+                                  fromCollection: 'notes',
+                                  noteModel: noteModel!);
+                            }
+                            Get.offNamedUntil(LockedNotesScreen.id, ModalRoute.withName(HomeScreen.id));
+                          })
+                        ],
+                      ),
                     ),
-                  ),
-                )
-              : FirstTwoTimes(),
+                  )
+                : FirstTwoTimes(),
+          ),
         ),
       ),
     );
@@ -134,9 +140,7 @@ class FirstTwoTimes extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(
-          height: 25,
-        ),
+        kSizedBox25,
         Obx(
           () => Visibility(
             visible: _pinSetController.invalidInput.value,

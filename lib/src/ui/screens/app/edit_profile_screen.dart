@@ -8,6 +8,7 @@ import 'package:notes_app/src/controllers/user_controller.dart';
 import 'package:notes_app/src/methods/show_custom_bottom_sheet.dart';
 import 'package:notes_app/src/models/mode_enum.dart';
 import 'package:notes_app/src/services/storage.dart';
+import 'package:notes_app/src/ui/ui_constants.dart';
 import 'package:notes_app/src/ui/widgets/custom_back_button.dart';
 import 'package:notes_app/src/ui/widgets/profile_screen/profile_screen_listtile.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -43,7 +44,7 @@ class EditProfileScreen extends GetView<UserController> {
                     radius: 110,
                   ),
                 ),
-                SizedBox(height: 10),
+                kSizedBox10,
                 TextButton(
                     onPressed: () {
                       showModalBottomSheet(
@@ -61,7 +62,7 @@ class EditProfileScreen extends GetView<UserController> {
                       "Change Profile Picture",
                       style: TextStyle(fontSize: 17),
                     )),
-                SizedBox(height: 15),
+                kSizedBox15,
                 ProfileScreenListTile(
                   titleWidget: Padding(
                     padding: const EdgeInsets.only(right: 20),
@@ -132,7 +133,7 @@ class EditProfileScreen extends GetView<UserController> {
                     showCustomModalBottomSheet(context, textController: _textController, mode: Mode.password);
                   },
                 ),
-                SizedBox(height: 35),
+                kSizedBox35,
                 Obx(
                   () => Visibility(
                     visible: getVerified(),
@@ -236,7 +237,7 @@ class BottomSheet extends StatelessWidget {
             "Choose a Source",
             style: TextStyle(fontSize: 30),
           ),
-          SizedBox(height: 40),
+          kSizedBox40,
           Container(
             child: Wrap(
               crossAxisAlignment: WrapCrossAlignment.start,
@@ -278,7 +279,7 @@ class BottomSheet extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(height: 15),
+                      kSizedBox15,
                       Text(
                         "Gallery",
                         style: TextStyle(fontSize: 18),
@@ -286,7 +287,7 @@ class BottomSheet extends StatelessWidget {
                     ],
                   ),
                 ),
-                SizedBox(width: 25),
+                kSizedBox25,
                 Container(
                   child: Column(
                     children: [
@@ -322,7 +323,7 @@ class BottomSheet extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(height: 15),
+                      kSizedBox15,
                       Text(
                         "Camera",
                         style: TextStyle(fontSize: 18),

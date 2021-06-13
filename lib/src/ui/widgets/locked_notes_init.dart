@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:notes_app/src/models/note_model.dart';
 import 'package:notes_app/src/ui/screens/app/pin_set_screen.dart';
+import 'package:notes_app/src/ui/ui_constants.dart';
 import 'package:notes_app/src/ui/widgets/biometric_box.dart';
 import 'package:notes_app/src/ui/widgets/continue_button.dart';
 import 'package:notes_app/src/ui/widgets/custom_back_button.dart';
@@ -23,22 +24,10 @@ class LockedNotesInit extends StatelessWidget {
               alignment: Alignment.topLeft,
               child: CustomBackButton(),
             ),
-            // Container(
-            //   margin: EdgeInsets.only(bottom: 20),
-            //   padding: EdgeInsets.symmetric(horizontal: Get.width / 60),
-            //   child: Text(
-            //     "INTRODUCING",
-            //     textAlign: TextAlign.center,
-            //     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-            //     strutStyle: StrutStyle(fontSize: 18),
-            //   ),
-            // ),
             CircleAvatar(
               radius: 100,
             ),
-            SizedBox(
-              height: 17.5,
-            ),
+            SizedBox(height: 17.5),
             Container(
               padding: EdgeInsets.symmetric(horizontal: Get.width / 60),
               child: Text(
@@ -48,7 +37,7 @@ class LockedNotesInit extends StatelessWidget {
                 strutStyle: StrutStyle(fontSize: 18),
               ),
             ),
-            SizedBox(height: 15),
+            kSizedBox15,
             Container(
               padding: EdgeInsets.symmetric(horizontal: Get.width / 60),
               child: Text(
@@ -58,9 +47,7 @@ class LockedNotesInit extends StatelessWidget {
                 strutStyle: StrutStyle(fontSize: 37),
               ),
             ),
-            SizedBox(
-              height: 25,
-            ),
+            kSizedBox25,
             Container(
               padding: EdgeInsets.symmetric(horizontal: Get.width / 60),
               child: Text(

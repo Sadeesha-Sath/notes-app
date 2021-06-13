@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:notes_app/src/ui/ui_constants.dart';
 
 class Loading extends StatelessWidget {
   @override
@@ -12,9 +13,7 @@ class Loading extends StatelessWidget {
             Container(
               child: CircularProgressIndicator.adaptive(),
             ),
-            SizedBox(
-              height: 30,
-            ),
+            kSizedBox30,
             Container(
               child: Text(
                 "Loading...",

@@ -8,6 +8,7 @@ import 'package:notes_app/src/models/note_model.dart';
 import 'package:notes_app/src/services/database.dart';
 import 'package:notes_app/src/ui/platform_aware_widgets/platform_alert_dialog.dart';
 import 'package:notes_app/src/ui/screens/app/note_screen.dart';
+import 'package:notes_app/src/ui/ui_constants.dart';
 import 'package:notes_app/src/ui/widgets/app_bar_button.dart';
 import 'package:notes_app/src/ui/widgets/custom_back_button.dart';
 
@@ -32,7 +33,7 @@ class FavouritesScreen extends StatelessWidget {
               "Favourites",
               style: TextStyle(color: Colors.black),
             ),
-            SizedBox(width: 10),
+            kSizedBox10,
             Icon(
               CupertinoIcons.heart,
               color: Colors.grey.shade800,
@@ -198,7 +199,7 @@ class FavouritesScreen extends StatelessWidget {
                         CircleAvatar(
                           radius: 100,
                         ),
-                        SizedBox(height: 30),
+                        kSizedBox30,
                         Text(
                           "Looks like you are all cleaned up!",
                           style: TextStyle(fontSize: 33, fontWeight: FontWeight.w600, color: Colors.grey.shade600),

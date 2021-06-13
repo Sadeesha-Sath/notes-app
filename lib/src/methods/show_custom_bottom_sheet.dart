@@ -56,9 +56,7 @@ class BottomSheet extends GetView<UserController> {
       child: Column(
         children: [
           getTitle(),
-          SizedBox(
-            height: 30,
-          ),
+          kSizedBox30,
           getTextField(),
           Obx(
             () => Visibility(
@@ -73,14 +71,14 @@ class BottomSheet extends GetView<UserController> {
               ),
             ),
           ),
-          SizedBox(height: 25),
+          kSizedBox25,
           Visibility(
               visible: mode == Mode.pinWithBiometrics &&
                   InheritedPreferences.of(context)!.preferences['isBiometricEnabled']!,
               child: BiometricCard(error: error)),
-          SizedBox(height: 20),
+          kSizedBox20,
           getButton(context),
-          SizedBox(height: 12),
+          kSizedBox12,
           if (mode == Mode.pin)
             Obx(
               () => Visibility(

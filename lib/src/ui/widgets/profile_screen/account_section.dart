@@ -8,6 +8,7 @@ import 'package:notes_app/src/methods/show_custom_bottom_sheet.dart';
 import 'package:notes_app/src/services/database.dart';
 import 'package:notes_app/src/ui/platform_aware_widgets/platform_alert_dialog.dart';
 import 'package:notes_app/src/ui/screens/auth/start_screen.dart';
+import 'package:notes_app/src/ui/ui_constants.dart';
 import 'package:notes_app/src/ui/widgets/auth/password_field.dart';
 import 'package:notes_app/src/ui/widgets/profile_screen/profile_screen_listtile.dart';
 
@@ -52,9 +53,7 @@ class AccountSection extends GetWidget<UserController> {
                   child: Column(
                     children: [
                       Text("Enter your Password to Continue", style: TextStyle(fontSize: 20)),
-                      SizedBox(
-                        height: 30,
-                      ),
+                      kSizedBox30,
                       PasswordTextField(
                         controller: _textController,
                         key: ValueKey("password"),
@@ -73,9 +72,7 @@ class AccountSection extends GetWidget<UserController> {
                           ),
                         ),
                       ),
-                      SizedBox(
-                        height: 45,
-                      ),
+                      SizedBox(height: 45),
                       BottomSheetButton(
                         text: "Delete Account",
                         color: Colors.redAccent,

@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:notes_app/src/controllers/notes_controller.dart';
 import 'package:notes_app/src/controllers/user_controller.dart';
 import 'package:notes_app/src/ui/screens/app/note_screen.dart';
+import 'package:notes_app/src/ui/ui_constants.dart';
 import 'package:notes_app/src/ui/widgets/dismissable_note_card.dart';
 import 'package:notes_app/src/ui/widgets/home_screen_appbar.dart';
 
@@ -34,9 +35,7 @@ class HomeScreen extends StatelessWidget {
             slivers: [
               HomeScreenAppbar(),
               SliverToBoxAdapter(
-                child: SizedBox(
-                  height: 10,
-                ),
+                child: kSizedBox10,
               ),
               GetX<NotesController>(
                 init: Get.find<NotesController>(),

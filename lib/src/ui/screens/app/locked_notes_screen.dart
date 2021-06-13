@@ -9,6 +9,7 @@ import 'package:notes_app/src/models/mode_enum.dart';
 import 'package:notes_app/src/services/database.dart';
 import 'package:notes_app/src/ui/platform_aware_widgets/platform_alert_dialog.dart';
 import 'package:notes_app/src/ui/screens/app/note_screen.dart';
+import 'package:notes_app/src/ui/ui_constants.dart';
 import 'package:notes_app/src/ui/widgets/app_bar_button.dart';
 import 'package:notes_app/src/ui/widgets/locked_note_card.dart';
 
@@ -139,9 +140,7 @@ class LockedNotesScreen extends GetView<NotesController> {
                                   : "No Secrets",
                               style: TextStyle(color: Colors.black, fontSize: 33),
                             ),
-                            SizedBox(
-                              width: 2,
-                            ),
+                            SizedBox(width: 2),
                             Icon(
                               CupertinoIcons.lock_fill,
                               size: (notesController.lockedNotes!.isNotEmpty) ? 32 : 29,
@@ -156,9 +155,7 @@ class LockedNotesScreen extends GetView<NotesController> {
                 ),
               ),
               SliverToBoxAdapter(
-                child: SizedBox(
-                  height: 10,
-                ),
+                child: kSizedBox10,
               ),
               // TODO Refractor this and home screen
               GetX<NotesController>(
@@ -224,6 +221,7 @@ class LockedNotesScreen extends GetView<NotesController> {
                         );
                       } else {
                         // No Notes yet
+                        // TODO Design this
                         return SliverToBoxAdapter(
                           child: Container(
                             decoration:

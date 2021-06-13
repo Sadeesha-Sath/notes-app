@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:notes_app/src/controllers/firebase_auth_controller.dart';
 import 'package:notes_app/src/ui/screens/auth/forgot_password_screen.dart';
 import 'package:notes_app/src/ui/screens/auth/register_screen.dart';
+import 'package:notes_app/src/ui/ui_constants.dart';
 import 'package:notes_app/src/ui/widgets/auth/email_text_field.dart';
 import 'package:notes_app/src/ui/widgets/custom_back_button.dart';
 import 'package:notes_app/src/ui/widgets/auth/password_field.dart';
@@ -17,6 +18,7 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var kSizedBox20;
     return Scaffold(
       // resizeToAvoidBottomInset: false,
       body: SafeArea(
@@ -40,16 +42,12 @@ class LoginScreen extends StatelessWidget {
                         "Let's sign you in.",
                         style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
                       ),
-                      SizedBox(
-                        height: 20,
-                      ),
+                      kSizedBox20,
                       Text(
                         "Welcome Back.",
                         style: TextStyle(fontSize: 30),
                       ),
-                      SizedBox(
-                        height: 8,
-                      ),
+                      SizedBox(height: 8),
                       Text(
                         "You were missed!",
                         style: TextStyle(fontSize: 30),
@@ -81,7 +79,7 @@ class LoginScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(height: 10),
+                kSizedBox10,
                 Obx(() => Visibility(
                       visible: error.value != null,
                       child: Text(
@@ -95,7 +93,7 @@ class LoginScreen extends StatelessWidget {
                     visible: showSpinner.value,
                     child: Container(
                         margin: EdgeInsets.symmetric(vertical: 10), child: CircularProgressIndicator.adaptive()))),
-                SizedBox(height: 10),
+                kSizedBox10,
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 40),
                   child: ElevatedButton(

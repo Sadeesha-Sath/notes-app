@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:notes_app/src/file_handlers/inherited_preferences.dart';
 import 'package:notes_app/src/file_handlers/preferences_handler.dart';
+import 'package:notes_app/src/ui/ui_constants.dart';
 
 class BiometricBox extends StatefulWidget {
   BiometricBox({Key? key});
@@ -33,9 +34,7 @@ class _BiometricBoxState extends State<BiometricBox> {
                 color: Colors.grey.shade700,
                 size: 50,
               ),
-              SizedBox(
-                height: 10,
-              ),
+              kSizedBox10,
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

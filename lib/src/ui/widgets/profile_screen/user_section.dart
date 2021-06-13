@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:notes_app/src/controllers/firebase_auth_controller.dart';
 import 'package:notes_app/src/controllers/user_controller.dart';
 import 'package:notes_app/src/ui/screens/app/edit_profile_screen.dart';
+import 'package:notes_app/src/ui/ui_constants.dart';
 
 class UserSection extends GetView<UserController> {
   @override
@@ -19,14 +20,14 @@ class UserSection extends GetView<UserController> {
               radius: 36,
             ),
           ),
-          SizedBox(height: 5),
+          kSizedBox5,
           Obx(
             () => Text(
               controller.userModel?.name ?? "Name",
               style: TextStyle(fontSize: 27),
             ),
           ),
-          SizedBox(height: 3),
+          kSizedBox3,
           Obx(
             () => Text(
               controller.user?.email ?? "email",
