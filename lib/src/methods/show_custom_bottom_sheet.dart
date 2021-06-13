@@ -188,7 +188,7 @@ class BottomSheet extends GetView<UserController> {
             controller.updateName(textController.text);
             Database.updateName(controller.user!.uid, textController.text);
             if (controller.user?.displayName != null) {
-              controller.user!.updateProfile(displayName: textController.text);
+              controller.user!.updateDisplayName(textController.text);
             }
             Get.back();
             ScaffoldMessenger.of(context).showSnackBar(

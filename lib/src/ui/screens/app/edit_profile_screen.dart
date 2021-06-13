@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -5,8 +8,10 @@ import 'package:notes_app/src/controllers/firebase_auth_controller.dart';
 import 'package:notes_app/src/controllers/user_controller.dart';
 import 'package:notes_app/src/methods/show_custom_bottom_sheet.dart';
 import 'package:notes_app/src/models/mode_enum.dart';
+import 'package:notes_app/src/services/storage.dart';
 import 'package:notes_app/src/ui/widgets/custom_back_button.dart';
 import 'package:notes_app/src/ui/widgets/profile_screen/profile_screen_listtile.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class EditProfileScreen extends GetView<UserController> {
   const EditProfileScreen({Key? key}) : super(key: key);
@@ -31,7 +36,9 @@ class EditProfileScreen extends GetView<UserController> {
             child: Column(
               children: [
                 CircleAvatar(
-                  foregroundImage: controller.user?.photoURL != null ? NetworkImage(controller.user!.photoURL!) : null,
+                  foregroundImage: Get.find<FirebaseAuthController>().userTokenChanges?.photoURL != null
+                      ? NetworkImage(Get.find<FirebaseAuthController>().userTokenChanges!.photoURL!)
+                      : null,
                   radius: 110,
                 ),
                 SizedBox(height: 10),
@@ -47,6 +54,7 @@ class EditProfileScreen extends GetView<UserController> {
                         ),
                         context: context,
                         builder: (context) => Container(
+                          height: 300,
                           padding: EdgeInsets.all(25),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,41 +63,100 @@ class EditProfileScreen extends GetView<UserController> {
                                 "Choose a Source",
                                 style: TextStyle(fontSize: 30),
                               ),
-                              SizedBox(height: 20),
+                              SizedBox(height: 40),
                               Container(
                                 child: Wrap(
                                   crossAxisAlignment: WrapCrossAlignment.start,
                                   children: [
-                                    InkWell(
-                                      onTap: () async {
-                                        // TODO Add permission check
-                                        var response = await _picker.getImage(source: ImageSource.gallery);
-                                        // TODO Upload to cloud
-                                        
-                                      },
-                                      child: Container(
-                                        height: 100,
-                                        width: 100,
-                                        decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.lightBlue),
-                                        child: Center(
-                                          child: Text("Gallery"),
-                                        ),
+                                    Container(
+                                      child: Column(
+                                        children: [
+                                          GestureDetector(
+                                            onTap: () async {
+                                              if (await Permission.photos.isDenied) {
+                                                await Permission.photos.request();
+                                              }
+                                              if (await Permission.photos.isGranted ||
+                                                  await Permission.photos.isLimited) {
+                                                try {
+                                                  var pickedFile = await _picker.getImage(source: ImageSource.gallery);
+                                                  print(pickedFile);
+                                                  if (pickedFile != null) {
+                                                    await Storage.addProfileImage(File(pickedFile.path));
+                                                    Get.back();
+                                                  }
+                                                } catch (e) {
+                                                  print("this is an error     $e");
+                                                }
+                                              }
+                                            },
+                                            child: Container(
+                                              height: 90,
+                                              width: 90,
+                                              decoration:
+                                                  BoxDecoration(shape: BoxShape.circle, color: Colors.lightBlue),
+                                              child: Center(
+                                                child: Icon(
+                                                  Platform.isIOS
+                                                      ? CupertinoIcons.photo_fill_on_rectangle_fill
+                                                      : Icons.photo_library_rounded,
+                                                  size: 35,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(height: 15),
+                                          Text(
+                                            "Gallery",
+                                            style: TextStyle(fontSize: 18),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                    SizedBox(width: 20),
-                                    InkWell(
-                                      onTap: () async {
-                                        var response = await _picker.getImage(
-                                            source: ImageSource.camera, preferredCameraDevice: CameraDevice.front);
-                                        // TODO Upload to cloud
-                                      },
-                                      child: Container(
-                                        height: 100,
-                                        width: 100,
-                                        decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.amber),
-                                        child: Center(
-                                          child: Text("Camera"),
-                                        ),
+                                    SizedBox(width: 25),
+                                    Container(
+                                      child: Column(
+                                        children: [
+                                          GestureDetector(
+                                            onTap: () async {
+                                              if (await Permission.camera.isDenied) {
+                                                await Permission.camera.request();
+                                              }
+                                              if (await Permission.camera.isGranted ||
+                                                  await Permission.camera.isLimited) {
+                                                try {
+                                                  var pickedFile = await _picker.getImage(
+                                                      source: ImageSource.camera,
+                                                      preferredCameraDevice: CameraDevice.front);
+                                                  if (pickedFile != null) {
+                                                    await Storage.addProfileImage(File(pickedFile.path));
+                                                  }
+                                                } catch (e) {
+                                                  print(e);
+                                                }
+                                              }
+                                            },
+                                            child: Container(
+                                              height: 90,
+                                              width: 90,
+                                              decoration:
+                                                  BoxDecoration(shape: BoxShape.circle, color: Colors.lightBlue),
+                                              child: Center(
+                                                child: Icon(
+                                                  Platform.isIOS
+                                                      ? CupertinoIcons.photo_camera_solid
+                                                      : Icons.photo_camera,
+                                                  size: 35,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(height: 15),
+                                          Text(
+                                            "Camera",
+                                            style: TextStyle(fontSize: 18),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ],

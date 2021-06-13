@@ -108,12 +108,16 @@ class _NoteScreenState extends State<NoteScreen> {
           // color: ColorConverter.convertColor(noteModel.color, Get.isDarkMode),
           padding: EdgeInsets.symmetric(horizontal: Get.width / 20, vertical: Get.height / 45),
           child: AnimatedSwitcher(
-            duration: Duration(milliseconds: 180),
+            duration: Duration(milliseconds: 300),
             transitionBuilder: (Widget child, Animation<double> animation) {
-              return ScaleTransition(
-                alignment: Alignment.topLeft,
-                scale: animation,
-                child: child,
+              return FadeTransition(
+                opacity:
+                    CurvedAnimation(curve: Curves.easeInOutQuad, parent: animation, reverseCurve: Curves.easeInCubic),
+                child: ScaleTransition(
+                  alignment: Alignment.topLeft,
+                  scale: CurvedAnimation(parent: animation, curve: Curves.easeInOutCubic),
+                  child: child,
+                ),
               );
             },
             child: _body,
@@ -206,14 +210,6 @@ class _NoteScreenState extends State<NoteScreen> {
         ],
       );
     }
-  }
-
-  List<Widget> getBodyChildren() {
-    if (isEditable) {
-      // Editable body
-      return [];
-    }
-    return [];
   }
 
   List<Widget> getAppbarActions(

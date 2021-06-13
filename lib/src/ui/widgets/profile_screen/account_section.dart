@@ -31,7 +31,7 @@ class AccountSection extends GetWidget<UserController> {
               content:
                   "Are you sure about deleting your account? All your data will be deleted and you won't be able to recover them.",
               confirmColor: Colors.redAccent,
-            ).show(context);
+            ).show(context, alignment: Alignment.bottomCenter);
 
             if (value) {
               var _textController = TextEditingController();
@@ -61,19 +61,17 @@ class AccountSection extends GetWidget<UserController> {
                         hintText: "",
                       ),
                       Obx(
-                        () => 
-                             Visibility(
-                               visible: hasError.value,
-                               child: Container(
-                                  margin: EdgeInsets.only(top: 25),
-                                  child: Text(
-                                    error.value,
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(fontSize: 16, color: Colors.redAccent),
-                                  ),
-                                ),
-                             )
-                           ,
+                        () => Visibility(
+                          visible: hasError.value,
+                          child: Container(
+                            margin: EdgeInsets.only(top: 25),
+                            child: Text(
+                              error.value,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontSize: 16, color: Colors.redAccent),
+                            ),
+                          ),
+                        ),
                       ),
                       SizedBox(
                         height: 45,

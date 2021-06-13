@@ -13,7 +13,9 @@ class UserSection extends GetView<UserController> {
         children: [
           Obx(
             () => CircleAvatar(
-              foregroundImage: controller.user?.photoURL != null ? NetworkImage(controller.user!.photoURL!) : null,
+              foregroundImage: Get.find<FirebaseAuthController>().userTokenChanges?.photoURL != null
+                  ? NetworkImage(Get.find<FirebaseAuthController>().userTokenChanges!.photoURL!)
+                  : null,
               radius: 36,
             ),
           ),
