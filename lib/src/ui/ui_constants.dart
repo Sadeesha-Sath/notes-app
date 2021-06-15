@@ -58,3 +58,11 @@ const List<Color> kLightColorList = [
   kBlueColorLight,
   kPurpleColorLight,
 ];
+
+const Color kLightBackground = Color(0xFFFAFAFA);
+const Color kFABColorLight = Color(0xFF303030);
+const Color kBottomBarColorLight = Color(0xFFDEDEDE);
+
+// Dark Mode Colors
+
+const Color kDarkBackground = Color(0xFF212121);

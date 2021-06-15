@@ -10,6 +10,7 @@ import 'package:notes_app/src/ui/ui_constants.dart';
 import 'package:notes_app/src/ui/widgets/biometric_box.dart';
 import 'package:notes_app/src/ui/widgets/continue_button.dart';
 import 'package:notes_app/src/ui/widgets/custom_back_button.dart';
+import 'package:rive/rive.dart';
 
 class PinSetScreen extends StatelessWidget {
   static final String id = "/archives_init/pin_set";
@@ -53,8 +54,12 @@ class PinSetScreen extends StatelessWidget {
                       height: 35 * Get.height / 45,
                       child: Column(
                         children: [
-                          CircleAvatar(
-                            radius: 130,
+                          SizedBox(
+                            child: RiveAnimation.asset(
+                              'assets/lock_animation.riv',
+                              fit: BoxFit.fitHeight,
+                            ),
+                            height: Get.height / 3,
                           ),
                           kSizedBox25,
                           Text(

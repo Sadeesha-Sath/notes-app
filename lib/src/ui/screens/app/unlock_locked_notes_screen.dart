@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:notes_app/src/controllers/user_controller.dart';
@@ -17,9 +18,8 @@ class UnlockLockedNotesScreen extends StatelessWidget {
     // print(arguments);
     return Scaffold(
       body: SafeArea(
-        child: Get.find<UserController>().isPinSet()
-            ? UnlockWithBiometricOrPin()
-            : LockedNotesInit(noteModel: arguments),
+        child:
+            Get.find<UserController>().isPinSet() ? UnlockWithBiometricOrPin() : LockedNotesInit(noteModel: arguments),
       ),
     );
   }
@@ -57,8 +57,9 @@ class UnlockWithBiometricOrPin extends StatelessWidget {
                     Spacer(
                       flex: 2,
                     ),
-                    CircleAvatar(
-                      radius: 110,
+                    SvgPicture.asset(
+                      Get.isDarkMode ? 'assets/unlock_intro_dark.svg' : 'assets/unlock_intro.svg',
+                      height: 0.9 * Get.height / 3,
                     ),
                     Spacer(
                       flex: 2,
@@ -75,6 +76,7 @@ class UnlockWithBiometricOrPin extends StatelessWidget {
                       () => (usePin.value)
                           ? TextField(
                               controller: textController,
+                              autofocus: usePin.value,
                               style: TextStyle(fontSize: 20),
                               decoration: textFieldDecoration.copyWith(
                                   hintText: "Enter Your Protected Space Pin", hintStyle: TextStyle(fontSize: 17)),

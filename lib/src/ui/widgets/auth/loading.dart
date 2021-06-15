@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:notes_app/src/ui/ui_constants.dart';
 
 class Loading extends StatelessWidget {
@@ -17,7 +18,7 @@ class Loading extends StatelessWidget {
             Container(
               child: Text(
                 "Loading...",
-                style: TextStyle(fontSize: 16, color: Colors.grey.shade800),
+                style: TextStyle(fontSize: 16, color: Get.isDarkMode ? Colors.grey.shade400 : Colors.grey.shade800),
               ),
             )
           ],

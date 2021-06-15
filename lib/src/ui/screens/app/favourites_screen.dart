@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:notes_app/src/controllers/favourite_controller.dart';
 import 'package:notes_app/src/controllers/user_controller.dart';
@@ -188,21 +189,24 @@ class FavouritesScreen extends StatelessWidget {
                   },
                   itemCount: favourites.length,
                 )
-              :
-
-              // TODO design this
-              Container(
+              : Container(
                   padding: EdgeInsets.all(Get.height / 30),
                   child: Center(
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        CircleAvatar(
-                          radius: 100,
+                        SvgPicture.asset(
+                          'assets/favourites.svg',
+                          height: 80,
                         ),
-                        kSizedBox30,
+                        kSizedBox25,
                         Text(
-                          "Looks like you are all cleaned up!",
-                          style: TextStyle(fontSize: 33, fontWeight: FontWeight.w600, color: Colors.grey.shade600),
+                          "Aww... You don't have any favourites yet. Mark your notes as favourites to find them easier.",
+                          style: TextStyle(
+                              fontSize: 18.5,
+                              fontWeight: FontWeight.w500,
+                              color: Get.isDarkMode ? Colors.grey.shade500 : Colors.grey.shade600),
+                          strutStyle: StrutStyle(fontSize: 21),
                           textAlign: TextAlign.center,
                         ),
                       ],

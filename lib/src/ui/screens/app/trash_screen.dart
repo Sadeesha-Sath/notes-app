@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:notes_app/src/controllers/notes_controller.dart';
 import 'package:notes_app/src/controllers/trash_screen_controller.dart';
@@ -159,14 +160,19 @@ class TrashScreen extends GetView<NotesController> {
                   padding: EdgeInsets.all(Get.height / 30),
                   child: Center(
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        CircleAvatar(
-                          radius: 100,
+                        SvgPicture.asset(
+                          Get.isDarkMode ? 'assets/trash_dark.svg': 'assets/trash.svg',
+                          height: 1.1 * Get.height / 3,
                         ),
                         kSizedBox30,
                         Text(
                           "Looks like you are all cleaned up!",
-                          style: TextStyle(fontSize: 33, fontWeight: FontWeight.w600, color: Colors.grey.shade600),
+                          style: TextStyle(
+                              fontSize: 25,
+                              fontWeight: FontWeight.w500,
+                              color: Get.isDarkMode ? Colors.grey.shade500 : Colors.grey.shade600),
                           textAlign: TextAlign.center,
                         ),
                       ],
@@ -178,8 +184,6 @@ class TrashScreen extends GetView<NotesController> {
             },
           ),
         )
-
-        // TODO Make a view to accomadate empty trash
         );
   }
 }

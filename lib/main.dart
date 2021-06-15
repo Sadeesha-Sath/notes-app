@@ -52,6 +52,7 @@ class _AppState extends State<App> {
 
           if (snapshot.connectionState == ConnectionState.done) {
             return GetMaterialApp(
+              darkTheme: ThemeData.dark(),
               title: 'Notes App',
               home: GetBuilder<FirebaseAuthController>(
                 autoRemove: false,

@@ -13,7 +13,7 @@ class CustomBackButton extends StatelessWidget {
       splashRadius: 25,
       icon: Icon(
         CupertinoIcons.arrow_turn_up_left,
-        color: Colors.black,
+        color: Get.isDarkMode ? Color(0xFFFBFBFB) : Colors.black,
       ),
       onPressed: onTap ?? () => Get.back(),
     );

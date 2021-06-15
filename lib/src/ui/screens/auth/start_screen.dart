@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:notes_app/src/ui/screens/auth/login_screen.dart';
 import 'package:notes_app/src/ui/screens/auth/register_screen.dart';
@@ -18,8 +19,12 @@ class StartScreen extends StatelessWidget {
             child: Column(
               children: [
                 Spacer(),
-                CircleAvatar(
-                  radius: 100,
+                SvgPicture.asset(
+                  'assets/start.svg',
+                  height: 0.92 * Get.height / 3,
+                  semanticsLabel: "start_image",
+                  // color: Colors.grey,
+                  // colorBlendMode: BlendMode.color,
                 ),
                 Spacer(),
                 Text(
@@ -80,6 +85,8 @@ class StartScreen extends StatelessWidget {
     );
   }
 }
+
+// TODO Maybe use just the social icon as the  login button instead of a bottomsheet
 
 class StartScreenButton extends StatelessWidget {
   StartScreenButton({
