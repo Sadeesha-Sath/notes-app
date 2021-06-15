@@ -32,7 +32,7 @@ const SizedBox kSizedBox20 = SizedBox(height: 20, width: 20);
 
 const Color kPeachColorLight = Color(0xFFFACDC6);
 const Color kPinkColorLight = Color(0xFFFFBBD7);
-const Color kOrangeColorLight = Color(0xFFF2907A);
+const Color kOrangeColorLight = Color(0xFFF2A695);
 const Color kRedColorLight = Color(0xFFFFAAAA);
 const Color kEmberColorLight = Color(0xFFF4B072);
 const Color kBrownColorLight = Color(0xFFD6B59C);
@@ -59,6 +59,7 @@ const List<Color> kLightColorList = [
   kPurpleColorLight,
 ];
 
+
 const Color kLightBackground = Color(0xFFFAFAFA);
 const Color kFABColorLight = Color(0xFF303030);
 const Color kBottomBarColorLight = Color(0xFFDEDEDE);
@@ -66,3 +67,32 @@ const Color kBottomBarColorLight = Color(0xFFDEDEDE);
 // Dark Mode Colors
 
 const Color kDarkBackground = Color(0xFF212121);
+
+const Color kPeachColorDark = Color(0xFFD47D6F);
+const Color kPinkColorDark = Color(0xFFD36A95);
+const Color kOrangeColorDark = Color(0xFFC75940);
+const Color kRedColorDark = Color(0xFFC34545);
+const Color kEmberColorDark = Color(0xFFC77C39);
+const Color kBrownColorDark = Color(0xFF8E572D);
+const Color kYellowColorDark = Color(0xFFC6A923);
+const Color kGreenColorDark = Color(0xFF9BB533);
+const Color kTealColorDark = Color(0xFF409D7A);
+const Color kBlueColorDark = Color(0xFF2B96A5);
+const Color kPurpleColorDark = Color(0xFF7F42B7);
+const Color kGreyColorDark = Color(0xFFA4A4A4);
+const Color kBlackColorDark = Color(0xFF3C3C3C);
+
+const List<Color> kDarkColorList = [
+  kBlackColorDark,
+  kGreyColorDark,
+  kPeachColorDark,
+  kPinkColorDark,
+  kOrangeColorDark,
+  kRedColorDark,
+  kEmberColorDark,
+  kBrownColorDark,
+  kYellowColorDark,
+  kGreenColorDark,
+  kBlueColorDark,
+  kPurpleColorDark,
+];

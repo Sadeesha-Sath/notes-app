@@ -14,21 +14,21 @@ class PreferencesHandler {
     return File('$path/preferences.json');
   }
 
-  Future<Map<String, bool>> readPreferences() async {
+  Future<Map<String, bool?>> readPreferences() async {
     try {
       final file = await _localFile;
 
       // Read the file
       final contents = await file.readAsString();
       final decodedContents = jsonDecode(contents);
-      final isNightMode = decodedContents['isNightMode'] as bool;
+      final isNightMode = decodedContents['isNightMode'] as bool?;
       final biomet = decodedContents['isBiometricEnabled'] as bool;
       var returnContents = {"isNightMode": isNightMode, "isBiometricEnabled": biomet};
 
       return returnContents;
     } catch (e) {
       print(e);
-      final defaultContents = {"isNightMode": false, "isBiometricEnabled": false};
+      final defaultContents = {"isNightMode": null, "isBiometricEnabled": false};
       writePreferences(defaultContents);
       return defaultContents;
     }

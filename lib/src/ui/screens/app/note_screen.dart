@@ -79,7 +79,8 @@ class _NoteScreenState extends State<NoteScreen> {
               itemBuilder: (context, index) => GestureDetector(
                 onTap: () async {
                   setState(() {
-                    noteModel.color = ColorConverter.convertToString(kLightColorList[index]);
+                    noteModel.color =
+                        ColorConverter.convertToString(Get.isDarkMode ? kDarkColorList[index] : kLightColorList[index]);
                   });
                   Database.updateColor(
                     uid: Get.find<UserController>().user!.uid,
@@ -92,9 +93,10 @@ class _NoteScreenState extends State<NoteScreen> {
                   margin: EdgeInsets.symmetric(horizontal: 10),
                   decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: kLightColorList[index],
-                      border: kLightColorList[index] == ColorConverter.convertColor(noteModel.color)
-                          ? Border.all(color: Colors.black, width: 2.5)
+                      color: Get.isDarkMode ? kDarkColorList[index] : kLightColorList[index],
+                      border: (Get.isDarkMode ? kDarkColorList[index] : kLightColorList[index]) ==
+                              ColorConverter.convertColor(noteModel.color)
+                          ? Border.all(color: Get.isDarkMode ? kLightBackground : Colors.grey.shade900, width: 2.5)
                           : null),
                   width: 50,
                   height: 50,

@@ -20,10 +20,12 @@ import 'package:notes_app/src/ui/screens/auth/register_screen.dart';
 import 'package:notes_app/src/ui/screens/auth/start_screen.dart';
 import 'package:notes_app/src/ui/widgets/auth/loading.dart';
 import 'package:notes_app/src/ui/widgets/auth/something_went_wrong.dart';
+import 'package:notes_app/themes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   var preferences = await PreferencesHandler().readPreferences();
+  // get secret data from .env
   await dotenv.load();
   Get.lazyPut<FirebaseAuthController>(() => FirebaseAuthController());
   runApp(
@@ -40,9 +42,10 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
   @override
   Widget build(BuildContext context) {
+    // Make sure that the inherited preference default to the system theme
+    final Future _initialization = dataInitialization(InheritedPreferences.of(context)!);
     return FutureBuilder(
         future: _initialization,
         builder: (context, snapshot) {
@@ -52,12 +55,15 @@ class _AppState extends State<App> {
 
           if (snapshot.connectionState == ConnectionState.done) {
             return GetMaterialApp(
+              themeMode:
+                  InheritedPreferences.of(context)!.preferences['isNightMode']! ? ThemeMode.dark : ThemeMode.light,
               darkTheme: ThemeData.dark(),
               title: 'Notes App',
               home: GetBuilder<FirebaseAuthController>(
                 autoRemove: false,
                 init: FirebaseAuthController(),
                 builder: (_) {
+                  // The init method in firbase auth controller checks for any user and redirect accordingly. So no need to implement it here.
                   return Loading();
                 },
               ),
@@ -146,16 +152,32 @@ class _AppState extends State<App> {
                   curve: Curves.easeInOut,
                 ),
               ],
-              theme: InheritedPreferences.of(context)!.preferences['isNightMode']!
-                  ? ThemeData.dark()
-                  : ThemeData(
-                      primarySwatch: Colors.blue,
-                    ),
+              theme: lightTheme,
             );
           }
 
           return MaterialApp(home: Loading());
         });
+  }
+
+  Future dataInitialization(InheritedPreferences inheritedPreferences) async {
+    var initialValue = inheritedPreferences.preferences;
+    if (initialValue['isNightMode'] == null) {
+      if (ThemeMode.system == ThemeMode.dark) {
+        setState(() {
+          inheritedPreferences.preferences['isNightMode'] = true;
+        });
+        PreferencesHandler().updatePreferences(
+            preferences: {'isNightMode': true, 'isBiometricEnabled': initialValue['isBiometricEnabled']});
+      } else {
+        setState(() {
+          inheritedPreferences.preferences['isNightMode'] = false;
+        });
+        PreferencesHandler().updatePreferences(
+            preferences: {'isNightMode': false, 'isBiometricEnabled': initialValue['isBiometricEnabled']});
+      }
+    }
+    await Firebase.initializeApp();
   }
 }
 

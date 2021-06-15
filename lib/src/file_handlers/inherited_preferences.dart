@@ -7,7 +7,7 @@ class InheritedPreferences extends InheritedWidget {
     required Widget child,
   }) : super(key: key, child: child);
 
-  final Map<String, bool> preferences;
+  final Map<String, bool?> preferences;
 
   // InheritedPreferences.fromJson({
   //   required Map<String, dynamic> preferencesDynamic,
