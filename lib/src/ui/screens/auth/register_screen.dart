@@ -18,6 +18,7 @@ class RegisterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: themeAwareBackgroundColor(),
       // resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: SingleChildScrollView(
@@ -53,7 +54,7 @@ class RegisterScreen extends StatelessWidget {
                     keyboardType: TextInputType.text,
                     textAlign: TextAlign.left,
                     controller: _nameField,
-                    decoration: textFieldDecoration.copyWith(
+                    decoration: (Get.isDarkMode ? textFieldDecorationDark : textFieldDecorationLight).copyWith(
                       prefixIcon: Icon(Icons.person),
                       hintText: "Enter your name",
                     ),
@@ -66,7 +67,7 @@ class RegisterScreen extends StatelessWidget {
                     keyboardType: TextInputType.emailAddress,
                     textAlign: TextAlign.left,
                     controller: _emailField,
-                    decoration: textFieldDecoration.copyWith(
+                    decoration: (Get.isDarkMode ? textFieldDecorationDark : textFieldDecorationLight).copyWith(
                       prefixIcon: Icon(Icons.email),
                       hintText: "Enter your email",
                     ),
@@ -89,6 +90,8 @@ class RegisterScreen extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 40),
                   child: ElevatedButton(
                     style: ButtonStyle(
+                      backgroundColor: Get.isDarkMode ? MaterialStateProperty.all(kElevatedBackgroundDark) : null,
+                      foregroundColor: Get.isDarkMode ? MaterialStateProperty.all(kElevatedForegroundDark) : null,
                       padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 14)),
                       shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
                     ),
@@ -129,7 +132,8 @@ class RegisterScreen extends StatelessWidget {
                       TextSpan(text: "Already a User?  "),
                       TextSpan(
                         text: " Sign In ",
-                        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
+                        style: TextStyle(fontWeight: FontWeight.bold, color: Get.isDarkMode ? Colors.tealAccent.shade400 : Colors.blue,
+                        ),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
                             Get.offNamed(LoginScreen.id);
@@ -137,7 +141,7 @@ class RegisterScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  style: TextStyle(fontSize: 15.5),
+                  style: TextStyle(fontSize: 16),
                 ),
               ],
             ),

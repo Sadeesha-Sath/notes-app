@@ -31,7 +31,7 @@ class AccountSection extends GetWidget<UserController> {
               confirmText: "Delete Forever",
               content:
                   "Are you sure about deleting your account? All your data will be deleted and you won't be able to recover them.",
-              confirmColor: Colors.redAccent,
+              confirmColor: Get.isDarkMode ? Color(0xFFF35C5C) : Colors.redAccent,
             ).show(context, alignment: Alignment.bottomCenter, opacityCurves: Curves.easeOutExpo);
 
             if (value) {
@@ -106,7 +106,7 @@ class AccountSection extends GetWidget<UserController> {
               );
             }
           },
-          color: Colors.redAccent,
+          color: Get.isDarkMode ? Color(0xFFF35C5C) : Colors.redAccent,
         ),
         ProfileScreenListTile(
           title: "Sign Out",
@@ -124,7 +124,7 @@ class AccountSection extends GetWidget<UserController> {
               Get.find<FirebaseAuthController>().signOutUser();
             }
           },
-          color: Colors.redAccent,
+          color: Get.isDarkMode ? Color(0xFFF35C5C) : Colors.redAccent,
         ),
       ],
     );

@@ -21,12 +21,13 @@ class EditProfileScreen extends GetView<UserController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: themeAwareBackgroundColor(),
       appBar: AppBar(
         leading: CustomBackButton(),
-        backgroundColor: Colors.white,
+        backgroundColor: themeAwareBackgroundColor(),
         title: Text(
           "Edit Profile",
-          style: TextStyle(color: Colors.black87),
+          style: TextStyle(color: themeAwareTextColor()),
         ),
         centerTitle: true,
       ),
@@ -60,7 +61,7 @@ class EditProfileScreen extends GetView<UserController> {
                     },
                     child: Text(
                       "Change Profile Picture",
-                      style: TextStyle(fontSize: 17),
+                      style: TextStyle(fontSize: 17, color: Get.isDarkMode ? kTextButtonColorDark : null),
                     )),
                 kSizedBox15,
                 ProfileScreenListTile(
@@ -73,12 +74,15 @@ class EditProfileScreen extends GetView<UserController> {
                       children: [
                         Text(
                           "Name:  ",
-                          style: TextStyle(fontSize: 16, color: Color(0xFF070707)),
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Get.isDarkMode ? kProfileListTileTextColorDark : kProfileListTileTextColorLight),
                         ),
                         Obx(
                           () => Text(
                             controller.userModel!.name,
-                            style: TextStyle(fontSize: 16, color: Colors.grey.shade700),
+                            style: TextStyle(
+                                fontSize: 16, color: Get.isDarkMode ? Color(0xFFA2A2A2) : Colors.grey.shade700),
                           ),
                         ),
                       ],
@@ -104,12 +108,15 @@ class EditProfileScreen extends GetView<UserController> {
                       children: [
                         Text(
                           "Email:  ",
-                          style: TextStyle(fontSize: 16, color: Color(0xFF070707)),
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Get.isDarkMode ? kProfileListTileTextColorDark : kProfileListTileTextColorLight),
                         ),
                         Obx(
                           () => Text(
                             Get.find<FirebaseAuthController>().userTokenChanges!.email!,
-                            style: TextStyle(fontSize: 16, color: Colors.grey.shade700),
+                            style: TextStyle(
+                                fontSize: 16, color: Get.isDarkMode ? Color(0xFFA2A2A2) : Colors.grey.shade700),
                           ),
                         ),
                       ],
@@ -142,7 +149,7 @@ class EditProfileScreen extends GetView<UserController> {
                         Container(
                           height: 150,
                           width: double.infinity,
-                          color: Colors.red.shade200,
+                          color: Get.isDarkMode ? Color(0xFF975353) : Color(0xFFEFBABA),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -173,8 +180,10 @@ class EditProfileScreen extends GetView<UserController> {
                                 },
                                 child: Text(
                                   "Cannot find the email? Resend here.",
-                                  style:
-                                      TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Colors.blue.shade800),
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w400,
+                                      color: Get.isDarkMode ? Colors.tealAccent : Colors.blue.shade800),
                                 ),
                               ),
                               Spacer(),
@@ -185,7 +194,10 @@ class EditProfileScreen extends GetView<UserController> {
                           child: TextButton(
                             child: Text(
                               "Already Verified?",
-                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                  color: Get.isDarkMode ? Colors.tealAccent.shade400 : null),
                             ),
                             onPressed: () async {
                               showIndicator(true);

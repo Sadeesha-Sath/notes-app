@@ -15,7 +15,7 @@ class ForgotPasswordScreen extends GetView<FirebaseAuthController> {
     Rx<String?> error = Rx(null);
     RxBool showSpinner = false.obs;
     return Scaffold(
-      resizeToAvoidBottomInset: true,
+      backgroundColor: themeAwareBackgroundColor(),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Container(
@@ -32,11 +32,11 @@ class ForgotPasswordScreen extends GetView<FirebaseAuthController> {
                     children: [
                       Text(
                         "Forgot Your Password?",
-                        style: TextStyle(fontSize: 39, fontWeight: FontWeight.bold),
+                        style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
                       ),
                       kSizedBox20,
                       Text(
-                        "No Worries. Let's get Your Data to Your Hand...",
+                        "No Worries. Let's get Your Data to You...",
                         style: TextStyle(fontSize: 25),
                         strutStyle: StrutStyle(fontSize: 32),
                       ),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:notes_app/src/file_handlers/inherited_preferences.dart';
 import 'package:notes_app/src/file_handlers/preferences_handler.dart';
+import 'package:notes_app/src/ui/ui_constants.dart';
 
 class NightModeListTile extends StatelessWidget {
   @override
@@ -18,12 +19,12 @@ class NightModeListTile extends StatelessWidget {
         },
         secondary: Icon(
           CupertinoIcons.moon,
-          color: Color(0xFF656565),
+          color: Get.isDarkMode ? kProfileListTileIconColorDark : kProfileListTileIconColorLight,
         ),
         title: Text(
           "Night Mode",
           style: TextStyle(
-            color: Color(0xFF070707),
+            color: Get.isDarkMode ? kProfileListTileTextColorDark : kProfileListTileTextColorLight,
           ),
         ),
       ),

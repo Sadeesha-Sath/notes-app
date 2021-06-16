@@ -21,13 +21,16 @@ class HomeScreen extends StatelessWidget {
     Get.lazyPut(() => NotesController());
 
     return Scaffold(
+      backgroundColor: themeAwareBackgroundColor(),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Get.isDarkMode ? kFABColorDark : kFABColorLight,
         onPressed: () {
           Get.to(() => NoteScreen.newNote(), transition: Transition.downToUp);
         },
         child: Icon(
           Icons.add,
           size: 30,
+          color: Get.isDarkMode ? Color(0xFFE9E9E9) : null,
         ),
       ),
       body: GetX<NotesController>(
@@ -58,7 +61,7 @@ class HomeScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     AppBar(
-                      backgroundColor: Colors.white,
+                      backgroundColor: themeAwareBackgroundColor(),
                       title: Text(
                         "Home",
                         style: TextStyle(color: Colors.black),

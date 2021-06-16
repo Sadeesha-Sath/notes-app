@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:notes_app/src/ui/ui_constants.dart';
 
 class EmailTextField extends StatelessWidget {
@@ -19,10 +20,12 @@ class EmailTextField extends StatelessWidget {
         keyboardType: TextInputType.emailAddress,
         textAlign: TextAlign.left,
         controller: _controller,
-        decoration: textFieldDecoration.copyWith(
-          prefixIcon: Icon(Icons.email),
-          hintText: "Enter your email",
-        ),
+        decoration:( Get.isDarkMode
+            ? textFieldDecorationDark
+            : textFieldDecorationLight).copyWith(
+                prefixIcon: Icon(Icons.email),
+                hintText: "Enter your email",
+              ),
       ),
     );
   }

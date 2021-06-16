@@ -22,6 +22,7 @@ class LockedNotesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Get.find<NotesController>().bindLocked();
     return Scaffold(
+      backgroundColor: themeAwareBackgroundColor(),
       body: GetX<NotesController>(
           init: Get.find<NotesController>(),
           builder: (NotesController notesController) {
@@ -106,8 +107,8 @@ class LockedNotesScreen extends StatelessWidget {
                     AppBar(
                       centerTitle: true,
                       leadingWidth: 80,
-                      backgroundColor: Colors.white,
                       leading: CustomBackButton(),
+                      backgroundColor: Colors.white,
                       title: Text(
                         "Protected Space",
                         style: TextStyle(color: Colors.black),
@@ -160,11 +161,11 @@ class LockedScreenAppBar extends StatelessWidget {
     return SliverAppBar(
       leading: Container(),
       elevation: 0,
-      shadowColor: Colors.white,
-      foregroundColor: Colors.black,
+      // shadowColor: Colors.white,
+      // foregroundColor: Colors.black,
       pinned: true,
       expandedHeight: 170,
-      backgroundColor: Color(0xFFFAFAFA),
+      backgroundColor: themeAwareBackgroundColor(),
       actions: [
         AppbarButton(
           onTap: () async {
@@ -252,7 +253,7 @@ class LockedScreenAppBar extends StatelessWidget {
           children: [
             Text(
               controller.lockedNotes!.length == 1 ? "1 Note" : "${controller.lockedNotes!.length} Notes",
-              style: TextStyle(color: Colors.black, fontSize: 33),
+              style: TextStyle(fontSize: 33, fontWeight: FontWeight.w500),
             ),
             SizedBox(width: 2),
             Icon(

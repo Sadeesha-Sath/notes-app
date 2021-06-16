@@ -65,11 +65,12 @@ class _NoteScreenState extends State<NoteScreen> {
         return true;
       },
       child: Scaffold(
+        backgroundColor: themeAwareBackgroundColor(),
         resizeToAvoidBottomInset: false,
         bottomNavigationBar: BottomAppBar(
           // color: ColorConverter.convertColor(noteModel.color),
 
-          color: Colors.grey.shade300,
+          color: Get.isDarkMode ? kBottomBarColorDark : kBottomBarColorLight,
           child: Container(
             height: 70,
             child: ListView.builder(
@@ -145,10 +146,12 @@ class _NoteScreenState extends State<NoteScreen> {
             textAlignVertical: TextAlignVertical.top,
             controller: _titleController,
             textCapitalization: TextCapitalization.sentences,
-            decoration: textFieldDecoration.copyWith(
-                contentPadding: EdgeInsets.symmetric(horizontal: 22, vertical: 16),
-                hintText: "Title",
-                hintStyle: TextStyle(fontSize: 27, fontWeight: FontWeight.w600)),
+            decoration: (Get.isDarkMode
+                ? textFieldDecorationDark
+                : textFieldDecorationLight).copyWith(
+                    contentPadding: EdgeInsets.symmetric(horizontal: 22, vertical: 16),
+                    hintText: "Title",
+                    hintStyle: TextStyle(fontSize: 27, fontWeight: FontWeight.w600)),
             autocorrect: true,
             maxLines: null,
           ),
@@ -159,11 +162,13 @@ class _NoteScreenState extends State<NoteScreen> {
             controller: _bodyController,
             textAlignVertical: TextAlignVertical.top,
             textCapitalization: TextCapitalization.sentences,
-            decoration: textFieldDecoration.copyWith(
-              contentPadding: EdgeInsets.symmetric(horizontal: 22, vertical: 16),
-              hintText: "Text",
-              hintStyle: TextStyle(fontSize: 18),
-            ),
+            decoration: (Get.isDarkMode
+                ? textFieldDecorationDark
+                : textFieldDecorationLight).copyWith(
+                    contentPadding: EdgeInsets.symmetric(horizontal: 22, vertical: 16),
+                    hintText: "Text",
+                    hintStyle: TextStyle(fontSize: 18),
+                  ),
             autocorrect: true,
             maxLines: null,
           ),
@@ -186,7 +191,7 @@ class _NoteScreenState extends State<NoteScreen> {
               width: double.infinity,
               child: Text(
                 noteModel.title ?? "[No Title]",
-                style: TextStyle(fontSize: 27, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
               ),
             ),
           ),
@@ -261,7 +266,7 @@ class _NoteScreenState extends State<NoteScreen> {
             },
             child: Text(
               "Save",
-              style: TextStyle(color: Colors.blueAccent, fontSize: 18),
+              style: TextStyle(color: Get.isDarkMode ? Colors.tealAccent.shade400 : Colors.blueAccent, fontSize: 18),
             ),
           ),
         ),
@@ -288,6 +293,7 @@ class _NoteScreenState extends State<NoteScreen> {
     if (!isInTrash) {
       return [
         AppbarButton(
+            keepSameColor: true,
             customIcon: Icon(Icons.edit, color: ColorConverter.convertColor(noteModel.color)),
             onTap: () {
               setState(() {
@@ -296,6 +302,7 @@ class _NoteScreenState extends State<NoteScreen> {
             }),
         if (!isLocked)
           AppbarButton(
+              keepSameColor: true,
               customIcon: Icon(
                 noteModel.isFavourite ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
                 color: ColorConverter.convertColor(noteModel.color),
@@ -313,12 +320,13 @@ class _NoteScreenState extends State<NoteScreen> {
                   );
                 }
               }),
-        AppbarButton(popupMenuButton: _popupMenuButton(isLocked)),
+        AppbarButton(keepSameColor: true, popupMenuButton: _popupMenuButton(isLocked)),
         kSizedBox5,
       ];
     }
     return [
       AppbarButton(
+        keepSameColor: true,
         icon: Icons.restore_page_rounded,
         onTap: () async {
           var value = await PlatformAlertDialog(
@@ -341,6 +349,7 @@ class _NoteScreenState extends State<NoteScreen> {
         },
       ),
       AppbarButton(
+        keepSameColor: true,
         customIcon: Icon(
           CupertinoIcons.trash_fill,
           color: Colors.red.shade200,
@@ -444,7 +453,7 @@ class _NoteScreenState extends State<NoteScreen> {
               cancelText: "Cancel",
               confirmText: "Delete",
               content: "Do you want to delete this note? You can restore it from the Trash.",
-              confirmColor: Colors.redAccent,
+              confirmColor: Get.isDarkMode ? kDialogRedDark : Colors.redAccent,
             ).show(context);
 
             if (value) {
@@ -467,7 +476,7 @@ class _NoteScreenState extends State<NoteScreen> {
               cancelText: "Cancel",
               confirmText: "Delete",
               content: "Do you want to delete this permenantly?. You won't be able to restore it.",
-              confirmColor: Colors.redAccent,
+              confirmColor: Get.isDarkMode ? kDialogRedDark : Colors.redAccent,
             ).show(context);
 
             if (value) {
@@ -496,7 +505,7 @@ class _NoteScreenState extends State<NoteScreen> {
           {
             'text': isLocked ? 'Delete Forever' : 'Send to Trash',
             'iconData': CupertinoIcons.trash_fill,
-            'color': Colors.redAccent
+            'color': Get.isDarkMode ? Color(0xFFA21515) : Colors.redAccent
           }
         }.map((Map<String, dynamic> choice) {
           return PopupMenuItem<String>(

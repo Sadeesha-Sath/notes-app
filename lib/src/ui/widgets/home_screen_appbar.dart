@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:notes_app/src/controllers/notes_controller.dart';
 import 'package:notes_app/src/ui/screens/app/profile_screen.dart';
 import 'package:notes_app/src/ui/screens/app/unlock_locked_notes_screen.dart';
+import 'package:notes_app/src/ui/ui_constants.dart';
 import 'package:notes_app/src/ui/widgets/app_bar_button.dart';
 
 class HomeScreenAppbar extends StatelessWidget {
@@ -17,7 +18,7 @@ class HomeScreenAppbar extends StatelessWidget {
       shadowColor: Colors.white,
       pinned: true,
       expandedHeight: 170,
-      backgroundColor: Color(0xFFFAFAFA),
+      backgroundColor: themeAwareBackgroundColor(),
       actions: [
         AppbarButton(
           onTap: () => Get.toNamed(UnlockLockedNotesScreen.id),
@@ -31,15 +32,10 @@ class HomeScreenAppbar extends StatelessWidget {
       flexibleSpace: FlexibleSpaceBar(
         titlePadding: EdgeInsets.only(bottom: 10),
         title: Container(
-          child: (notesController.notes!.length == 1)
-              ? Text(
-                  "1 Note",
-                  style: TextStyle(color: Colors.black, fontSize: 33),
-                )
-              : Text(
-                  "${notesController.notes!.length} Notes",
-                  style: TextStyle(color: Colors.black, fontSize: 33),
-                ),
+          child: Text(
+            (notesController.notes!.length == 1) ? "1 Note" : "${notesController.notes!.length} Notes",
+            style: TextStyle(fontSize: 33, fontWeight: FontWeight.w500, color: themeAwareTextColor()),
+          ),
         ),
       ),
     );

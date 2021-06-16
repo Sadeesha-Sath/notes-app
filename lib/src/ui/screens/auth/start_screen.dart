@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:notes_app/src/ui/screens/auth/login_screen.dart';
 import 'package:notes_app/src/ui/screens/auth/register_screen.dart';
+import 'package:notes_app/src/ui/ui_constants.dart';
 import 'package:notes_app/src/ui/widgets/auth/social_media_login_bottomsheet.dart';
 
 class StartScreen extends StatelessWidget {
@@ -11,6 +12,7 @@ class StartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: themeAwareBackgroundColor(),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Container(
@@ -45,7 +47,7 @@ class StartScreen extends StatelessWidget {
                   onPressed: () {
                     Get.toNamed(RegisterScreen.id);
                   },
-                  text: "Register",
+                  text: "I'm in",
                   backgroundColor: Colors.blue,
                 ),
                 StartScreenButton(
@@ -67,7 +69,10 @@ class StartScreen extends StatelessWidget {
                       TextSpan(text: "Already a User?  "),
                       TextSpan(
                         text: " Sign In ",
-                        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Get.isDarkMode ? Colors.tealAccent.shade400 : Colors.blue,
+                        ),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
                             Get.toNamed(LoginScreen.id);
@@ -75,7 +80,7 @@ class StartScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  style: TextStyle(fontSize: 15.5),
+                  style: TextStyle(fontSize: 16),
                 ),
               ],
             ),
@@ -106,6 +111,7 @@ class StartScreenButton extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
       child: ElevatedButton(
         style: ButtonStyle(
+          foregroundColor: Get.isDarkMode ? MaterialStateProperty.all(kElevatedForegroundDark) : null,
           backgroundColor: MaterialStateProperty.all(backgroundColor),
           shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
         ),

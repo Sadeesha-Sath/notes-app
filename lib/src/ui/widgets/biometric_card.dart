@@ -21,7 +21,7 @@ class BiometricCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 1,
-      color: Color(0xFFA2D1F6),
+      color: Get.isDarkMode ? kBiometCardDark : kBiometCardLight,
       child: InkWell(
         borderRadius: BorderRadius.circular(20),
         onTap: () async {
@@ -57,11 +57,12 @@ class BiometricCard extends StatelessWidget {
                 Icon(
                   Icons.fingerprint_rounded,
                   size: 40,
+                  color: Colors.black87,
                 ),
                 kSizedBox20,
                 Text(
                   "Use Biometrics",
-                  style: TextStyle(fontSize: 19),
+                  style: TextStyle(fontSize: 19, color: Colors.black87),
                 ),
               ],
             ),

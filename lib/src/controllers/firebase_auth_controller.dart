@@ -13,6 +13,7 @@ class FirebaseAuthController extends GetxController {
   Rx<User?> get user => _firebaseUser;
   User? get userTokenChanges => _userIdchanges.value;
   // FirebaseAuth get auth => _auth;
+  bool isInitialized = false;
 
   @override
   void onInit() {
@@ -22,7 +23,6 @@ class FirebaseAuthController extends GetxController {
     ever(_firebaseUser, checkUser);
 
     Get.lazyPut(() => UserController());
-
     super.onInit();
   }
 
@@ -37,8 +37,10 @@ class FirebaseAuthController extends GetxController {
 
   void checkUser(User? user) async {
     if (user != null) {
+      isInitialized = true;
       Get.offNamed(HomeScreen.id);
     } else {
+      isInitialized = true;
       Get.offNamed(StartScreen.id);
     }
   }

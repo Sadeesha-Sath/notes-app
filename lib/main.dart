@@ -20,7 +20,6 @@ import 'package:notes_app/src/ui/screens/auth/register_screen.dart';
 import 'package:notes_app/src/ui/screens/auth/start_screen.dart';
 import 'package:notes_app/src/ui/widgets/auth/loading.dart';
 import 'package:notes_app/src/ui/widgets/auth/something_went_wrong.dart';
-import 'package:notes_app/themes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,141 +44,151 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     // Make sure that the inherited preference default to the system theme
-    final Future _initialization = dataInitialization(InheritedPreferences.of(context)!);
-    return FutureBuilder(
-        future: _initialization,
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return MaterialApp(home: SomethingWentWrong());
-          }
+    final Future _initialization = Firebase.initializeApp();
+    dataInitialization(InheritedPreferences.of(context)!);
+    return GetMaterialApp(
+      theme: InheritedPreferences.of(context)!.preferences['isNightMode']!
+          ? ThemeData.dark().copyWith(
+              colorScheme: ThemeData.dark()
+                  .colorScheme
+                  .copyWith(primary: Colors.tealAccent.shade400, primaryVariant: Colors.tealAccent.shade700),
+            )
+          : ThemeData.light(),
+      title: 'Notes App',
+      home: FutureBuilder(
+          future: _initialization,
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              SomethingWentWrong();
+            }
 
-          if (snapshot.connectionState == ConnectionState.done) {
-            return GetMaterialApp(
-              themeMode:
-                  InheritedPreferences.of(context)!.preferences['isNightMode']! ? ThemeMode.dark : ThemeMode.light,
-              darkTheme: ThemeData.dark(),
-              title: 'Notes App',
-              home: GetBuilder<FirebaseAuthController>(
+            if (snapshot.connectionState == ConnectionState.done) {
+              return GetBuilder<FirebaseAuthController>(
                 autoRemove: false,
-                init: FirebaseAuthController(),
-                builder: (_) {
-                  // The init method in firbase auth controller checks for any user and redirect accordingly. So no need to implement it here.
+                init: Get.find<FirebaseAuthController>(),
+                builder: (controller) {
+                  // The init method in firbase auth controller checks for any users and redirect accordingly. This check is useful for hot reload only.
+                  if (controller.isInitialized) {
+                    if (controller.user.value == null)
+                      return StartScreen();
+                    else
+                      return HomeScreen();
+                  }
                   return Loading();
                 },
-              ),
-              getPages: [
-                GetPage(
-                  name: StartScreen.id,
-                  page: () => StartScreen(),
-                  transition: Transition.fadeIn,
-                  transitionDuration: Duration(milliseconds: 400),
-                  curve: Curves.easeInOut,
-                ),
-                GetPage(
-                  name: LoginScreen.id,
-                  page: () => LoginScreen(),
-                  transition: Transition.rightToLeft,
-                  transitionDuration: Duration(milliseconds: 280),
-                  curve: Curves.easeInOut,
-                ),
-                GetPage(
-                  name: ForgotPasswordScreen.id,
-                  page: () => ForgotPasswordScreen(),
-                  transition: Transition.downToUp,
-                  transitionDuration: Duration(milliseconds: 420),
-                  curve: Curves.easeInOut,
-                ),
-                GetPage(
-                    name: RegisterScreen.id,
-                    page: () => RegisterScreen(),
-                    transition: Transition.rightToLeft,
-                    curve: Curves.easeInOut,
-                    transitionDuration: Duration(milliseconds: 280)),
-                GetPage(
-                  name: HomeScreen.id,
-                  page: () => HomeScreen(),
-                  transition: Transition.fadeIn,
-                  transitionDuration: Duration(milliseconds: 400),
-                  curve: Curves.easeIn,
-                ),
-                GetPage(
-                  name: ProfileScreen.id,
-                  page: () => ProfileScreen(),
-                  transition: Transition.rightToLeft,
-                  transitionDuration: Duration(milliseconds: 330),
-                  curve: Curves.easeInOut,
-                ),
-                GetPage(
-                  name: LockedNotesScreen.id,
-                  page: () => LockedNotesScreen(),
-                  transition: Transition.downToUp,
-                  transitionDuration: Duration(milliseconds: 420),
-                  curve: Curves.easeInOut,
-                ),
-                GetPage(
-                  name: PinSetScreen.id,
-                  page: () => PinSetScreen(),
-                  transition: Transition.rightToLeft,
-                  transitionDuration: Duration(milliseconds: 330),
-                  curve: Curves.easeInOut,
-                ),
-                GetPage(
-                  name: UnlockLockedNotesScreen.id,
-                  page: () => UnlockLockedNotesScreen(),
-                  transition: Transition.rightToLeft,
-                  transitionDuration: Duration(milliseconds: 330),
-                  curve: Curves.easeInOut,
-                ),
-                GetPage(
-                  name: TrashScreen.id,
-                  page: () => TrashScreen(),
-                  transition: Transition.rightToLeft,
-                  transitionDuration: Duration(milliseconds: 330),
-                  curve: Curves.easeInOut,
-                ),
-                GetPage(
-                  name: EditProfileScreen.id,
-                  page: () => EditProfileScreen(),
-                  transition: Transition.rightToLeft,
-                  transitionDuration: Duration(milliseconds: 330),
-                  curve: Curves.easeInOut,
-                ),
-                GetPage(
-                  name: FavouritesScreen.id,
-                  page: () => FavouritesScreen(),
-                  transition: Transition.rightToLeft,
-                  transitionDuration: Duration(milliseconds: 330),
-                  curve: Curves.easeInOut,
-                ),
-              ],
-              theme: lightTheme,
-            );
-          }
+              );
+            }
 
-          return MaterialApp(home: Loading());
-        });
+            return Loading();
+          }),
+      getPages: [
+        GetPage(
+          name: StartScreen.id,
+          page: () => StartScreen(),
+          transition: Transition.fadeIn,
+          transitionDuration: Duration(milliseconds: 400),
+          curve: Curves.easeInOut,
+        ),
+        GetPage(
+          name: LoginScreen.id,
+          page: () => LoginScreen(),
+          transition: Transition.rightToLeft,
+          transitionDuration: Duration(milliseconds: 280),
+          curve: Curves.easeInOut,
+        ),
+        GetPage(
+          name: ForgotPasswordScreen.id,
+          page: () => ForgotPasswordScreen(),
+          transition: Transition.downToUp,
+          transitionDuration: Duration(milliseconds: 420),
+          curve: Curves.easeInOut,
+        ),
+        GetPage(
+            name: RegisterScreen.id,
+            page: () => RegisterScreen(),
+            transition: Transition.rightToLeft,
+            curve: Curves.easeInOut,
+            transitionDuration: Duration(milliseconds: 280)),
+        GetPage(
+          name: HomeScreen.id,
+          page: () => HomeScreen(),
+          transition: Transition.fadeIn,
+          transitionDuration: Duration(milliseconds: 400),
+          curve: Curves.easeIn,
+        ),
+        GetPage(
+          name: ProfileScreen.id,
+          page: () => ProfileScreen(),
+          transition: Transition.rightToLeft,
+          transitionDuration: Duration(milliseconds: 330),
+          curve: Curves.easeInOut,
+        ),
+        GetPage(
+          name: LockedNotesScreen.id,
+          page: () => LockedNotesScreen(),
+          transition: Transition.downToUp,
+          transitionDuration: Duration(milliseconds: 420),
+          curve: Curves.easeInOut,
+        ),
+        GetPage(
+          name: PinSetScreen.id,
+          page: () => PinSetScreen(),
+          transition: Transition.rightToLeft,
+          transitionDuration: Duration(milliseconds: 330),
+          curve: Curves.easeInOut,
+        ),
+        GetPage(
+          name: UnlockLockedNotesScreen.id,
+          page: () => UnlockLockedNotesScreen(),
+          transition: Transition.rightToLeft,
+          transitionDuration: Duration(milliseconds: 330),
+          curve: Curves.easeInOut,
+        ),
+        GetPage(
+          name: TrashScreen.id,
+          page: () => TrashScreen(),
+          transition: Transition.rightToLeft,
+          transitionDuration: Duration(milliseconds: 330),
+          curve: Curves.easeInOut,
+        ),
+        GetPage(
+          name: EditProfileScreen.id,
+          page: () => EditProfileScreen(),
+          transition: Transition.rightToLeft,
+          transitionDuration: Duration(milliseconds: 330),
+          curve: Curves.easeInOut,
+        ),
+        GetPage(
+          name: FavouritesScreen.id,
+          page: () => FavouritesScreen(),
+          transition: Transition.rightToLeft,
+          transitionDuration: Duration(milliseconds: 330),
+          curve: Curves.easeInOut,
+        ),
+      ],
+    );
   }
 
-  Future dataInitialization(InheritedPreferences inheritedPreferences) async {
+  void dataInitialization(InheritedPreferences inheritedPreferences) async {
     var initialValue = inheritedPreferences.preferences;
     if (initialValue['isNightMode'] == null) {
       if (ThemeMode.system == ThemeMode.dark) {
         setState(() {
           inheritedPreferences.preferences['isNightMode'] = true;
         });
+
         PreferencesHandler().updatePreferences(
             preferences: {'isNightMode': true, 'isBiometricEnabled': initialValue['isBiometricEnabled']});
       } else {
         setState(() {
           inheritedPreferences.preferences['isNightMode'] = false;
         });
+
         PreferencesHandler().updatePreferences(
             preferences: {'isNightMode': false, 'isBiometricEnabled': initialValue['isBiometricEnabled']});
       }
     }
-    await Firebase.initializeApp();
   }
 }
-
 
 // TODO Get access in ios using xcode

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-
 class SectionSeparator extends StatelessWidget {
   SectionSeparator(this.title);
 
@@ -11,7 +10,7 @@ class SectionSeparator extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: Get.width / 22),
-      color: Color(0xFFF6F6F6),
+      color: Get.isDarkMode ? Color(0xFF3A3A3A) : Color(0xFFF6F6F6),
       width: double.infinity,
       child: Text(
         title,

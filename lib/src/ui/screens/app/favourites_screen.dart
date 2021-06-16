@@ -24,20 +24,21 @@ class FavouritesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     var favourites = controller.favourites;
     return Scaffold(
+      backgroundColor: themeAwareBackgroundColor(),
       key: _key,
       appBar: AppBar(
+        foregroundColor: themeAwareTextColor(),
+        backgroundColor: themeAwareBackgroundColor(),
         leading: CustomBackButton(),
-        backgroundColor: Colors.white,
         title: Row(
           children: [
             Text(
               "Favourites",
-              style: TextStyle(color: Colors.black),
             ),
             kSizedBox10,
             Icon(
               CupertinoIcons.heart,
-              color: Colors.grey.shade800,
+              color: Get.isDarkMode ? Colors.grey.shade400 : Colors.grey.shade800,
             ),
           ],
         ),
@@ -161,16 +162,24 @@ class FavouritesScreen extends StatelessWidget {
                             onPressed: () {
                               controller.toggleCheckbox(index);
                             },
-                            icon: Icon(
-                              controller.getBool(index) ? CupertinoIcons.heart_slash_fill : CupertinoIcons.heart,
-                              color: Colors.grey.shade700,
-                            ),
+                            icon: controller.getBool(index)
+                                ? Icon(
+                                    CupertinoIcons.heart_slash_fill,
+                                    color: Get.isDarkMode ? Colors.tealAccent.shade700 : Colors.grey.shade700,
+                                  )
+                                : Icon(
+                                    CupertinoIcons.heart,
+                                    color: Get.isDarkMode ? kProfileListTileIconColorDark : Colors.grey.shade700,
+                                  ),
                           ),
                         ),
                         contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 3) + EdgeInsets.only(right: 10),
                         title: Text(
                           ContentTrimmer.trimmer(note.title) ?? ContentTrimmer.trimmer(note.body) ?? "[No Contents]",
-                          style: TextStyle(fontSize: 18.5, fontWeight: FontWeight.w600, color: Colors.grey.shade800),
+                          style: TextStyle(
+                              fontSize: 18.5,
+                              fontWeight: FontWeight.w600,
+                              color: Get.isDarkMode ? Colors.grey.shade400 : Colors.grey.shade800),
                         ),
                         onTap: () {
                           Get.to(

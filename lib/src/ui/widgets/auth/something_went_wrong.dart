@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:notes_app/src/ui/ui_constants.dart';
 
 class SomethingWentWrong extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: themeAwareBackgroundColor(),
         body: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [

@@ -6,6 +6,7 @@ class Loading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: themeAwareBackgroundColor(),
       body: Container(
         alignment: Alignment.center,
         child: Column(

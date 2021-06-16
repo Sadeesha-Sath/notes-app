@@ -20,7 +20,9 @@ class PinSetScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: themeAwareBackgroundColor(),
       appBar: AppBar(
+        foregroundColor: themeAwareTextColor(),
         toolbarHeight: kToolbarHeight + 20,
         leading: Container(
           padding: EdgeInsets.only(left: 20),
@@ -32,8 +34,8 @@ class PinSetScreen extends StatelessWidget {
           "Set Up Protected Space",
           style: TextStyle(color: Colors.black, fontSize: 25),
         ),
-        backgroundColor: Colors.transparent,
-        shadowColor: Colors.transparent,
+        backgroundColor: themeAwareBackgroundColor(),
+        // shadowColor: Colors.transparent,
       ),
       body: Container(
         alignment: Alignment.center,
@@ -134,15 +136,18 @@ class FirstTwoTimes extends StatelessWidget {
             focusNode: _focusNode,
             textAlign: TextAlign.center,
             keyboardType: TextInputType.number,
-            decoration: textFieldDecoration.copyWith(
-              suffixIcon: IconButton(
-                splashRadius: 20,
-                onPressed: () {
-                  _pinSetController.pinVisibilityToggle();
-                },
-                icon: Icon(_pinSetController.hidePin.value ? Icons.visibility_rounded : Icons.visibility_off_rounded),
-              ),
-            ),
+            decoration: Get.isDarkMode
+                ? textFieldDecorationDark
+                : textFieldDecorationLight.copyWith(
+                    suffixIcon: IconButton(
+                      splashRadius: 20,
+                      onPressed: () {
+                        _pinSetController.pinVisibilityToggle();
+                      },
+                      icon: Icon(
+                          _pinSetController.hidePin.value ? Icons.visibility_rounded : Icons.visibility_off_rounded),
+                    ),
+                  ),
           ),
         ),
         kSizedBox25,

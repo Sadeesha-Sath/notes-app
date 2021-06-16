@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:notes_app/src/ui/ui_constants.dart';
 
 class ProfileScreenListTile extends StatelessWidget {
   final VoidCallback onTap;
@@ -15,20 +16,22 @@ class ProfileScreenListTile extends StatelessWidget {
     return ListTile(
       contentPadding: EdgeInsets.symmetric(horizontal: Get.width / 11),
       onTap: onTap,
-      title: titleWidget ?? Text(
-         title!,
-        style: TextStyle(
-          color: color ?? Color(0xFF070707),
-        ),
-      ),
+      title: titleWidget ??
+          Text(
+            title!,
+            style: TextStyle(
+              color: color ?? (Get.isDarkMode ? kProfileListTileTextColorDark : kProfileListTileTextColorLight),
+            ),
+          ),
       leading: Icon(
         icon,
-        color: color ?? Color(0xFF656565),
+        color: color ?? (Get.isDarkMode ? kProfileListTileIconColorDark : kProfileListTileIconColorLight),
       ),
       trailing: color == null
           ? Icon(
               Icons.arrow_forward_ios_rounded,
               size: 22,
+              color: Get.isDarkMode ? kProfileListTileTextColorDark : kProfileListTileTextColorLight,
             )
           : null,
     );

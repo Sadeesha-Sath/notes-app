@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-const textFieldDecoration = InputDecoration(
+const InputDecoration textFieldDecorationLight = InputDecoration(
   contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 22.0),
   border: OutlineInputBorder(
     borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -10,10 +11,26 @@ const textFieldDecoration = InputDecoration(
     borderRadius: BorderRadius.all(Radius.circular(20)),
   ),
   focusedBorder: OutlineInputBorder(
-    borderSide: BorderSide(color: Colors.lightBlueAccent, width: 2.0),
+    borderSide: BorderSide(color:  Colors.lightBlueAccent, width: 2.0),
     borderRadius: BorderRadius.all(Radius.circular(20)),
   ),
 );
+
+const InputDecoration textFieldDecorationDark = InputDecoration(
+  contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 22.0),
+  border: OutlineInputBorder(
+    borderRadius: BorderRadius.all(Radius.circular(20)),
+  ),
+  enabledBorder: OutlineInputBorder(
+    borderSide: BorderSide(color: Colors.tealAccent, width: 1.0),
+    borderRadius: BorderRadius.all(Radius.circular(20)),
+  ),
+  focusedBorder: OutlineInputBorder(
+    borderSide: BorderSide(color:  Colors.tealAccent, width: 2.0),
+    borderRadius: BorderRadius.all(Radius.circular(20)),
+  ),
+);
+
 
 // SizedBoxes
 
@@ -59,14 +76,26 @@ const List<Color> kLightColorList = [
   kPurpleColorLight,
 ];
 
-
 const Color kLightBackground = Color(0xFFFAFAFA);
 const Color kFABColorLight = Color(0xFF303030);
 const Color kBottomBarColorLight = Color(0xFFDEDEDE);
+const Color kProfileListTileTextColorLight = Color(0xFF070707);
+const Color kProfileListTileIconColorLight = Color(0xFF656565);
+const Color kBiometCardLight = Color(0xFF53A9EF);
 
 // Dark Mode Colors
 
-const Color kDarkBackground = Color(0xFF212121);
+const Color kDarkBackground = Color(0xFF2E2E2E);
+const Color kBottomBarColorDark = Color(0xFF777777);
+const Color kProfileListTileTextColorDark = Color(0xFFDFDFDF);
+const Color kFABColorDark = Color(0xFF686868);
+const Color kAppBarButtonColorDark = Color(0xFF5E5E5E);
+const Color kProfileListTileIconColorDark = Color(0xFF8B8B8B);
+const Color kBiometCardDark = Color(0xFF52D0AA);
+const Color kDialogRedDark = Color(0xFFF35C5C);
+Color kTextButtonColorDark = Colors.tealAccent.shade700;
+Color kElevatedBackgroundDark = Colors.tealAccent.shade700;
+const Color kElevatedForegroundDark = Color(0xFF252525);
 
 const Color kPeachColorDark = Color(0xFFD47D6F);
 const Color kPinkColorDark = Color(0xFFD36A95);
@@ -96,3 +125,19 @@ const List<Color> kDarkColorList = [
   kBlueColorDark,
   kPurpleColorDark,
 ];
+
+Color themeAwareTextColor() {
+  if (Get.isDarkMode) {
+    return Color(0xFFEAEAEA);
+  } else {
+    return Colors.black;
+  }
+}
+
+Color themeAwareBackgroundColor() {
+  if (Get.isDarkMode) {
+    return kDarkBackground;
+  } else {
+    return kLightBackground;
+  }
+}

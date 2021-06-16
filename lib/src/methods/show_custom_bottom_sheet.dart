@@ -5,6 +5,7 @@ import 'package:notes_app/src/file_handlers/inherited_preferences.dart';
 import 'package:notes_app/src/models/mode_enum.dart';
 import 'package:notes_app/src/services/database.dart';
 import 'package:notes_app/src/ui/screens/app/pin_set_screen.dart';
+import 'package:notes_app/src/ui/screens/auth/forgot_password_screen.dart';
 import 'package:notes_app/src/ui/ui_constants.dart';
 import 'package:get/get.dart';
 import 'package:notes_app/src/ui/widgets/auth/password_field.dart';
@@ -79,6 +80,19 @@ class BottomSheet extends GetView<UserController> {
           kSizedBox20,
           getButton(context),
           kSizedBox12,
+          if (mode == Mode.password || mode == Mode.pin)
+            Obx(
+              () => Visibility(
+                visible: (mode == Mode.pin && stage.value == 2) || (mode == Mode.password && stage.value == 1),
+                child: TextButton(
+                  onPressed: () => Get.offNamed(ForgotPasswordScreen.id),
+                  child: Text(
+                    "Forgot password?",
+                    style: TextStyle(fontSize: 16.5, color: Get.isDarkMode ? Colors.tealAccent.shade400 : null),
+                  ),
+                ),
+              ),
+            ),
           if (mode == Mode.pin)
             Obx(
               () => Visibility(
@@ -89,7 +103,7 @@ class BottomSheet extends GetView<UserController> {
                   },
                   child: Text(
                     "Forgot Pin?",
-                    style: TextStyle(fontSize: 17),
+                    style: TextStyle(fontSize: 16.5, color: Get.isDarkMode ? Colors.tealAccent.shade400 : null),
                   ),
                 ),
               ),
@@ -136,7 +150,7 @@ class BottomSheet extends GetView<UserController> {
         () => (stage.value == 2)
             ? PasswordTextField(
                 controller: textController,
-                key: ValueKey('passwordfield'),
+                key: ValueKey('passwordfield1'),
                 hintText: "",
               )
             : TextField(
@@ -145,34 +159,34 @@ class BottomSheet extends GetView<UserController> {
                 controller: textController,
                 style: TextStyle(fontSize: 20),
                 textAlign: TextAlign.center,
-                decoration: textFieldDecoration,
+                decoration: Get.isDarkMode ? textFieldDecorationDark : textFieldDecorationLight,
               ),
       );
     } else if (mode == Mode.password) {
       return PasswordTextField(
         controller: textController,
-        key: ValueKey('passwordfield'),
+        key: ValueKey('passwordfield2'),
         hintText: "",
       );
     } else if (mode == Mode.name) {
       return TextField(
         controller: textController,
         style: TextStyle(fontSize: 20),
-        decoration: textFieldDecoration,
+        decoration: Get.isDarkMode ? textFieldDecorationDark : textFieldDecorationLight,
       );
     } else {
       return Obx(
         () => stage.value == 1
             ? PasswordTextField(
                 controller: textController,
-                key: ValueKey('passwordfield'),
+                key: ValueKey('passwordfield3'),
                 hintText: "",
               )
             : TextField(
                 keyboardType: TextInputType.emailAddress,
                 controller: textController,
                 style: TextStyle(fontSize: 20),
-                decoration: textFieldDecoration,
+                decoration: Get.isDarkMode ? textFieldDecorationDark : textFieldDecorationLight,
               ),
       );
     }
@@ -340,7 +354,12 @@ class BottomSheetButton extends StatelessWidget {
         style: TextStyle(fontSize: 18),
       ),
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(color),
+        backgroundColor: MaterialStateProperty.all(color ?? (Get.isDarkMode ? kElevatedBackgroundDark : null)),
+        foregroundColor: color == null
+            ? Get.isDarkMode
+                ? MaterialStateProperty.all(kElevatedForegroundDark)
+                : null
+            : null,
         padding: MaterialStateProperty.all(
           EdgeInsets.symmetric(horizontal: 20, vertical: 12.5),
         ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:notes_app/src/file_handlers/inherited_preferences.dart';
 import 'package:notes_app/src/file_handlers/preferences_handler.dart';
+import 'package:notes_app/src/ui/ui_constants.dart';
 
 class BiometricListTile extends StatefulWidget {
   const BiometricListTile({
@@ -27,12 +28,12 @@ class _BiometricListTileState extends State<BiometricListTile> {
         },
         secondary: Icon(
           Icons.fingerprint_rounded,
-          color: Color(0xFF656565),
+          color: Get.isDarkMode ? kProfileListTileIconColorDark : kProfileListTileIconColorLight,
         ),
         title: Text(
           "Use Biometric Authentication for Protected-Space",
           style: TextStyle(
-            color: Color(0xFF070707),
+            color: Get.isDarkMode ? kProfileListTileTextColorDark : kProfileListTileTextColorLight,
           ),
         ),
       ),

@@ -17,6 +17,7 @@ class UnlockLockedNotesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // print(arguments);
     return Scaffold(
+      backgroundColor: themeAwareBackgroundColor(),
       body: SafeArea(
         child:
             Get.find<UserController>().isPinSet() ? UnlockWithBiometricOrPin() : LockedNotesInit(noteModel: arguments),
@@ -66,7 +67,10 @@ class UnlockWithBiometricOrPin extends StatelessWidget {
                     ),
                     Text(
                       "Welcome to Your Private and Secure Space",
-                      style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.w600,
+                      ),
                       textAlign: TextAlign.center,
                     ),
                     Spacer(
@@ -78,8 +82,10 @@ class UnlockWithBiometricOrPin extends StatelessWidget {
                               controller: textController,
                               autofocus: usePin.value,
                               style: TextStyle(fontSize: 20),
-                              decoration: textFieldDecoration.copyWith(
-                                  hintText: "Enter Your Protected Space Pin", hintStyle: TextStyle(fontSize: 17)),
+                              decoration: (Get.isDarkMode
+                                  ? textFieldDecorationDark
+                                  : textFieldDecorationLight).copyWith(
+                                      hintText: "Enter Your Protected Space Pin", hintStyle: TextStyle(fontSize: 17)),
                               textAlign: TextAlign.center,
                               keyboardType: TextInputType.number,
                               onSubmitted: (text) {
@@ -120,6 +126,8 @@ class UnlockWithBiometricOrPin extends StatelessWidget {
                     ElevatedButton(
                       style: ButtonStyle(
                         padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 18, vertical: 10)),
+                        backgroundColor: Get.isDarkMode ? MaterialStateProperty.all(kElevatedBackgroundDark) : null,
+                        foregroundColor: Get.isDarkMode ? MaterialStateProperty.all(kElevatedForegroundDark) : null,
                         shape:
                             MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
                       ),

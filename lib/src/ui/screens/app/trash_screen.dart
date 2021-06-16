@@ -22,23 +22,25 @@ class TrashScreen extends GetView<NotesController> {
   Widget build(BuildContext context) {
     controller.bindTrash();
     return Scaffold(
+        backgroundColor: themeAwareBackgroundColor(),
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          foregroundColor: themeAwareTextColor(),
+          backgroundColor: themeAwareBackgroundColor(),
           title: Row(
             children: [
               Text(
                 "Trash",
-                style: TextStyle(color: Colors.black),
               ),
               kSizedBox10,
               Icon(
                 CupertinoIcons.trash,
-                color: Colors.grey.shade800,
+                color: Get.isDarkMode ? Colors.grey.shade400 : Colors.grey.shade800,
               ),
             ],
           ),
           actions: [
             AppbarButton(
+              keepSameColor: true,
               icon: Icons.restore_page_rounded,
               onTap: () async {
                 if (_trashScreenController.selectedItems.isNotEmpty) {
@@ -76,6 +78,7 @@ class TrashScreen extends GetView<NotesController> {
               },
             ),
             AppbarButton(
+              keepSameColor: true,
               customIcon: Icon(
                 CupertinoIcons.trash_fill,
                 color: Colors.red.shade200,
@@ -131,13 +134,17 @@ class TrashScreen extends GetView<NotesController> {
                         horizontalTitleGap: 25,
                         leading: Obx(
                           () => Checkbox(
+                              activeColor: Get.isDarkMode ? Colors.tealAccent.shade700 : null,
                               value: _trashScreenController.getBool(index),
                               onChanged: (bool? value) => _trashScreenController.toggleCheckbox(value!, index)),
                         ),
                         contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 3) + EdgeInsets.only(right: 10),
                         title: Text(
                           ContentTrimmer.trimmer(note.title) ?? ContentTrimmer.trimmer(note.body) ?? "[No Contents]",
-                          style: TextStyle(fontSize: 18.5, fontWeight: FontWeight.w600, color: Colors.grey.shade800),
+                          style: TextStyle(
+                              fontSize: 18.5,
+                              fontWeight: FontWeight.w600,
+                              color: Get.isDarkMode ? Colors.grey.shade400 : Colors.grey.shade800),
                         ),
                         onTap: () {
                           Get.to(
@@ -163,7 +170,7 @@ class TrashScreen extends GetView<NotesController> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SvgPicture.asset(
-                          Get.isDarkMode ? 'assets/trash_dark.svg': 'assets/trash.svg',
+                          Get.isDarkMode ? 'assets/trash_dark.svg' : 'assets/trash.svg',
                           height: 1.1 * Get.height / 3,
                         ),
                         kSizedBox30,
@@ -183,7 +190,6 @@ class TrashScreen extends GetView<NotesController> {
               return Center(child: CircularProgressIndicator.adaptive());
             },
           ),
-        )
-        );
+        ));
   }
 }

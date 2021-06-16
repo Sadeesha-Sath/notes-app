@@ -24,14 +24,14 @@ class UserSection extends GetView<UserController> {
           Obx(
             () => Text(
               controller.userModel?.name ?? "Name",
-              style: TextStyle(fontSize: 27),
+              style: TextStyle(fontSize: 27, color: themeAwareTextColor()),
             ),
           ),
           kSizedBox3,
           Obx(
             () => Text(
               controller.user?.email ?? "email",
-              style: TextStyle(color: Colors.grey.shade700, fontSize: 16),
+              style: TextStyle(color: Get.isDarkMode ? Colors.grey.shade400 : Colors.grey.shade700, fontSize: 16),
             ),
           ),
           SizedBox(height: 9),
@@ -41,6 +41,8 @@ class UserSection extends GetView<UserController> {
               children: [
                 ElevatedButton(
                   style: ButtonStyle(
+                    backgroundColor: Get.isDarkMode ? MaterialStateProperty.all(kElevatedBackgroundDark) : null,
+                    foregroundColor: Get.isDarkMode ? MaterialStateProperty.all(kElevatedForegroundDark) : null,
                     elevation: MaterialStateProperty.all(1.5),
                     padding: MaterialStateProperty.all(EdgeInsets.all(8.5)),
                     shape: MaterialStateProperty.all(
