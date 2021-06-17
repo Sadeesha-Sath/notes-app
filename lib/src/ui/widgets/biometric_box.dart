@@ -12,16 +12,13 @@ class BiometricBox extends StatefulWidget {
 class _BiometricBoxState extends State<BiometricBox> {
   @override
   Widget build(BuildContext context) {
-
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 50),
       child: InkWell(
         onTap: () {
           setState(() {
-
             LocalPreferences.biometrics = !LocalPreferences.biometrics;
           });
- 
         },
         child: Container(
           padding: EdgeInsets.only(
@@ -43,11 +40,9 @@ class _BiometricBoxState extends State<BiometricBox> {
                     style: TextStyle(fontSize: 16),
                   ),
                   Switch.adaptive(
-       
                       value: LocalPreferences.biometrics,
                       onChanged: (bool value) {
                         setState(() {
-
                           LocalPreferences.biometrics = value;
                         });
                       }),

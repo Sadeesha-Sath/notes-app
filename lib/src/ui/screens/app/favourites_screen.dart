@@ -27,13 +27,15 @@ class FavouritesScreen extends StatelessWidget {
       backgroundColor: themeAwareBackgroundColor(),
       key: _key,
       appBar: AppBar(
-        foregroundColor: themeAwareTextColor(),
         backgroundColor: themeAwareBackgroundColor(),
         leading: CustomBackButton(),
         title: Row(
           children: [
             Text(
               "Favourites",
+              style: TextStyle(
+                color: themeAwareTextColor(),
+              ),
             ),
             kSizedBox10,
             Icon(

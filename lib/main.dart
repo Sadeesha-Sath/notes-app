@@ -40,12 +40,10 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     // Make sure that the inherited preference default to the system theme
     final Future _initialization = Firebase.initializeApp();
-    // Make shared preference dark mode setting to be system deafult if not set
+    // Make shared preference dark mode setting to be system default if not set
     dataInit();
     return GetMaterialApp(
-      theme: LocalPreferences.isDarkMode!
-          ? darkTheme
-          : ThemeData.light(),
+      theme:LocalPreferences.isDarkMode! ? darkTheme :  ThemeData.light(),
       title: 'Notes App',
       home: FutureBuilder(
           future: _initialization,
@@ -59,7 +57,7 @@ class _AppState extends State<App> {
                 autoRemove: false,
                 init: Get.find<FirebaseAuthController>(),
                 builder: (controller) {
-                  // The init method in firbase auth controller checks for any users and redirect accordingly. This check is useful for hot reload only.
+                  // The init method in firebase auth controller checks for any users and redirect accordingly. This check is useful for hot reload only.
                   if (controller.isInitialized) {
                     if (controller.user.value == null)
                       return StartScreen();
@@ -174,7 +172,6 @@ class _AppState extends State<App> {
       }
     }
   }
-  
+
 // TODO Get access in ios using xcode and integrate apple sign in
 }
-

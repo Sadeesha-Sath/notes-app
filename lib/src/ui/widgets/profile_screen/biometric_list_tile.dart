@@ -26,9 +26,9 @@ class _BiometricListTileState extends State<BiometricListTile> {
               value: LocalPreferences.biometrics,
               contentPadding: EdgeInsets.symmetric(horizontal: Get.width / 11),
               onChanged: (bool value) {
-                // setState(() {
-                LocalPreferences.biometrics = value;
-                // });
+                setState(() {
+                  LocalPreferences.biometrics = value;
+                });
               },
               secondary: Icon(
                 Icons.fingerprint_rounded,

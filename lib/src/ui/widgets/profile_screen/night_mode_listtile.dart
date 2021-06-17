@@ -5,7 +5,12 @@ import 'package:notes_app/src/services/local_preferences.dart';
 import 'package:notes_app/src/ui/ui_constants.dart';
 import 'package:notes_app/themes.dart';
 
-class NightModeListTile extends StatelessWidget {
+class NightModeListTile extends StatefulWidget {
+  @override
+  _NightModeListTileState createState() => _NightModeListTileState();
+}
+
+class _NightModeListTileState extends State<NightModeListTile> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -13,8 +18,12 @@ class NightModeListTile extends StatelessWidget {
         value: LocalPreferences.isDarkMode!,
         contentPadding: EdgeInsets.symmetric(horizontal: Get.width / 11),
         onChanged: (bool value) {
-          LocalPreferences.isDarkMode = value;
+          setState(() {
+            LocalPreferences.isDarkMode = value;
+          });
+          // ? Not working in android arm64 builds 🤷‍♂️
           Get.changeTheme(value ? darkTheme : ThemeData.light());
+
         },
         secondary: Icon(
           CupertinoIcons.moon,

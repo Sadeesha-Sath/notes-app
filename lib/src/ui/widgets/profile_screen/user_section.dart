@@ -14,6 +14,7 @@ class UserSection extends GetView<UserController> {
         children: [
           Obx(
             () => CircleAvatar(
+              backgroundColor: Get.isDarkMode ? Colors.teal.shade700 : null,
               foregroundImage: Get.find<FirebaseAuthController>().userTokenChanges?.photoURL != null
                   ? NetworkImage(Get.find<FirebaseAuthController>().userTokenChanges!.photoURL!)
                   : null,
@@ -57,7 +58,7 @@ class UserSection extends GetView<UserController> {
                   child: Row(
                     children: [
                       Spacer(
-                        flex: 7,
+                        flex: MediaQuery.of(context).orientation == Orientation.portrait ? 7 : 1,
                       ),
                       Text(
                         "Edit Profile",
@@ -68,7 +69,7 @@ class UserSection extends GetView<UserController> {
                         size: 18,
                       ),
                       Spacer(
-                        flex: 2,
+                        flex: MediaQuery.of(context).orientation == Orientation.portrait ? 2 : 1,
                       )
                     ],
                   ),

@@ -24,12 +24,14 @@ class TrashScreen extends GetView<NotesController> {
     return Scaffold(
         backgroundColor: themeAwareBackgroundColor(),
         appBar: AppBar(
-          foregroundColor: themeAwareTextColor(),
           backgroundColor: themeAwareBackgroundColor(),
           title: Row(
             children: [
               Text(
                 "Trash",
+                style: TextStyle(
+                  color: themeAwareTextColor(),
+                ),
               ),
               kSizedBox10,
               Icon(
@@ -69,12 +71,13 @@ class TrashScreen extends GetView<NotesController> {
                   }
                 } else {
                   if (controller.deletedNotes!.isEmpty)
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text(
-                        "No Notes in Trash."),),);
-                    
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("No Notes in Trash."),
+                      ),
+                    );
                   else
-                  ScaffoldMessenger.of(context).showSnackBar(
+                    ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text("No Items Selected."),
                       ),
@@ -118,9 +121,8 @@ class TrashScreen extends GetView<NotesController> {
                         content: Text("No Notes in Trash."),
                       ),
                     );
-                    
                   else
-                   ScaffoldMessenger.of(context).showSnackBar(
+                    ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text("No Items Selected."),
                       ),
