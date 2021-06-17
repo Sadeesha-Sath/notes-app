@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:notes_app/src/controllers/user_controller.dart';
-import 'package:notes_app/src/file_handlers/inherited_preferences.dart';
+import 'package:notes_app/src/services/local_preferences.dart';
 import 'package:notes_app/src/ui/screens/app/locked_notes_screen.dart';
 import 'package:notes_app/src/ui/ui_constants.dart';
 import 'package:notes_app/src/ui/widgets/biometric_card.dart';
@@ -47,7 +47,7 @@ class UnlockWithBiometricOrPin extends StatelessWidget {
               if (snapshot.connectionState == ConnectionState.done) {
                 bool isBioEnabled = snapshot.data as bool;
                 if (isBioEnabled) {
-                  isBioEnabled = InheritedPreferences.of(context)!.preferences['isBiometricEnabled'] ?? false;
+                  isBioEnabled = LocalPreferences.biometrics;
                 }
                 if (isBioEnabled)
                   usePin(false);
@@ -82,9 +82,8 @@ class UnlockWithBiometricOrPin extends StatelessWidget {
                               controller: textController,
                               autofocus: usePin.value,
                               style: TextStyle(fontSize: 20),
-                              decoration: (Get.isDarkMode
-                                  ? textFieldDecorationDark
-                                  : textFieldDecorationLight).copyWith(
+                              decoration: (Get.isDarkMode ? textFieldDecorationDark : textFieldDecorationLight)
+                                  .copyWith(
                                       hintText: "Enter Your Protected Space Pin", hintStyle: TextStyle(fontSize: 17)),
                               textAlign: TextAlign.center,
                               keyboardType: TextInputType.number,

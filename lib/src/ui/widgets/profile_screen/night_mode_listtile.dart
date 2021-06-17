@@ -1,21 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:notes_app/src/file_handlers/inherited_preferences.dart';
-import 'package:notes_app/src/file_handlers/preferences_handler.dart';
+import 'package:notes_app/src/services/local_preferences.dart';
 import 'package:notes_app/src/ui/ui_constants.dart';
+import 'package:notes_app/themes.dart';
 
 class NightModeListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
       child: SwitchListTile.adaptive(
-        value: InheritedPreferences.of(context)!.preferences['isNightMode']!,
+        value: LocalPreferences.isDarkMode!,
         contentPadding: EdgeInsets.symmetric(horizontal: Get.width / 11),
         onChanged: (bool value) {
-          InheritedPreferences.of(context)!.preferences['isNightMode'] = value;
-          Get.changeTheme(value ? ThemeData.dark() : ThemeData.light());
-          PreferencesHandler().updatePreferences(preferences: InheritedPreferences.of(context)!.preferences);
+          LocalPreferences.isDarkMode = value;
+          Get.changeTheme(value ? darkTheme : ThemeData.light());
         },
         secondary: Icon(
           CupertinoIcons.moon,

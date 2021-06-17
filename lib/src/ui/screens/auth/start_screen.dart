@@ -70,7 +70,7 @@ class StartScreen extends StatelessWidget {
                       TextSpan(
                         text: " Sign In ",
                         style: TextStyle(
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w600,
                           color: Get.isDarkMode ? Colors.tealAccent.shade400 : Colors.blue,
                         ),
                         recognizer: TapGestureRecognizer()

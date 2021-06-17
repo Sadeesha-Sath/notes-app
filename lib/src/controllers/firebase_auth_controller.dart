@@ -38,10 +38,10 @@ class FirebaseAuthController extends GetxController {
   void checkUser(User? user) async {
     if (user != null) {
       isInitialized = true;
-      Get.offNamed(HomeScreen.id);
+      Get.offAllNamed(HomeScreen.id);
     } else {
       isInitialized = true;
-      Get.offNamed(StartScreen.id);
+      Get.offAllNamed(StartScreen.id);
     }
   }
 

@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:notes_app/src/controllers/user_controller.dart';
-import 'package:notes_app/src/file_handlers/inherited_preferences.dart';
 import 'package:notes_app/src/models/mode_enum.dart';
 import 'package:notes_app/src/services/database.dart';
+import 'package:notes_app/src/services/local_preferences.dart';
 import 'package:notes_app/src/ui/screens/app/pin_set_screen.dart';
 import 'package:notes_app/src/ui/screens/auth/forgot_password_screen.dart';
 import 'package:notes_app/src/ui/ui_constants.dart';
@@ -74,8 +74,8 @@ class BottomSheet extends GetView<UserController> {
           ),
           kSizedBox25,
           Visibility(
-              visible: mode == Mode.pinWithBiometrics &&
-                  InheritedPreferences.of(context)!.preferences['isBiometricEnabled']!,
+              visible: mode == Mode.pinWithBiometrics && LocalPreferences.biometrics,
+    
               child: BiometricCard(error: error)),
           kSizedBox20,
           getButton(context),

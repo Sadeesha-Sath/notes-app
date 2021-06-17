@@ -132,7 +132,7 @@ class RegisterScreen extends StatelessWidget {
                       TextSpan(text: "Already a User?  "),
                       TextSpan(
                         text: " Sign In ",
-                        style: TextStyle(fontWeight: FontWeight.bold, color: Get.isDarkMode ? Colors.tealAccent.shade400 : Colors.blue,
+                        style: TextStyle(fontWeight: FontWeight.w600, color: Get.isDarkMode ? Colors.tealAccent.shade400 : Colors.blue,
                         ),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {

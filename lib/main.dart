@@ -4,8 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:notes_app/src/controllers/firebase_auth_controller.dart';
-import 'package:notes_app/src/file_handlers/inherited_preferences.dart';
-import 'package:notes_app/src/file_handlers/preferences_handler.dart';
+import 'package:notes_app/src/services/local_preferences.dart';
 import 'package:notes_app/src/ui/screens/app/edit_profile_screen.dart';
 import 'package:notes_app/src/ui/screens/app/favourites_screen.dart';
 import 'package:notes_app/src/ui/screens/app/locked_notes_screen.dart';
@@ -20,19 +19,15 @@ import 'package:notes_app/src/ui/screens/auth/register_screen.dart';
 import 'package:notes_app/src/ui/screens/auth/start_screen.dart';
 import 'package:notes_app/src/ui/widgets/auth/loading.dart';
 import 'package:notes_app/src/ui/widgets/auth/something_went_wrong.dart';
+import 'package:notes_app/themes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  var preferences = await PreferencesHandler().readPreferences();
+  await LocalPreferences.onInit();
   // get secret data from .env
   await dotenv.load();
   Get.lazyPut<FirebaseAuthController>(() => FirebaseAuthController());
-  runApp(
-    InheritedPreferences(
-      preferences: preferences,
-      child: App(),
-    ),
-  );
+  runApp(App());
 }
 
 class App extends StatefulWidget {
@@ -45,14 +40,11 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     // Make sure that the inherited preference default to the system theme
     final Future _initialization = Firebase.initializeApp();
-    dataInitialization(InheritedPreferences.of(context)!);
+    // Make shared preference dark mode setting to be system deafult if not set
+    dataInit();
     return GetMaterialApp(
-      theme: InheritedPreferences.of(context)!.preferences['isNightMode']!
-          ? ThemeData.dark().copyWith(
-              colorScheme: ThemeData.dark()
-                  .colorScheme
-                  .copyWith(primary: Colors.tealAccent.shade400, primaryVariant: Colors.tealAccent.shade700),
-            )
+      theme: LocalPreferences.isDarkMode!
+          ? darkTheme
           : ThemeData.light(),
       title: 'Notes App',
       home: FutureBuilder(
@@ -169,26 +161,20 @@ class _AppState extends State<App> {
     );
   }
 
-  void dataInitialization(InheritedPreferences inheritedPreferences) async {
-    var initialValue = inheritedPreferences.preferences;
-    if (initialValue['isNightMode'] == null) {
+  void dataInit() async {
+    if (LocalPreferences.isDarkMode == null) {
       if (ThemeMode.system == ThemeMode.dark) {
         setState(() {
-          inheritedPreferences.preferences['isNightMode'] = true;
+          LocalPreferences.isDarkMode = true;
         });
-
-        PreferencesHandler().updatePreferences(
-            preferences: {'isNightMode': true, 'isBiometricEnabled': initialValue['isBiometricEnabled']});
       } else {
         setState(() {
-          inheritedPreferences.preferences['isNightMode'] = false;
+          LocalPreferences.isDarkMode = false;
         });
-
-        PreferencesHandler().updatePreferences(
-            preferences: {'isNightMode': false, 'isBiometricEnabled': initialValue['isBiometricEnabled']});
       }
     }
   }
 }
+
 
 // TODO Get access in ios using xcode

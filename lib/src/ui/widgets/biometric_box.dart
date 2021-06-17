@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:notes_app/src/file_handlers/inherited_preferences.dart';
-import 'package:notes_app/src/file_handlers/preferences_handler.dart';
+import 'package:notes_app/src/services/local_preferences.dart';
 import 'package:notes_app/src/ui/ui_constants.dart';
 
 class BiometricBox extends StatefulWidget {
@@ -13,15 +12,16 @@ class BiometricBox extends StatefulWidget {
 class _BiometricBoxState extends State<BiometricBox> {
   @override
   Widget build(BuildContext context) {
-    var initialValue = InheritedPreferences.of(context)!.preferences;
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 50),
       child: InkWell(
         onTap: () {
           setState(() {
-            InheritedPreferences.of(context)!.preferences['isBiometricEnabled'] = !initialValue['isBiometricEnabled']!;
+
+            LocalPreferences.biometrics = !LocalPreferences.biometrics;
           });
-          PreferencesHandler().updatePreferences(preferences: initialValue);
+ 
         },
         child: Container(
           padding: EdgeInsets.only(
@@ -43,12 +43,13 @@ class _BiometricBoxState extends State<BiometricBox> {
                     style: TextStyle(fontSize: 16),
                   ),
                   Switch.adaptive(
-                      value: initialValue['isBiometricEnabled']!,
+       
+                      value: LocalPreferences.biometrics,
                       onChanged: (bool value) {
                         setState(() {
-                          InheritedPreferences.of(context)!.preferences['isBiometricEnabled'] = value;
+
+                          LocalPreferences.biometrics = value;
                         });
-                        PreferencesHandler().updatePreferences(preferences: initialValue);
                       }),
                 ],
               ),
