@@ -11,7 +11,7 @@ const InputDecoration textFieldDecorationLight = InputDecoration(
     borderRadius: BorderRadius.all(Radius.circular(20)),
   ),
   focusedBorder: OutlineInputBorder(
-    borderSide: BorderSide(color:  Colors.lightBlueAccent, width: 2.0),
+    borderSide: BorderSide(color: Colors.lightBlueAccent, width: 2.0),
     borderRadius: BorderRadius.all(Radius.circular(20)),
   ),
 );
@@ -26,11 +26,10 @@ const InputDecoration textFieldDecorationDark = InputDecoration(
     borderRadius: BorderRadius.all(Radius.circular(20)),
   ),
   focusedBorder: OutlineInputBorder(
-    borderSide: BorderSide(color:  Colors.tealAccent, width: 2.0),
+    borderSide: BorderSide(color: Colors.tealAccent, width: 2.0),
     borderRadius: BorderRadius.all(Radius.circular(20)),
   ),
 );
-
 
 // SizedBoxes
 
@@ -109,10 +108,10 @@ const Color kTealColorDark = Color(0xFF409D7A);
 const Color kBlueColorDark = Color(0xFF2B96A5);
 const Color kPurpleColorDark = Color(0xFF7F42B7);
 const Color kGreyColorDark = Color(0xFFA4A4A4);
-const Color kBlackColorDark = Color(0xFF3C3C3C);
+const Color kWhiteColorDark = Color(0xFFD5D5D5);
 
 const List<Color> kDarkColorList = [
-  kBlackColorDark,
+  kWhiteColorDark,
   kGreyColorDark,
   kPeachColorDark,
   kPinkColorDark,

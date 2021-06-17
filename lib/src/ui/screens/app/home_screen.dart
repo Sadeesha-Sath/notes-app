@@ -28,7 +28,7 @@ class HomeScreen extends StatelessWidget {
           Get.to(() => NoteScreen.newNote(), transition: Transition.downToUp);
         },
         child: Icon(
-          Icons.add,
+          CupertinoIcons.add,
           size: 30,
           color: Get.isDarkMode ? Color(0xFFE9E9E9) : null,
         ),

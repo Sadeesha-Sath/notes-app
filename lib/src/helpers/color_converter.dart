@@ -17,7 +17,7 @@ class ColorConverter {
     'blue': {'light': kBlueColorLight, 'dark': kBlueColorDark},
     'purple': {'light': kPurpleColorLight, 'dark': kPurpleColorDark},
     'grey': {'light': kGreyColorLight, 'dark': kGreyColorDark},
-    'primary': {'light': kWhiteColorLight, 'dark': kBlackColorDark},
+    'white': {'light': kWhiteColorLight, 'dark': kWhiteColorDark},
   };
   static Map<Color?, String> _reverseMap = {};
 
@@ -42,7 +42,7 @@ class ColorConverter {
     if (_reverseMap.containsKey(color)) {
       return _reverseMap[color]!;
     } else {
-      return "primary";
+      return "white";
     }
   }
 }

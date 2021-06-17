@@ -142,33 +142,29 @@ class _NoteScreenState extends State<NoteScreen> {
         children: [
           kSizedBox15,
           TextField(
-            style: TextStyle(fontSize: 27, fontWeight: FontWeight.w600),
+            style: TextStyle(fontSize: 33, fontWeight: FontWeight.w600),
             textAlignVertical: TextAlignVertical.top,
             controller: _titleController,
             textCapitalization: TextCapitalization.sentences,
-            decoration: (Get.isDarkMode
-                ? textFieldDecorationDark
-                : textFieldDecorationLight).copyWith(
-                    contentPadding: EdgeInsets.symmetric(horizontal: 22, vertical: 16),
-                    hintText: "Title",
-                    hintStyle: TextStyle(fontSize: 27, fontWeight: FontWeight.w600)),
+            decoration: (Get.isDarkMode ? textFieldDecorationDark : textFieldDecorationLight).copyWith(
+                contentPadding: EdgeInsets.symmetric(horizontal: 22, vertical: 16),
+                hintText: "Title",
+                hintStyle: TextStyle(fontSize: 33, fontWeight: FontWeight.w600)),
             autocorrect: true,
             maxLines: null,
           ),
           kSizedBox15,
           TextField(
-            style: TextStyle(fontSize: 18, color: Colors.grey.shade900),
+            style: TextStyle(fontSize: 19, color: Get.isDarkMode ? Colors.grey.shade300 : Colors.grey.shade900),
             strutStyle: StrutStyle(fontSize: 21.5),
             controller: _bodyController,
             textAlignVertical: TextAlignVertical.top,
             textCapitalization: TextCapitalization.sentences,
-            decoration: (Get.isDarkMode
-                ? textFieldDecorationDark
-                : textFieldDecorationLight).copyWith(
-                    contentPadding: EdgeInsets.symmetric(horizontal: 22, vertical: 16),
-                    hintText: "Text",
-                    hintStyle: TextStyle(fontSize: 18),
-                  ),
+            decoration: (Get.isDarkMode ? textFieldDecorationDark : textFieldDecorationLight).copyWith(
+              contentPadding: EdgeInsets.symmetric(horizontal: 22, vertical: 16),
+              hintText: "Text",
+              hintStyle: TextStyle(fontSize: 19),
+            ),
             autocorrect: true,
             maxLines: null,
           ),
@@ -191,14 +187,17 @@ class _NoteScreenState extends State<NoteScreen> {
               width: double.infinity,
               child: Text(
                 noteModel.title ?? "[No Title]",
-                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 33, fontWeight: FontWeight.bold),
               ),
             ),
           ),
           kSizedBox15,
           Text(
             noteModel.getDateCreated,
-            style: TextStyle(fontSize: 18, color: Colors.black54, fontWeight: FontWeight.w500),
+            style: TextStyle(
+                fontSize: 20,
+                color: Get.isDarkMode ? Colors.grey.shade500 : Color(0xFF828282),
+                fontWeight: FontWeight.w500),
           ),
           kSizedBox30,
           GestureDetector(
@@ -212,7 +211,7 @@ class _NoteScreenState extends State<NoteScreen> {
               width: double.infinity,
               child: Text(
                 noteModel.body ?? "[No Text]",
-                style: TextStyle(fontSize: 18, color: Colors.grey.shade900),
+                style: TextStyle(fontSize: 19, color: Get.isDarkMode ? Colors.grey.shade300 : Colors.grey.shade900),
                 maxLines: null,
                 strutStyle: StrutStyle(fontSize: 21.5),
               ),
@@ -266,7 +265,7 @@ class _NoteScreenState extends State<NoteScreen> {
             },
             child: Text(
               "Save",
-              style: TextStyle(color: Get.isDarkMode ? Colors.tealAccent.shade400 : Colors.blueAccent, fontSize: 18),
+              style: TextStyle(color: Get.isDarkMode ? Colors.tealAccent : Colors.blueAccent, fontSize: 18),
             ),
           ),
         ),
@@ -334,7 +333,7 @@ class _NoteScreenState extends State<NoteScreen> {
             cancelText: "Cancel",
             confirmText: "Restore",
             content: "Are you sure about restoring this note?",
-            confirmColor: Colors.greenAccent.shade700,
+            confirmColor: Get.isDarkMode ? Colors.greenAccent.shade400 : Colors.greenAccent.shade700,
           ).show(context);
 
           if (value) {
@@ -394,7 +393,7 @@ class _NoteScreenState extends State<NoteScreen> {
               cancelText: "Cancel",
               confirmText: "Move",
               content: "Do you want to lock this note? You will have to use your pin to gain access.",
-              confirmColor: Colors.greenAccent.shade700,
+              confirmColor: Get.isDarkMode ? Colors.greenAccent.shade400 : Colors.greenAccent.shade700,
             ).show(context);
 
             if (value) {
@@ -427,7 +426,7 @@ class _NoteScreenState extends State<NoteScreen> {
               cancelText: "Cancel",
               confirmText: "Move",
               content: "Do you want to unlock this note? Anyone using your device will be able to see it.",
-              confirmColor: Colors.greenAccent.shade700,
+              confirmColor: Get.isDarkMode ? Colors.greenAccent.shade400 : Colors.greenAccent.shade700,
             ).show(context);
             if (value) {
               var response = await showCustomModalBottomSheet(context, mode: Mode.pinWithBiometrics);
