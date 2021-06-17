@@ -23,14 +23,14 @@ class UserSection extends GetView<UserController> {
           kSizedBox5,
           Obx(
             () => Text(
-              controller.userModel?.name ?? "Name",
+              controller.userModel?.name ?? "[No Name]",
               style: TextStyle(fontSize: 27, color: themeAwareTextColor()),
             ),
           ),
           kSizedBox3,
           Obx(
             () => Text(
-              controller.user?.email ?? "email",
+              controller.user?.email ?? "[No Email]",
               style: TextStyle(color: Get.isDarkMode ? Colors.grey.shade400 : Colors.grey.shade700, fontSize: 16),
             ),
           ),

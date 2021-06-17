@@ -407,12 +407,14 @@ class _NoteScreenState extends State<NoteScreen> {
                   fromCollection: 'notes',
                   noteModel: noteModel,
                 );
-                Get.snackbar("Locking Successful", "The note was locked in the Protected-Space successfully.",
-                    snackPosition: SnackPosition.BOTTOM);
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text(
+                  "Successfully Locked the note",
+                )));
               } else {
-                Get.snackbar("Protcted-Space not initialized yet",
-                    "Initialize Protected-Space to lock your note. Don't worry, your note will be saved and transferred when you finsh setting up",
-                    snackPosition: SnackPosition.BOTTOM);
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text(
+                        "Initialize Protected-Space to lock your note. This note will be transferred automatically.")));
                 Get.toNamed(UnlockLockedNotesScreen.id, arguments: noteModel);
               }
             }
@@ -440,8 +442,11 @@ class _NoteScreenState extends State<NoteScreen> {
                   fromCollection: 'locked',
                   noteModel: noteModel,
                 );
-                Get.snackbar("Unlock Successful", "Note was unlocked successfully",
-                    snackPosition: SnackPosition.BOTTOM);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text("Note Succesfully Locked."),
+                  ),
+                );
               }
             }
             break;
@@ -463,8 +468,11 @@ class _NoteScreenState extends State<NoteScreen> {
                 noteModel: noteModel,
               );
               Get.back();
-              Get.snackbar("Delete Completed", "The note was sent to Trash successfully.",
-                  snackPosition: SnackPosition.BOTTOM);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("Note moved to Trash Successfully."),
+                ),
+              );
             }
 
             break;
@@ -487,8 +495,11 @@ class _NoteScreenState extends State<NoteScreen> {
                   noteId: noteModel.noteId!,
                 );
                 Get.back();
-                Get.snackbar("Delete Completed", "The note was deleted permenently.",
-                    snackPosition: SnackPosition.BOTTOM);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text("Note Successfully Deleted."),
+                  ),
+                );
               }
             }
             break;

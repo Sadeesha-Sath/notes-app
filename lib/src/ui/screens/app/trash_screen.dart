@@ -69,11 +69,16 @@ class TrashScreen extends GetView<NotesController> {
                   }
                 } else {
                   if (controller.deletedNotes!.isEmpty)
-                    Get.snackbar("No notes in Trash", "There are no notes in trash to restore.",
-                        snackPosition: SnackPosition.BOTTOM);
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text(
+                        "No Notes in Trash."),),);
+                    
                   else
-                    Get.snackbar("No Items Selected", "There is no selected item to restore.",
-                        snackPosition: SnackPosition.BOTTOM);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("No Items Selected."),
+                      ),
+                    );
                 }
               },
             ),
@@ -108,11 +113,18 @@ class TrashScreen extends GetView<NotesController> {
                   }
                 } else {
                   if (controller.deletedNotes!.isEmpty)
-                    Get.snackbar("No notes in Trash", "There are no notes in trash to delete.",
-                        snackPosition: SnackPosition.BOTTOM);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("No Notes in Trash."),
+                      ),
+                    );
+                    
                   else
-                    Get.snackbar("No Items Selected", "There is no selected item to delete.",
-                        snackPosition: SnackPosition.BOTTOM);
+                   ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("No Items Selected."),
+                      ),
+                    );
                 }
               },
             ),

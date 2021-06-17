@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:notes_app/src/controllers/user_controller.dart';
 import 'package:notes_app/src/ui/screens/app/home_screen.dart';
 import 'package:notes_app/src/ui/screens/auth/start_screen.dart';
@@ -42,6 +43,30 @@ class FirebaseAuthController extends GetxController {
     } else {
       isInitialized = true;
       Get.offAllNamed(StartScreen.id);
+    }
+  }
+
+  Future<void> googleSignIn() async {
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+      // Obtain the auth details from the request
+      if (googleUser != null) {
+
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+      // Create a new credential
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      // Once signed in, return the UserCredential
+      await FirebaseAuth.instance.signInWithCredential(credential);
+      }
+    } catch (e) {
+      print(e);
+      Get.snackbar("Google Sign in was Unsuccessful", e.toString(), snackPosition: SnackPosition.BOTTOM);
     }
   }
 

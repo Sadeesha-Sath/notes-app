@@ -174,7 +174,7 @@ class _AppState extends State<App> {
       }
     }
   }
+  
+// TODO Get access in ios using xcode and integrate apple sign in
 }
 
-
-// TODO Get access in ios using xcode

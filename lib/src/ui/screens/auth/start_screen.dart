@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:notes_app/src/controllers/firebase_auth_controller.dart';
 import 'package:notes_app/src/services/local_preferences.dart';
 import 'package:notes_app/src/ui/screens/auth/login_screen.dart';
 import 'package:notes_app/src/ui/screens/auth/register_screen.dart';
@@ -25,11 +26,11 @@ class StartScreen extends StatelessWidget {
                 padding: EdgeInsets.symmetric(
                       horizontal: Get.size.width / 15,
                     ) +
-                    EdgeInsets.only(top: 10, bottom: Get.height / 40),
+                    EdgeInsets.only(top: 3, bottom: Get.height / 40),
                 child: Column(
                   children: [
                     Container(
-                      alignment: Alignment.topRight,
+                      alignment: Alignment.topCenter,
                       padding: EdgeInsets.only(right: 20),
                       child: Card(
                         clipBehavior: Clip.hardEdge,
@@ -45,7 +46,7 @@ class StartScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    // Spacer(),
+                    SizedBox(height: 8),
                     SvgPicture.asset(
                       'assets/start.svg',
                       height: 0.92 * Get.height / 3,
@@ -94,54 +95,16 @@ class StartScreen extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Container(
-                          margin: EdgeInsets.symmetric(horizontal: 8),
-                          child: Card(
-                            elevation: 2,
-                            clipBehavior: Clip.hardEdge,
-                            shape: CircleBorder(),
-                            color: Get.isDarkMode ? Color(0xFF383838) : kLightBackground,
-                            child: IconButton(
-                              icon: FaIcon(
-                                FontAwesomeIcons.google,
-                                color: themeAwareTextColor(),
-                              ),
-                              onPressed: () {},
-                            ),
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.symmetric(horizontal: 8),
-                          child: Card(
-                            elevation: 2,
-                            clipBehavior: Clip.hardEdge,
-                            shape: CircleBorder(),
-                            color: Get.isDarkMode ? Color(0xFF383838) : kLightBackground,
-                            child: IconButton(
-                              icon: FaIcon(
-                                FontAwesomeIcons.apple,
-                                color: themeAwareTextColor(),
-                              ),
-                              onPressed: () {},
-                            ),
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.symmetric(horizontal: 8),
-                          child: Card(
-                            elevation: 2,
-                            clipBehavior: Clip.hardEdge,
-                            shape: CircleBorder(),
-                            color: Get.isDarkMode ? Color(0xFF383838) : kLightBackground,
-                            child: IconButton(
-                              icon: FaIcon(
-                                FontAwesomeIcons.facebookF,
-                                color: themeAwareTextColor(),
-                              ),
-                              onPressed: () {},
-                            ),
-                          ),
-                        ),
+                        SocialSignInButton(
+                            icon: FontAwesomeIcons.google,
+                            onPressed: () async {
+                              await Get.find<FirebaseAuthController>().googleSignIn();
+                            }),
+                        SocialSignInButton(
+                            icon: FontAwesomeIcons.apple,
+                            onPressed: () {
+                              // Currently has an issue with Android Platform
+                            }),
                       ],
                     ),
                     Spacer(),
@@ -175,4 +138,33 @@ class StartScreen extends StatelessWidget {
   }
 }
 
+class SocialSignInButton extends StatelessWidget {
+  const SocialSignInButton({
+    Key? key,
+    required this.icon,
+    required this.onPressed,
+  }) : super(key: key);
 
+  final IconData icon;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 8),
+      child: Card(
+        elevation: 2,
+        clipBehavior: Clip.hardEdge,
+        shape: CircleBorder(),
+        color: Get.isDarkMode ? Color(0xFF383838) : kLightBackground,
+        child: IconButton(
+          icon: FaIcon(
+            icon,
+            color: themeAwareTextColor(),
+          ),
+          onPressed: onPressed,
+        ),
+      ),
+    );
+  }
+}

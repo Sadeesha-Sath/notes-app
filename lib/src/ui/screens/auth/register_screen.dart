@@ -103,17 +103,17 @@ class RegisterScreen extends StatelessWidget {
                               .registerUser(_emailField.text, _password1Field.text, _nameField.text);
                           showSpinner(false);
                         } else {
-                          Get.snackbar(
-                            "Passwords don't match",
-                            "Please check the passwords and try again",
-                            snackPosition: SnackPosition.BOTTOM,
+                           ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text("Passwords don't match."),
+                            ),
                           );
                         }
                       } else {
-                        Get.snackbar(
-                          "Password is too short",
-                          "The password must be at least 8 characters long.",
-                          snackPosition: SnackPosition.BOTTOM,
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("Password must be atleast 8 characters long."),
+                          ),
                         );
                       }
                     },

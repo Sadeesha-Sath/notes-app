@@ -198,8 +198,10 @@ class LockedScreenAppBar extends StatelessWidget {
                 }
               }
             } else {
-              Get.snackbar("No Items Selected", "There is no selected item to unlock.",
-                  snackPosition: SnackPosition.BOTTOM);
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(
+                "No Items were Selected",
+              )));
             }
           },
           icon: CupertinoIcons.lock_slash_fill,
@@ -233,8 +235,10 @@ class LockedScreenAppBar extends StatelessWidget {
                 }
               }
             } else {
-              Get.snackbar("No Items Selected", "There is no selected item to delete.",
-                  snackPosition: SnackPosition.BOTTOM);
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(
+                "No Items were Selected",
+              )));
             }
           },
           customIcon: Icon(

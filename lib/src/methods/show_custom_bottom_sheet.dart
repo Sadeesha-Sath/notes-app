@@ -75,7 +75,6 @@ class BottomSheet extends GetView<UserController> {
           kSizedBox25,
           Visibility(
               visible: mode == Mode.pinWithBiometrics && LocalPreferences.biometrics,
-    
               child: BiometricCard(error: error)),
           kSizedBox20,
           getButton(context),
@@ -289,12 +288,12 @@ class BottomSheet extends GetView<UserController> {
                           }
                         } catch (e) {
                           print(e);
-                          Get.snackbar(
-                            "Update Unsuccessful",
-                            e.toString(),
-                            snackPosition: SnackPosition.BOTTOM,
-                            backgroundColor: Colors.red.shade900,
-                          );
+                          Get.back();
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text(
+                            "Update was Unsuccessful",
+                            style: TextStyle(color: Get.isDarkMode ? kRedColorDark : Colors.redAccent),
+                          )));
                         }
                       },
                       text: "Update Email",

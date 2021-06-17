@@ -114,7 +114,7 @@ class EditProfileScreen extends GetView<UserController> {
                         ),
                         Obx(
                           () => Text(
-                            Get.find<FirebaseAuthController>().userTokenChanges!.email!,
+                            Get.find<FirebaseAuthController>().userTokenChanges!.email ?? "[No Email]",
                             style: TextStyle(
                                 fontSize: 16, color: Get.isDarkMode ? Color(0xFFA2A2A2) : Colors.grey.shade700),
                           ),
