@@ -98,7 +98,11 @@ class UnlockWithBiometricOrPin extends StatelessWidget {
                               },
                             )
                           : (isBioEnabled)
-                              ? BiometricCard(error: error, usePin: usePin)
+                              ? BiometricCard(
+                                  error: error,
+                                  usePin: usePin,
+                                  autorizeOnly: false,
+                                )
                               : Spacer(flex: 2),
                     ),
                     Obx(

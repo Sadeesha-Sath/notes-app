@@ -1,11 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:notes_app/src/controllers/firebase_auth_controller.dart';
 import 'package:notes_app/src/controllers/user_controller.dart';
 import 'package:notes_app/src/models/mode_enum.dart';
 import 'package:notes_app/src/services/database.dart';
 import 'package:notes_app/src/services/local_preferences.dart';
 import 'package:notes_app/src/ui/screens/app/pin_set_screen.dart';
-import 'package:notes_app/src/ui/screens/auth/forgot_password_screen.dart';
 import 'package:notes_app/src/ui/ui_constants.dart';
 import 'package:get/get.dart';
 import 'package:notes_app/src/ui/widgets/auth/password_field.dart';
@@ -51,63 +51,86 @@ class BottomSheet extends GetView<UserController> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(25),
-      // height: 250,
-      child: Column(
-        children: [
-          getTitle(),
-          kSizedBox30,
-          getTextField(),
-          Obx(
-            () => Visibility(
-              visible: error.value != null,
-              child: Container(
-                margin: EdgeInsets.only(top: 25),
-                child: Text(
-                  error.value.toString(),
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16, color: Colors.redAccent),
-                ),
-              ),
-            ),
-          ),
-          kSizedBox25,
-          Visibility(
-              visible: mode == Mode.pinWithBiometrics && LocalPreferences.biometrics,
-              child: BiometricCard(error: error)),
-          kSizedBox20,
-          getButton(context),
-          kSizedBox12,
-          if (mode == Mode.password || mode == Mode.pin)
+    return SingleChildScrollView(
+      child: Container(
+        height: 3 * Get.height / 5,
+        padding: EdgeInsets.all(25),
+        // height: 250,
+        child: Column(
+          children: [
+            getTitle(),
+            kSizedBox30,
+            getTextField(),
             Obx(
               () => Visibility(
-                visible: (mode == Mode.pin && stage.value == 2) || (mode == Mode.password && stage.value == 1),
-                child: TextButton(
-                  onPressed: () => Get.offNamed(ForgotPasswordScreen.id),
+                visible: error.value != null,
+                child: Container(
+                  margin: EdgeInsets.only(top: 25),
                   child: Text(
-                    "Forgot password?",
-                    style: TextStyle(fontSize: 16.5, color: Get.isDarkMode ? Colors.tealAccent.shade400 : null),
+                    error.value.toString(),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 16, color: Colors.redAccent),
                   ),
                 ),
               ),
             ),
-          if (mode == Mode.pin)
-            Obx(
-              () => Visibility(
-                visible: stage.value == 1,
-                child: TextButton(
-                  onPressed: () {
-                    ++stage.value;
-                  },
-                  child: Text(
-                    "Forgot Pin?",
-                    style: TextStyle(fontSize: 16.5, color: Get.isDarkMode ? Colors.tealAccent.shade400 : null),
+            kSizedBox25,
+            Visibility(
+                visible: mode == Mode.pinWithBiometrics && LocalPreferences.biometrics,
+                child: BiometricCard(error: error)),
+            kSizedBox20,
+            getButton(context),
+            kSizedBox12,
+            if (mode == Mode.password || mode == Mode.pin)
+              Obx(
+                () => Visibility(
+                  visible: (mode == Mode.pin && stage.value == 2) || (mode == Mode.password && stage.value == 1),
+                  child: TextButton(
+                    onPressed: () async {
+                      if (Get.find<UserController>().user!.emailVerified) {
+                        var email = Get.find<UserController>().user!.email!;
+                        Get.find<FirebaseAuthController>().sendPasswordResetEmail(email);
+                        Get.back();
+                        ScaffoldMessenger.of(context).clearSnackBars();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("A password reset request was sent to $email"),
+                          ),
+                        );
+                      } else {
+                        Get.back();
+                        ScaffoldMessenger.of(context).clearSnackBars();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("Your email isn't verified yet. Please verifiy your email to continue."),
+                          ),
+                        );
+                      }
+                    },
+                    child: Text(
+                      "Forgot password?",
+                      style: TextStyle(fontSize: 16.5, color: Get.isDarkMode ? Colors.tealAccent.shade400 : null),
+                    ),
                   ),
                 ),
               ),
-            ),
-        ],
+            if (mode == Mode.pin)
+              Obx(
+                () => Visibility(
+                  visible: stage.value == 1,
+                  child: TextButton(
+                    onPressed: () {
+                      ++stage.value;
+                    },
+                    child: Text(
+                      "Forgot Pin?",
+                      style: TextStyle(fontSize: 16.5, color: Get.isDarkMode ? Colors.tealAccent.shade400 : null),
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -196,12 +219,15 @@ class BottomSheet extends GetView<UserController> {
       return BottomSheetButton(
         onPressed: () async {
           try {
-            controller.updateName(textController.text);
-            Database.updateName(controller.user!.uid, textController.text);
+            var text = textController.text;
+            if (text == "") text = "[No Name]";
+            controller.updateName(text);
+            Database.updateName(controller.user!.uid, text);
             if (controller.user?.displayName != null) {
-              controller.user!.updateDisplayName(textController.text);
+              controller.user!.updateDisplayName(text);
             }
             Get.back();
+            ScaffoldMessenger.of(context).clearSnackBars();
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text("Update Successful"),
@@ -210,6 +236,7 @@ class BottomSheet extends GetView<UserController> {
             );
           } catch (e) {
             print(e);
+            ScaffoldMessenger.of(context).clearSnackBars();
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text("Update Unsuccessful"),
@@ -222,9 +249,14 @@ class BottomSheet extends GetView<UserController> {
       );
     else if (mode == Mode.pinWithBiometrics) {
       return ContinueButton(onPressed: () {
-        if (controller.isPinCorrect(int.tryParse(textController.text))) {
-          Get.back<bool>(result: true);
-        } else {
+        try {
+          if (controller.isPinCorrect(int.parse(textController.text))) {
+            Get.back<bool>(result: true);
+          } else {
+            textController.clear();
+            error("Used Pin is Incorrect.");
+          }
+        } catch (e) {
           textController.clear();
           error("Used Pin is Incorrect.");
         }
@@ -234,10 +266,15 @@ class BottomSheet extends GetView<UserController> {
       () => (mode == Mode.pin && stage.value == 1)
           ? ContinueButton(
               onPressed: () {
-                if (controller.isPinCorrect(int.tryParse(textController.text))) {
-                  error(null);
-                  Get.offNamed(PinSetScreen.id);
-                } else {
+                try {
+                  if (controller.isPinCorrect(int.parse(textController.text))) {
+                    error(null);
+                    Get.offNamed(PinSetScreen.id);
+                  } else {
+                    textController.clear();
+                    error("Used Pin is Incorrect.");
+                  }
+                } catch (e) {
                   textController.clear();
                   error("Used Pin is Incorrect.");
                 }
@@ -277,6 +314,7 @@ class BottomSheet extends GetView<UserController> {
                             textController.clear();
 
                             Get.back();
+                            ScaffoldMessenger.of(context).clearSnackBars();
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text("Update Successful"),
@@ -289,6 +327,7 @@ class BottomSheet extends GetView<UserController> {
                         } catch (e) {
                           print(e);
                           Get.back();
+                          ScaffoldMessenger.of(context).clearSnackBars();
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               content: Text(
                             "Update was Unsuccessful",
@@ -299,12 +338,19 @@ class BottomSheet extends GetView<UserController> {
                       text: "Update Email",
                     )
                   : (stage.value == 2 && mode == Mode.password)
-                      ? ContinueButton(onPressed: () {
-                          password(textController.text);
-                          error(null);
-                          textController.clear();
-                          ++stage.value;
-                        })
+                      ? ContinueButton(
+                          onPressed: () {
+                            // Go to the second password
+                            if (textController.text != "") {
+                              password(textController.text);
+                              error(null);
+                              textController.clear();
+                              ++stage.value;
+                            } else {
+                              error("Use a valid password");
+                            }
+                          },
+                        )
                       : BottomSheetButton(
                           onPressed: () async {
                             try {
@@ -312,6 +358,7 @@ class BottomSheet extends GetView<UserController> {
                                 await controller.user!.updatePassword(password.value);
                                 textController.clear();
                                 Get.back();
+                                ScaffoldMessenger.of(context).clearSnackBars();
                                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                   content: Text("Update Successful"),
                                   backgroundColor: Colors.green,

@@ -40,8 +40,7 @@ class StartScreen extends StatelessWidget {
                             Get.isDarkMode ? CupertinoIcons.moon_zzz : CupertinoIcons.sun_max,
                           ),
                           onPressed: () {
-                            // ? Not working in android arm64 builds 🤷‍♂️
-                             Get.changeTheme(Get.isDarkMode ? ThemeData.light() : darkTheme);
+                            Get.changeThemeMode(Get.isDarkMode ? ThemeMode.light : ThemeMode.dark);
 
                             LocalPreferences.isDarkMode = !LocalPreferences.isDarkMode!;
                           },

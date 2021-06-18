@@ -77,6 +77,7 @@ class ForgotPasswordScreen extends GetView<FirebaseAuthController> {
                       } else {
                         showSpinner(false);
                         error.value = null;
+                        ScaffoldMessenger.of(context).clearSnackBars();
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(

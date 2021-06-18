@@ -173,9 +173,21 @@ class EditProfileScreen extends GetView<UserController> {
                                 onPressed: () async {
                                   try {
                                     controller.user!.sendEmailVerification();
-                                    print("sending email");
+                                    ScaffoldMessenger.of(context).clearSnackBars();
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                            "A verification email was sent to ${Get.find<FirebaseAuthController>().userTokenChanges!.email}"),
+                                      ),
+                                    );
                                   } catch (e) {
                                     print(e);
+                                    ScaffoldMessenger.of(context).clearSnackBars();
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text("Verification email sending was unsuccessful."),
+                                      ),
+                                    );
                                   }
                                 },
                                 child: Text(

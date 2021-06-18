@@ -43,7 +43,9 @@ class _AppState extends State<App> {
     // Make shared preference dark mode setting to be system default if not set
     dataInit();
     return GetMaterialApp(
-      theme:LocalPreferences.isDarkMode! ? darkTheme :  ThemeData.light(),
+      theme: ThemeData.light().copyWith(snackBarTheme: SnackBarThemeData(behavior: SnackBarBehavior.floating)),
+      themeMode: LocalPreferences.isDarkMode! ? ThemeMode.dark : ThemeMode.light,
+      darkTheme: darkTheme,
       title: 'Notes App',
       home: FutureBuilder(
           future: _initialization,

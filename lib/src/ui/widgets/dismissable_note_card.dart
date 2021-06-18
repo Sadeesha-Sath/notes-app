@@ -33,6 +33,7 @@ class DismissableNoteCard extends StatelessWidget {
               noteModel: model,
             );
 
+            ScaffoldMessenger.of(context).clearSnackBars();
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text("Note Locked."),
@@ -64,6 +65,7 @@ class DismissableNoteCard extends StatelessWidget {
               noteModel: model,
             );
 
+            ScaffoldMessenger.of(context).clearSnackBars();
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text("Note moved to trash."),

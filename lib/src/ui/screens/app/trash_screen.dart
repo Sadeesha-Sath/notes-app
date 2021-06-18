@@ -70,18 +70,24 @@ class TrashScreen extends GetView<NotesController> {
                     }
                   }
                 } else {
-                  if (controller.deletedNotes!.isEmpty)
-                    ScaffoldMessenger.of(context).showSnackBar(
+                  if (controller.deletedNotes!.isEmpty) {
+
+                    ScaffoldMessenger.of(context).clearSnackBars();
+                      ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text("No Notes in Trash."),
                       ),
                     );
-                  else
-                    ScaffoldMessenger.of(context).showSnackBar(
+                  }
+                  else {
+
+                    ScaffoldMessenger.of(context).clearSnackBars();
+                      ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text("No Items Selected."),
                       ),
                     );
+                  }
                 }
               },
             ),
@@ -115,18 +121,22 @@ class TrashScreen extends GetView<NotesController> {
                     _trashScreenController.selectedItems.clear();
                   }
                 } else {
-                  if (controller.deletedNotes!.isEmpty)
-                    ScaffoldMessenger.of(context).showSnackBar(
+                  if (controller.deletedNotes!.isEmpty) {
+                    ScaffoldMessenger.of(context).clearSnackBars();
+                      ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text("No Notes in Trash."),
                       ),
                     );
-                  else
-                    ScaffoldMessenger.of(context).showSnackBar(
+                  }
+                  else {
+                    ScaffoldMessenger.of(context).clearSnackBars();
+                      ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text("No Items Selected."),
                       ),
                     );
+                  }
                 }
               },
             ),

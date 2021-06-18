@@ -103,13 +103,15 @@ class RegisterScreen extends StatelessWidget {
                               .registerUser(_emailField.text, _password1Field.text, _nameField.text);
                           showSpinner(false);
                         } else {
-                           ScaffoldMessenger.of(context).showSnackBar(
+                          ScaffoldMessenger.of(context).clearSnackBars();
+                          ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text("Passwords don't match."),
                             ),
                           );
                         }
                       } else {
+                        ScaffoldMessenger.of(context).clearSnackBars();
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text("Password must be atleast 8 characters long."),
@@ -132,7 +134,9 @@ class RegisterScreen extends StatelessWidget {
                       TextSpan(text: "Already a User?  "),
                       TextSpan(
                         text: " Sign In ",
-                        style: TextStyle(fontWeight: FontWeight.w600, color: Get.isDarkMode ? Colors.tealAccent.shade400 : Colors.blue,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color: Get.isDarkMode ? Colors.tealAccent.shade400 : Colors.blue,
                         ),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {

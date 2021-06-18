@@ -78,10 +78,16 @@ class FavouritesScreen extends StatelessWidget {
                     }
                   }
                 } else {
-                  if (favourites.isEmpty)
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("No Favourite Notes")));
-                  else
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("No notes selected")));
+                  if (favourites.isEmpty){
+
+                    ScaffoldMessenger.of(context).clearSnackBars();
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("No Favourite Notes")));
+                  }
+                  else {
+
+                    ScaffoldMessenger.of(context).clearSnackBars();
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("No notes selected")));
+                  }
                 }
               },
             ),
@@ -230,7 +236,8 @@ class FavouritesScreen extends StatelessWidget {
   }
 
   void restoreFavouriteSnackbar(BuildContext context, NoteModel note, int index) {
-    ScaffoldMessenger.of(context).showSnackBar(
+    ScaffoldMessenger.of(context).clearSnackBars();
+                      ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text("Note removed from Favourites"),
         action: SnackBarAction(
@@ -249,7 +256,8 @@ class FavouritesScreen extends StatelessWidget {
   }
 
   void moveToNotesSnackbar(BuildContext context, NoteModel note, int index) {
-    ScaffoldMessenger.of(context).showSnackBar(
+    ScaffoldMessenger.of(context).clearSnackBars();
+                      ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text("Note moved to Trash"),
         action: SnackBarAction(

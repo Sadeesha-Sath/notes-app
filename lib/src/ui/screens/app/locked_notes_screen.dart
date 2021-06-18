@@ -198,6 +198,7 @@ class LockedScreenAppBar extends StatelessWidget {
                 }
               }
             } else {
+              ScaffoldMessenger.of(context).clearSnackBars();
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   content: Text(
                 "No Items were Selected",
@@ -235,6 +236,7 @@ class LockedScreenAppBar extends StatelessWidget {
                 }
               }
             } else {
+              ScaffoldMessenger.of(context).clearSnackBars();
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   content: Text(
                 "No Items were Selected",
@@ -257,7 +259,7 @@ class LockedScreenAppBar extends StatelessWidget {
           children: [
             Text(
               controller.lockedNotes!.length == 1 ? "1 Note" : "${controller.lockedNotes!.length} Notes",
-              style: TextStyle(fontSize: 33, fontWeight: FontWeight.w500),
+              style: TextStyle(fontSize: 33, fontWeight: FontWeight.w500, color: themeAwareTextColor()),
             ),
             SizedBox(width: 2),
             Icon(

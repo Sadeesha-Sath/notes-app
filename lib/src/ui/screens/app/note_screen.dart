@@ -56,6 +56,7 @@ class _NoteScreenState extends State<NoteScreen> {
 
     return WillPopScope(
       onWillPop: () async {
+        // If editable but not new note, just cancel the editing
         if (isEditable && !isNewNote) {
           setState(() {
             isEditable = false;
@@ -83,12 +84,14 @@ class _NoteScreenState extends State<NoteScreen> {
                     noteModel.color =
                         ColorConverter.convertToString(Get.isDarkMode ? kDarkColorList[index] : kLightColorList[index]);
                   });
-                  Database.updateColor(
-                    uid: Get.find<UserController>().user!.uid,
-                    noteId: noteModel.noteId!,
-                    color: noteModel.color,
-                    collectionName: collectionName,
-                  );
+                  if (!isNewNote) {
+                    Database.updateColor(
+                      uid: Get.find<UserController>().user!.uid,
+                      noteId: noteModel.noteId!,
+                      color: noteModel.color,
+                      collectionName: collectionName,
+                    );
+                  }
                 },
                 child: Container(
                   margin: EdgeInsets.symmetric(horizontal: 10),
@@ -111,23 +114,26 @@ class _NoteScreenState extends State<NoteScreen> {
           backgroundColor: ColorConverter.convertColor(noteModel.color),
           actions: getAppbarActions(isLocked, isInTrash),
         ),
-        body: Container(
-          // color: ColorConverter.convertColor(noteModel.color, Get.isDarkMode),
-          padding: EdgeInsets.symmetric(horizontal: Get.width / 20, vertical: Get.height / 45),
-          child: AnimatedSwitcher(
-            duration: Duration(milliseconds: 300),
-            transitionBuilder: (Widget child, Animation<double> animation) {
-              return FadeTransition(
-                opacity:
-                    CurvedAnimation(curve: Curves.easeInOutQuad, parent: animation, reverseCurve: Curves.easeInCubic),
-                child: ScaleTransition(
-                  alignment: Alignment.topLeft,
-                  scale: CurvedAnimation(parent: animation, curve: Curves.easeInOutCubic),
-                  child: child,
-                ),
-              );
-            },
-            child: _body,
+        body: SingleChildScrollView(
+          child: Container(
+            height: 13 * Get.height / 16,
+            // color: ColorConverter.convertColor(noteModel.color, Get.isDarkMode),
+            padding: EdgeInsets.symmetric(horizontal: Get.width / 20, vertical: Get.height / 45),
+            child: AnimatedSwitcher(
+              duration: Duration(milliseconds: 300),
+              transitionBuilder: (Widget child, Animation<double> animation) {
+                return FadeTransition(
+                  opacity:
+                      CurvedAnimation(curve: Curves.easeInOutQuad, parent: animation, reverseCurve: Curves.easeInCubic),
+                  child: ScaleTransition(
+                    alignment: Alignment.topLeft,
+                    scale: CurvedAnimation(parent: animation, curve: Curves.easeInOutCubic),
+                    child: child,
+                  ),
+                );
+              },
+              child: _body,
+            ),
           ),
         ),
       ),
@@ -136,9 +142,8 @@ class _NoteScreenState extends State<NoteScreen> {
 
   Widget switchBody() {
     if (isEditable) {
-      return Column(
+      return ListView(
         key: ValueKey<bool>(isEditable),
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           kSizedBox15,
           TextField(
@@ -171,9 +176,8 @@ class _NoteScreenState extends State<NoteScreen> {
         ],
       );
     } else {
-      return Column(
+      return ListView(
         key: ValueKey<bool>(isEditable),
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           kSizedBox15,
           GestureDetector(
@@ -407,11 +411,13 @@ class _NoteScreenState extends State<NoteScreen> {
                   fromCollection: 'notes',
                   noteModel: noteModel,
                 );
+                ScaffoldMessenger.of(context).clearSnackBars();
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     content: Text(
-                  "Successfully Locked the note",
+                  "Note Succesfully Locked",
                 )));
               } else {
+                ScaffoldMessenger.of(context).clearSnackBars();
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     content: Text(
                         "Initialize Protected-Space to lock your note. This note will be transferred automatically.")));
@@ -442,9 +448,10 @@ class _NoteScreenState extends State<NoteScreen> {
                   fromCollection: 'locked',
                   noteModel: noteModel,
                 );
+                ScaffoldMessenger.of(context).clearSnackBars();
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text("Note Succesfully Locked."),
+                    content: Text("Note Succesfully Unlocked."),
                   ),
                 );
               }
@@ -468,6 +475,7 @@ class _NoteScreenState extends State<NoteScreen> {
                 noteModel: noteModel,
               );
               Get.back();
+              ScaffoldMessenger.of(context).clearSnackBars();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text("Note moved to Trash Successfully."),
@@ -495,6 +503,7 @@ class _NoteScreenState extends State<NoteScreen> {
                   noteId: noteModel.noteId!,
                 );
                 Get.back();
+                ScaffoldMessenger.of(context).clearSnackBars();
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text("Note Successfully Deleted."),

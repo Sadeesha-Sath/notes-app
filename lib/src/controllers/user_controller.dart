@@ -69,7 +69,7 @@ class UserController extends GetxController {
     return true;
   }
 
-  bool isPinCorrect(int? pin) {
+  bool isPinCorrect(int pin) {
     if (EncrypterClass.hashGenerator(pin: pin) == _userModel.value!.protectedSpacePin) return true;
     return false;
   }
