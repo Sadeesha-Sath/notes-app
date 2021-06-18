@@ -58,7 +58,8 @@ class UserSection extends GetView<UserController> {
                   child: Row(
                     children: [
                       Spacer(
-                        flex: MediaQuery.of(context).orientation == Orientation.portrait ? 7 : 1,
+                        // flex: MediaQuery.of(context).orientation == Orientation.portrait ? 7 : 1,
+                        flex: 7,
                       ),
                       Text(
                         "Edit Profile",
@@ -69,7 +70,8 @@ class UserSection extends GetView<UserController> {
                         size: 18,
                       ),
                       Spacer(
-                        flex: MediaQuery.of(context).orientation == Orientation.portrait ? 2 : 1,
+                        // flex: MediaQuery.of(context).orientation == Orientation.portrait ? 2 : 1,
+                        flex: 2,
                       )
                     ],
                   ),

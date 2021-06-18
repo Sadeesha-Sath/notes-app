@@ -9,12 +9,12 @@ import 'package:notes_app/src/services/local_preferences.dart';
 import 'package:notes_app/src/ui/screens/auth/login_screen.dart';
 import 'package:notes_app/src/ui/screens/auth/register_screen.dart';
 import 'package:notes_app/src/ui/ui_constants.dart';
-import 'package:notes_app/themes.dart';
 
 class StartScreen extends StatelessWidget {
   static final id = "/start";
   @override
   Widget build(BuildContext context) {
+    print(Get.height);
     return Scaffold(
       backgroundColor: themeAwareBackgroundColor(),
       body: SafeArea(

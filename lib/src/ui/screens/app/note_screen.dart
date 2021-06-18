@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:notes_app/src/controllers/user_controller.dart';
 import 'package:notes_app/src/helpers/color_converter.dart';
-import 'package:notes_app/src/methods/show_custom_bottom_sheet.dart';
+import 'package:notes_app/src/ui/widgets/show_custom_bottom_sheet.dart';
 import 'package:notes_app/src/models/mode_enum.dart';
 import 'package:notes_app/src/models/note_model.dart';
 import 'package:notes_app/src/services/database.dart';

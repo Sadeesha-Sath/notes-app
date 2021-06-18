@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:notes_app/src/controllers/firebase_auth_controller.dart';
 import 'package:notes_app/src/controllers/user_controller.dart';
-import 'package:notes_app/src/methods/show_custom_bottom_sheet.dart';
+import 'package:notes_app/src/ui/widgets/show_custom_bottom_sheet.dart';
 import 'package:notes_app/src/models/mode_enum.dart';
 import 'package:notes_app/src/services/storage.dart';
 import 'package:notes_app/src/ui/ui_constants.dart';
