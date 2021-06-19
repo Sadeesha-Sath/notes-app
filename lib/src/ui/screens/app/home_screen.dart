@@ -64,7 +64,7 @@ class HomeScreen extends StatelessWidget {
                       backgroundColor: themeAwareBackgroundColor(),
                       title: Text(
                         "Home",
-                        style: TextStyle(color: Colors.black),
+                        style: TextStyle(color: themeAwareTextColor()),
                       ),
                       actions: [
                         AppbarButton(

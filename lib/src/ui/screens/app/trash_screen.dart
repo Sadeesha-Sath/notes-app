@@ -68,21 +68,19 @@ class TrashScreen extends GetView<NotesController> {
                         noteModel: controller.deletedNotes![index],
                       );
                     }
+                    _trashScreenController.selectedItems.clear();
                   }
                 } else {
                   if (controller.deletedNotes!.isEmpty) {
-
                     ScaffoldMessenger.of(context).clearSnackBars();
-                      ScaffoldMessenger.of(context).showSnackBar(
+                    ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text("No Notes in Trash."),
                       ),
                     );
-                  }
-                  else {
-
+                  } else {
                     ScaffoldMessenger.of(context).clearSnackBars();
-                      ScaffoldMessenger.of(context).showSnackBar(
+                    ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text("No Items Selected."),
                       ),
@@ -123,15 +121,14 @@ class TrashScreen extends GetView<NotesController> {
                 } else {
                   if (controller.deletedNotes!.isEmpty) {
                     ScaffoldMessenger.of(context).clearSnackBars();
-                      ScaffoldMessenger.of(context).showSnackBar(
+                    ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text("No Notes in Trash."),
                       ),
                     );
-                  }
-                  else {
+                  } else {
                     ScaffoldMessenger.of(context).clearSnackBars();
-                      ScaffoldMessenger.of(context).showSnackBar(
+                    ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text("No Items Selected."),
                       ),

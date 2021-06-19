@@ -14,7 +14,6 @@ class StartScreen extends StatelessWidget {
   static final id = "/start";
   @override
   Widget build(BuildContext context) {
-    print(Get.height);
     return Scaffold(
       backgroundColor: themeAwareBackgroundColor(),
       body: SafeArea(

@@ -108,10 +108,10 @@ class LockedNotesScreen extends StatelessWidget {
                       centerTitle: true,
                       leadingWidth: 80,
                       leading: CustomBackButton(),
-                      backgroundColor: Colors.white,
+                      backgroundColor: themeAwareBackgroundColor(),
                       title: Text(
                         "Protected Space",
-                        style: TextStyle(color: Colors.black),
+                        style: TextStyle(color: themeAwareTextColor()),
                       ),
                     ),
                     Spacer(),

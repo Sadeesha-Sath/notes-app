@@ -332,7 +332,7 @@ class BottomSheet extends GetView<UserController> {
                               content: Text(
                             "Update was Unsuccessful",
                             style: TextStyle(color: Get.isDarkMode ? kRedColorDark : Colors.redAccent),
-                          )));
+                          ),),);
                         }
                       },
                       text: "Update Email",

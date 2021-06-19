@@ -287,7 +287,7 @@ class _NoteScreenState extends State<NoteScreen> {
             },
             child: Text(
               "Discard",
-              style: TextStyle(color: Colors.redAccent, fontSize: 18),
+              style: TextStyle(color: Get.isDarkMode ? kDialogRedDark : Colors.redAccent, fontSize: 18),
             ),
           ),
         )
