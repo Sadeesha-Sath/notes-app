@@ -108,7 +108,7 @@ const Color kTealColorDark = Color(0xFF409D7A);
 const Color kBlueColorDark = Color(0xFF2B96A5);
 const Color kPurpleColorDark = Color(0xFF7F42B7);
 const Color kGreyColorDark = Color(0xFFA4A4A4);
-const Color kWhiteColorDark = Color(0xFFD5D5D5);
+const Color kWhiteColorDark = Color(0xFFD0D0D0);
 
 const List<Color> kDarkColorList = [
   kWhiteColorDark,

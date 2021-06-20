@@ -124,8 +124,6 @@ class Database {
       });
       return retVal;
     }
-
-    // if (favourites == null || favourites == false)
     return _firestore
         .collection("users")
         .doc(uid)
@@ -134,14 +132,7 @@ class Database {
         .snapshots()
         .map((QuerySnapshot query) => getNotes(query));
 
-    // return _firestore
-    //     .collection("users")
-    //     .doc(uid)
-    //     .collection(collectionName)
-    //     .where("isFavourite", isEqualTo: true)
-    //     .orderBy("dateCreated", descending: true)
-    //     .snapshots()
-    //     .map((QuerySnapshot query) => getNotes(query));
+  
   }
 
   static Future<void> updateNote(
@@ -153,16 +144,16 @@ class Database {
     try {
       Map<String, dynamic> updateFields = {};
       if (isForced != null && isForced) {
-        updateFields['body'] = EncrypterClass().encryptText(string: newModel.body ?? "");
-        updateFields['title'] = EncrypterClass().encryptText(string: newModel.title ?? "");
+        updateFields['body'] = EncrypterClass.encryptText(string: newModel.body ?? "");
+        updateFields['title'] = EncrypterClass.encryptText(string: newModel.title ?? "");
       } else {
         if (oldModel.body != newModel.body) {
           updateFields['body'] =
-              collectionName == 'locked' ? EncrypterClass().encryptText(string: newModel.body ?? "") : newModel.body;
+              collectionName == 'locked' ? EncrypterClass.encryptText(string: newModel.body ?? "") : newModel.body;
         }
         if (oldModel.title != newModel.title) {
           updateFields['title'] =
-              collectionName == 'locked' ? EncrypterClass().encryptText(string: newModel.title ?? "") : newModel.title;
+              collectionName == 'locked' ? EncrypterClass.encryptText(string: newModel.title ?? "") : newModel.title;
         }
       }
       _firestore.collection("users").doc(uid).collection(collectionName).doc(oldModel.noteId).update(updateFields);
@@ -229,8 +220,8 @@ class Database {
   static Future addNote({required String uid, String collectionName = 'notes', required NoteModel note}) async {
     try {
       final data = {
-        "title": collectionName == "locked" ? EncrypterClass().encryptText(string: note.title ?? "") : note.title,
-        "body": collectionName == "locked" ? EncrypterClass().encryptText(string: note.body ?? "") : note.body,
+        "title": collectionName == "locked" ? EncrypterClass.encryptText(string: note.title ?? "") : note.title,
+        "body": collectionName == "locked" ? EncrypterClass.encryptText(string: note.body ?? "") : note.body,
         "dateCreated": note.dateCreated,
         "isFavourite": note.isFavourite,
         "color": note.color,

@@ -318,6 +318,7 @@ class BottomSheet extends StatelessWidget {
                       GestureDetector(
                         onTap: () async {
                           if (await Permission.camera.isDenied) {
+                            print('hi');
                             await Permission.camera.request();
                           }
                           if (await Permission.camera.isGranted || await Permission.camera.isLimited) {

@@ -19,8 +19,8 @@ class NoteModel {
 
   NoteModel.fromDocSnapshotEncrypted(DocumentSnapshot documentSnapshot)
       : noteId = documentSnapshot.id,
-        title = EncrypterClass().decryptText(string: documentSnapshot['title']),
-        body = EncrypterClass().decryptText(string: documentSnapshot['body']),
+        title = EncrypterClass.decryptText(string: documentSnapshot['title']),
+        body = EncrypterClass.decryptText(string: documentSnapshot['body']),
         dateCreated = documentSnapshot['dateCreated'],
         isFavourite = documentSnapshot['isFavourite'],
         color = documentSnapshot['color'];

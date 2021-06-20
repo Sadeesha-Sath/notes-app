@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:notes_app/src/controllers/rating_controller.dart';
 import 'package:notes_app/src/ui/widgets/profile_screen/profile_screen_listtile.dart';
 
 class AboutSection extends StatelessWidget {
@@ -53,7 +55,10 @@ class AboutSection extends StatelessWidget {
           ProfileScreenListTile(
             title: "Rate Us",
             icon: Icons.star_outline_outlined,
-            onTap: () {},
+            onTap: () {
+              // TODO Add app rating
+              Get.find<RatingController>().showStarRatingDialog(context);
+            },
           ),
           ProfileScreenListTile(
             title: "View Licences",

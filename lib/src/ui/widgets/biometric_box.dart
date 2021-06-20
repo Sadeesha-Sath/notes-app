@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:notes_app/src/services/local_preferences.dart';
 import 'package:notes_app/src/ui/ui_constants.dart';
 
@@ -28,7 +29,7 @@ class _BiometricBoxState extends State<BiometricBox> {
             children: [
               Icon(
                 Icons.fingerprint_rounded,
-                color: Colors.grey.shade700,
+                color: Get.isDarkMode ? Colors.grey.shade400 : Colors.grey.shade700,
                 size: 50,
               ),
               kSizedBox10,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:notes_app/src/controllers/notes_controller.dart';
+import 'package:notes_app/src/controllers/rating_controller.dart';
 import 'package:notes_app/src/controllers/user_controller.dart';
 import 'package:notes_app/src/ui/screens/app/note_screen.dart';
 import 'package:notes_app/src/ui/screens/app/profile_screen.dart';
@@ -14,11 +15,16 @@ import 'package:notes_app/src/ui/widgets/home_screen_appbar.dart';
 
 class HomeScreen extends StatelessWidget {
   static final String id = "/home";
+  final ratingController = Get.find<RatingController>();
 
   @override
   Widget build(BuildContext context) {
     Get.lazyPut(() => UserController());
     Get.lazyPut(() => NotesController());
+
+    if (!ratingController.initialized) {
+      ratingController.onInit();
+    }
 
     return Scaffold(
       backgroundColor: themeAwareBackgroundColor(),

@@ -6,6 +6,7 @@ import 'package:notes_app/src/ui/ui_constants.dart';
 import 'package:notes_app/src/ui/widgets/biometric_box.dart';
 import 'package:notes_app/src/ui/widgets/continue_button.dart';
 import 'package:notes_app/src/ui/widgets/custom_back_button.dart';
+import 'package:rive/rive.dart';
 
 class LockedNotesInit extends StatelessWidget {
   LockedNotesInit({this.noteModel});
@@ -21,11 +22,18 @@ class LockedNotesInit extends StatelessWidget {
         child: Column(
           children: [
             Container(
-              alignment: Alignment.topLeft,
-              child: CustomBackButton(),
-            ),
-            CircleAvatar(
-              radius: 100,
+              child: Stack(
+                children: [
+                  SizedBox(
+                    child: RiveAnimation.asset(
+                      'assets/lock_animation.riv',
+                      fit: BoxFit.fitHeight,
+                    ),
+                    height: 2 * Get.height / 7,
+                  ),
+                  CustomBackButton(),
+                ],
+              ),
             ),
             SizedBox(height: 17.5),
             Container(
@@ -33,7 +41,10 @@ class LockedNotesInit extends StatelessWidget {
               child: Text(
                 "INTRODUCING",
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.grey.shade800),
+                style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: Get.isDarkMode ? Colors.grey.shade500 : Colors.grey.shade800),
                 strutStyle: StrutStyle(fontSize: 18),
               ),
             ),

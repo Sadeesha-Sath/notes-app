@@ -18,32 +18,28 @@ class ProfileScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: themeAwareBackgroundColor(),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Container(
-            padding: EdgeInsets.only(top: Get.height / 40),
-            child: Column(
-              children: [
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12),
-                  alignment: Alignment.topLeft,
-                  child: CustomBackButton(),
-                ),
-                UserSection(),
-                SizedBox(height: 22),
-                SectionSeparator("CONTENTS"),
-                ContentsSection(),
-                kSizedBox15,
-                SectionSeparator("PREFERENCES"),
-                PreferencesSection(),
-                kSizedBox15,
-                SectionSeparator("ABOUT"),
-                AboutSection(),
-                kSizedBox15,
-                SectionSeparator("ACCOUNT"),
-                AccountSection(),
-              ],
+        child: ListView(
+          padding: EdgeInsets.only(top: Get.height / 40),
+          children: [
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 12),
+              alignment: Alignment.topLeft,
+              child: CustomBackButton(),
             ),
-          ),
+            UserSection(),
+            SizedBox(height: 22),
+            SectionSeparator("CONTENTS"),
+            ContentsSection(),
+            kSizedBox15,
+            SectionSeparator("PREFERENCES"),
+            PreferencesSection(),
+            kSizedBox15,
+            SectionSeparator("ABOUT"),
+            AboutSection(),
+            kSizedBox15,
+            SectionSeparator("ACCOUNT"),
+            AccountSection(),
+          ],
         ),
       ),
     );

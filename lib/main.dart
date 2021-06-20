@@ -5,6 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:notes_app/src/controllers/firebase_auth_controller.dart';
+import 'package:notes_app/src/controllers/rating_controller.dart';
 import 'package:notes_app/src/services/local_preferences.dart';
 import 'package:notes_app/src/ui/screens/app/edit_profile_screen.dart';
 import 'package:notes_app/src/ui/screens/app/favourites_screen.dart';
@@ -21,6 +22,7 @@ import 'package:notes_app/src/ui/screens/auth/start_screen.dart';
 import 'package:notes_app/src/ui/widgets/auth/loading.dart';
 import 'package:notes_app/src/ui/widgets/auth/something_went_wrong.dart';
 import 'package:notes_app/themes.dart';
+import 'package:rate_my_app/rate_my_app.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,6 +31,7 @@ void main() async {
   await dotenv.load();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   Get.lazyPut<FirebaseAuthController>(() => FirebaseAuthController());
+  Get.lazyPut<RatingController>(() => RatingController());
   runApp(App());
 }
 
@@ -45,9 +48,9 @@ class _AppState extends State<App> {
     // Make shared preference dark mode setting to be system default if not set
     dataInit();
     return GetMaterialApp(
-      theme: ThemeData.light().copyWith(snackBarTheme: SnackBarThemeData(behavior: SnackBarBehavior.floating)),
-      themeMode: LocalPreferences.isDarkMode! ? ThemeMode.dark : ThemeMode.light,
+      theme: lightTheme,
       darkTheme: darkTheme,
+      themeMode: LocalPreferences.isDarkMode! ? ThemeMode.dark : ThemeMode.light,
       title: 'Notes App',
       home: FutureBuilder(
           future: _initialization,
@@ -178,4 +181,33 @@ class _AppState extends State<App> {
   }
 
 // TODO Get access in ios using xcode and integrate apple sign in
+}
+
+class RateAppInitWidget extends StatefulWidget {
+  final Widget Function(RateMyApp) builder;
+
+  const RateAppInitWidget({Key? key, required this.builder});
+
+  @override
+  _RateAppInitWidgetState createState() => _RateAppInitWidgetState();
+}
+
+class _RateAppInitWidgetState extends State<RateAppInitWidget> {
+  RateMyApp? rateMyApp;
+
+  static const playStoreId = "com.android.chrome";
+  static const appStoreIdentifier = "";
+
+  @override
+  Widget build(BuildContext context) {
+    return RateMyAppBuilder(
+      rateMyApp: RateMyApp(appStoreIdentifier: appStoreIdentifier, googlePlayIdentifier: playStoreId),
+      onInitialized: (context, rateMyApp) {
+        setState(() {
+          this.rateMyApp = rateMyApp;
+        });
+      },
+      builder: (context) => rateMyApp == null ? Loading() : widget.builder(rateMyApp!),
+    );
+  }
 }

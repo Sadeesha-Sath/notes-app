@@ -269,7 +269,7 @@ class _NoteScreenState extends State<NoteScreen> {
             },
             child: Text(
               "Save",
-              style: TextStyle(color: Get.isDarkMode ? Colors.tealAccent : Colors.blueAccent, fontSize: 18),
+              style: TextStyle(color: Get.isDarkMode ? Colors.tealAccent.shade700 : Colors.blueAccent, fontSize: 18),
             ),
           ),
         ),

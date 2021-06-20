@@ -9,6 +9,7 @@ class EncrypterClass {
   static String protectedSpacePin = Get.find<UserController>().userModel!.protectedSpacePin!;
   static var key1 = encrypt.Key.fromUtf8(hashGenerator(string: protectedSpacePin));
   static final key2 = encrypt.Key.fromUtf8(dotenv.env['APP_SPECIFIC_SECRET_KEY']!);
+  static const emptyTextPlaceholder = "r4u7w!z%WmZq4t6weShKaPdSgVk*FJ@6v9yBEp3s5v8kXp2s5RfUjXn";
   static var iv = Get.find<UserController>().userModel!.iv;
   static var masterKey =
       encrypt.Key.fromBase16(encrypt.Key.fromUtf8(key1.base64 + key2.base64).base16.substring(111, 143));
@@ -51,16 +52,22 @@ class EncrypterClass {
       iv = newIv;
   }
 
-  String encryptText({required String string}) {
+  static String encryptText({required String string}) {
+    if (string == "") {
+      return emptyTextPlaceholder;
+    }
     final encrypted = encrypter.encrypt(string, iv: encrypt.IV.fromBase64(iv!));
+    return encrypted.base64;
     // print("IV:    ${encrypt.IV.fromBase64(iv!).base64}");
     // print(encrypted.bytes);
     // print(encrypted.base16);
     // print(encrypted.base64);
-    return encrypted.base64;
   }
 
-  String decryptText({required String string}) {
+  static String decryptText({required String string}) {
+    if (string == emptyTextPlaceholder) {
+      return "";
+    }
     return encrypter.decrypt(encrypt.Encrypted.fromBase64(string), iv: encrypt.IV.fromBase64(iv!));
   }
 }

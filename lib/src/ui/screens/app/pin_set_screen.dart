@@ -22,8 +22,7 @@ class PinSetScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: themeAwareBackgroundColor(),
       appBar: AppBar(
-        foregroundColor: themeAwareTextColor(),
-        toolbarHeight: kToolbarHeight + 20,
+        // foregroundColor: themeAwareTextColor(),
         leading: Container(
           padding: EdgeInsets.only(left: 20),
           alignment: Alignment.centerLeft,
@@ -32,7 +31,7 @@ class PinSetScreen extends StatelessWidget {
         centerTitle: true,
         title: Text(
           "Set Up Protected Space",
-          style: TextStyle(color: Colors.black, fontSize: 25),
+          style: TextStyle(color: themeAwareTextColor(), fontSize: 22),
         ),
         backgroundColor: themeAwareBackgroundColor(),
         // shadowColor: Colors.transparent,
@@ -53,7 +52,7 @@ class PinSetScreen extends StatelessWidget {
             child: _pinSetController.stage.value == 3
                 ? SingleChildScrollView(
                     child: Container(
-                      height: 35 * Get.height / 45,
+                      height: 38 * Get.height / 45,
                       child: Column(
                         children: [
                           SizedBox(
@@ -91,7 +90,8 @@ class PinSetScreen extends StatelessWidget {
                                   noteModel: noteModel!);
                             }
                             Get.offNamedUntil(LockedNotesScreen.id, ModalRoute.withName(HomeScreen.id));
-                          })
+                          }),
+                          Spacer(),
                         ],
                       ),
                     ),
@@ -170,6 +170,7 @@ class FirstTwoTimes extends StatelessWidget {
                 .isInt(_pinSetController.stage.value == 1 ? _pinSetController.pin1.text : _pinSetController.pin2.text);
           },
         ),
+        Spacer(),
       ],
     );
   }
