@@ -31,7 +31,11 @@ class NoteCard extends StatelessWidget {
                       ContentTrimmer.trimmer(model.body, size != null ? 27 : null) ??
                       "[No Content]",
                   strutStyle: StrutStyle(fontSize: 22),
-                  style: TextStyle(fontSize: 21, fontWeight: FontWeight.w600),
+                  style: TextStyle(
+                    fontSize: 21,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF111111),
+                  ),
                 ),
               ),
               Spacer(),
@@ -39,7 +43,10 @@ class NoteCard extends StatelessWidget {
                 alignment: Alignment.bottomRight,
                 child: Text(
                   model.getDateCreated,
-                  style: TextStyle(fontSize: 17, color: Colors.grey.shade800),
+                  style: TextStyle(
+                    fontSize: 17,
+                    color: Get.isDarkMode ? Colors.grey.shade900 : Colors.grey.shade800,
+                  ),
                 ),
               )
             ],

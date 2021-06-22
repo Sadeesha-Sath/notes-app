@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -15,18 +14,21 @@ class RatingController extends GetxController {
     var instance = RateMyApp(
       // appStoreIdentifier: _appStoreIdentifier,
       googlePlayIdentifier: _playStoreId,
-      // ! Change these values
-      minDays: 0,
-      minLaunches: 1,
-      remindDays: 0,
-      remindLaunches: 3,
+      minDays: 5,
+      minLaunches: 10,
+      remindDays: 6,
+      remindLaunches: 7,
     );
     instance.init().then((value) {
       _rateMyApp.value = instance;
       if (_rateMyApp.value != null) {
+        var launches = _rateMyApp.value!.conditions.whereType<MinimumAppLaunchesCondition>().first;
+        print("Current Launches:    ${launches.launches}");
+        print("Minimum Launches:    ${launches.minLaunches}");
+        print(
+            "Do not Open Again Condition:    ${_rateMyApp.value!.conditions.whereType<DoNotOpenAgainCondition>().first.doNotOpenAgain}");
+        print("is conditions met :   ${_rateMyApp.value!.shouldOpenDialog}");
         showWillRateDialog();
-        // ! For debug only
-        // _rateMyApp.value!.showRateDialog(Get.context!);
       }
     });
 
@@ -59,21 +61,28 @@ class RatingController extends GetxController {
   }
 
   Widget buildOkButton(BuildContext context, double stars) {
-    return RateMyAppRateButton(
-      _rateMyApp.value!,
-      text: Platform.isAndroid ? "OK" : "Ok",
-      callback: () async {
-        if (stars < 3) {
-          // ? Redirect to review page
-          print("this one is too dangerous to be left alone");
-        } else {
-          await _rateMyApp.value!.launchStore();
+    return TextButton(
+      child: Text(
+        Platform.isAndroid ? "OK" : "Ok",
+      ),
+      onPressed: () async {
+        final event = RateMyAppEventType.rateButtonPressed;
+        var result = await _rateMyApp.value!.launchStore();
+        print(result);
+        if (result != LaunchStoreResult.errorOccurred) {
+          await _rateMyApp.value!.callEvent(event);
         }
+        Get.back();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text("Thank you for your kind rating"),
           ),
         );
+        if (stars < 4) {
+          // ? Redirect to review page after user finishes rating
+          // TODO Make review
+          // Get.toNamed(UnlockLockedNotesScreen.id);
+        }
       },
     );
   }
@@ -82,6 +91,15 @@ class RatingController extends GetxController {
     return RateMyAppLaterButton(
       _rateMyApp.value!,
       text: Platform.isAndroid ? "CANCEL" : "Cancel",
+      callback: () {
+        reset();
+      },
     );
+  }
+
+  Future<void> reset() async {
+    if (_rateMyApp.value != null) {
+      _rateMyApp.value!.reset();
+    }
   }
 }

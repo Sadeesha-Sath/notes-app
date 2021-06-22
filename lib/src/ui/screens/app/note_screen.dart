@@ -269,7 +269,7 @@ class _NoteScreenState extends State<NoteScreen> {
             },
             child: Text(
               "Save",
-              style: TextStyle(color: Get.isDarkMode ? Colors.tealAccent.shade700 : Colors.blueAccent, fontSize: 18),
+              style: TextStyle(color: Get.isDarkMode ? Color(0xFF7CDAC3) : Colors.blueAccent, fontSize: 18),
             ),
           ),
         ),
@@ -287,7 +287,7 @@ class _NoteScreenState extends State<NoteScreen> {
             },
             child: Text(
               "Discard",
-              style: TextStyle(color: Get.isDarkMode ? kDialogRedDark : Colors.redAccent, fontSize: 18),
+              style: TextStyle(color: Get.isDarkMode ? Color(0xFFFEAAAA) : Colors.redAccent, fontSize: 18),
             ),
           ),
         )

@@ -56,7 +56,6 @@ class AboutSection extends StatelessWidget {
             title: "Rate Us",
             icon: Icons.star_outline_outlined,
             onTap: () {
-              // TODO Add app rating
               Get.find<RatingController>().showStarRatingDialog(context);
             },
           ),
