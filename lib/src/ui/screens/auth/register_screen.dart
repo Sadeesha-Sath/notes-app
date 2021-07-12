@@ -90,10 +90,7 @@ class RegisterScreen extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 40),
                   child: ElevatedButton(
                     style: ButtonStyle(
-                      backgroundColor: Get.isDarkMode ? MaterialStateProperty.all(kElevatedBackgroundDark) : null,
-                      foregroundColor: Get.isDarkMode ? MaterialStateProperty.all(kElevatedForegroundDark) : null,
                       padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 14)),
-                      shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
                     ),
                     onPressed: () async {
                       if (_password1Field.text.length > 8 && _password2Field.text.length > 8) {
@@ -122,7 +119,7 @@ class RegisterScreen extends StatelessWidget {
                     child: Center(
                       child: Text(
                         "Register",
-                        style: TextStyle(fontSize: 17),
+                        style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
                       ),
                     ),
                   ),

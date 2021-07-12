@@ -42,15 +42,9 @@ class UserSection extends GetView<UserController> {
               children: [
                 ElevatedButton(
                   style: ButtonStyle(
-                    backgroundColor: Get.isDarkMode ? MaterialStateProperty.all(kElevatedBackgroundDark) : null,
-                    foregroundColor: Get.isDarkMode ? MaterialStateProperty.all(kElevatedForegroundDark) : null,
                     elevation: MaterialStateProperty.all(1.5),
                     padding: MaterialStateProperty.all(EdgeInsets.all(8.5)),
-                    shape: MaterialStateProperty.all(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                    ),
+                    
                   ),
                   onPressed: () {
                     Get.toNamed(EditProfileScreen.id);

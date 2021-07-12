@@ -95,6 +95,7 @@ const Color kDialogRedDark = Color(0xFFF35C5C);
 Color kTextButtonColorDark = Colors.tealAccent.shade700;
 Color kElevatedBackgroundDark = Colors.tealAccent.shade700;
 const Color kElevatedForegroundDark = Color(0xFF252525);
+const Color socialButtonColorDark = Color(0xFF383838);
 
 const Color kPeachColorDark = Color(0xFFD47D6F);
 const Color kPinkColorDark = Color(0xFFD36A95);

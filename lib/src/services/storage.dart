@@ -22,7 +22,7 @@ class Storage {
         await user.updatePhotoURL(url);
         await user.reload();
       } catch (e) {
-        print('Hello this is an error $e');
+        print('error $e');
       }
     } else {
       print("File does not exist.");

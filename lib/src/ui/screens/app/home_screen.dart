@@ -15,12 +15,14 @@ import 'package:notes_app/src/ui/widgets/home_screen_appbar.dart';
 
 class HomeScreen extends StatelessWidget {
   static final String id = "/home";
-  final ratingController = Get.find<RatingController>();
+  
 
   @override
   Widget build(BuildContext context) {
     Get.lazyPut(() => UserController());
     Get.lazyPut(() => NotesController());
+    Get.lazyPut<RatingController>(() => RatingController());
+    final ratingController = Get.find<RatingController>();
 
     if (!ratingController.initialized) {
       ratingController.onInit();

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:notes_app/src/controllers/locked_screen_controller.dart';
 import 'package:notes_app/src/controllers/notes_controller.dart';
 import 'package:notes_app/src/controllers/user_controller.dart';
@@ -68,31 +69,51 @@ class LockedNotesScreen extends StatelessWidget {
                               },
                               child: Obx(
                                 () => _lockedScreenController.selectMode.value
-                                    ? Container(
-                                        child: Row(
-                                          children: [
-                                            Container(
-                                              alignment: Alignment.topLeft,
-                                              child: Checkbox(
-                                                onChanged: (value) {
-                                                  _lockedScreenController.toggleCheckbox(
-                                                      value ?? !_lockedScreenController.getBool(index), index);
-                                                },
-                                                value: _lockedScreenController.getBool(index),
-                                              ),
-                                            ),
-                                            Container(
-                                              child: NoteCard(
+                                    ? Stack(
+                                        children: [
+                                          Container(
+                                              padding: EdgeInsets.all(7.5),
+                                              child: LockedNoteCard(
                                                 model,
-                                                size: Get.width / 3,
-                                              ),
-                                            )
-                                          ],
-                                        ),
+                                                isSelectMode: true,
+                                              )),
+                                          Positioned(
+                                            top: 5,
+                                            left: 5,
+                                            child: Checkbox(
+                                              onChanged: (value) {
+                                                _lockedScreenController.toggleCheckbox(
+                                                    value ?? !_lockedScreenController.getBool(index), index);
+                                              },
+                                              value: _lockedScreenController.getBool(index),
+                                            ),
+                                          ),
+                                        ],
                                       )
-                                    : Container(
-                                        child: Container(margin: EdgeInsets.all(7.5), child: NoteCard(model)),
-                                      ),
+                                    //  Container(
+                                    //     margin: EdgeInsets.symmetric(vertical: 7.5),
+                                    //     child: Row(
+                                    //       children: [
+                                    //         Container(
+                                    //           alignment: Alignment.topLeft,
+                                    //           child: Checkbox(
+                                    //             onChanged: (value) {
+                                    //               _lockedScreenController.toggleCheckbox(
+                                    //                   value ?? !_lockedScreenController.getBool(index), index);
+                                    //             },
+                                    //             value: _lockedScreenController.getBool(index),
+                                    //           ),
+                                    //         ),
+                                    //         Container(
+                                    //           child: NoteCard(
+                                    //             model,
+                                    //             size: Get.width / 3,
+                                    //           ),
+                                    //         )
+                                    //       ],
+                                    //     ),
+                                    //   )
+                                    : Container(margin: EdgeInsets.all(7.5), child: LockedNoteCard(model)),
                               ),
                             );
                           }).toList(),
@@ -166,6 +187,25 @@ class LockedScreenAppBar extends StatelessWidget {
       pinned: true,
       expandedHeight: 170,
       backgroundColor: themeAwareBackgroundColor(),
+      flexibleSpace: FlexibleSpaceBar(
+        collapseMode: CollapseMode.parallax,
+        titlePadding: EdgeInsets.only(bottom: 10),
+        title: Row(
+          crossAxisAlignment: CrossAxisAlignment.baseline,
+          textBaseline: TextBaseline.alphabetic,
+          children: [
+            Text(
+              controller.lockedNotes!.length == 1 ? "1 Note" : "${controller.lockedNotes!.length} Notes",
+              style: GoogleFonts.ubuntu(fontSize: 33, fontWeight: FontWeight.w500, color: themeAwareTextColor()),
+            ),
+            SizedBox(width: 2),
+            Icon(
+              CupertinoIcons.lock_fill,
+              size: (controller.lockedNotes!.isNotEmpty) ? 32 : 29,
+            )
+          ],
+        ),
+      ),
       actions: [
         AppbarButton(
           onTap: () async {
@@ -250,25 +290,6 @@ class LockedScreenAppBar extends StatelessWidget {
           ),
         ),
       ],
-      flexibleSpace: FlexibleSpaceBar(
-        collapseMode: CollapseMode.parallax,
-        titlePadding: EdgeInsets.only(bottom: 10),
-        title: Row(
-          crossAxisAlignment: CrossAxisAlignment.baseline,
-          textBaseline: TextBaseline.alphabetic,
-          children: [
-            Text(
-              controller.lockedNotes!.length == 1 ? "1 Note" : "${controller.lockedNotes!.length} Notes",
-              style: TextStyle(fontSize: 33, fontWeight: FontWeight.w500, color: themeAwareTextColor()),
-            ),
-            SizedBox(width: 2),
-            Icon(
-              CupertinoIcons.lock_fill,
-              size: (controller.lockedNotes!.isNotEmpty) ? 32 : 29,
-            )
-          ],
-        ),
-      ),
     );
   }
 }

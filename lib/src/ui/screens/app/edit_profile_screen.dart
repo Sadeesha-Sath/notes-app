@@ -277,7 +277,6 @@ class BottomSheet extends StatelessWidget {
                           if (await Permission.photos.isGranted || await Permission.photos.isLimited) {
                             try {
                               var pickedFile = await _picker.getImage(source: ImageSource.gallery);
-                              print(pickedFile);
                               if (pickedFile != null) {
                                 _showLoading(true);
                                 await Storage.addProfileImage(File(pickedFile.path));
@@ -318,7 +317,6 @@ class BottomSheet extends StatelessWidget {
                       GestureDetector(
                         onTap: () async {
                           if (await Permission.camera.isDenied) {
-                            print('hi');
                             await Permission.camera.request();
                           }
                           if (await Permission.camera.isGranted || await Permission.camera.isLimited) {

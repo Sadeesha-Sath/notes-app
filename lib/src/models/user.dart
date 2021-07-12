@@ -6,13 +6,11 @@ class UserModel {
   String uid;
   String? iv;
 
-  UserModel({this.protectedSpacePin, required this.uid, this.iv,required this.name});
+  UserModel({this.protectedSpacePin, required this.uid, this.iv, required this.name});
 
   UserModel.fromDocumentSnapshot({required DocumentSnapshot documentSnapshot, uid})
       : uid = documentSnapshot.id,
         protectedSpacePin = documentSnapshot['protectedSpacePin'],
         name = documentSnapshot['name'],
-        iv = documentSnapshot['iv'] {
-    print("successful");
-  }
+        iv = documentSnapshot['iv'];
 }

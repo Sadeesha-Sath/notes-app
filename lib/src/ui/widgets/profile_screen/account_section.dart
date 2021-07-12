@@ -87,6 +87,8 @@ class AccountSection extends GetWidget<UserController> {
                             await user.reauthenticateWithCredential(credential);
                             await Database.deleteUser(user.uid);
                             await user.delete();
+                            Get.find<UserController>().onClose();
+                            Get.find<NotesController>().onClose();
                             Get.offAllNamed(StartScreen.id);
                             print("deleting user");
                           } catch (e) {

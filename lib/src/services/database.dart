@@ -10,14 +10,13 @@ class Database {
 
   static Future<bool> createNewUser(UserModel user) async {
     try {
-      print("Creating database model");
+      // Create a new database model
       await _firestore.collection("users").doc(user.uid).set({
         "protectedSpacePin": user.protectedSpacePin,
         "uid": user.uid,
         "name": user.name,
         "iv": user.iv,
       });
-      print("uploaded to firestore");
       return true;
     } catch (e) {
       print(e);
@@ -28,8 +27,6 @@ class Database {
   static Future<UserModel> getUser(String uid) async {
     try {
       DocumentSnapshot _doc = await _firestore.collection("users").doc(uid).get();
-      print('getting data from cloud successful');
-
       return UserModel.fromDocumentSnapshot(documentSnapshot: _doc);
     } catch (e) {
       print(e);
@@ -47,19 +44,15 @@ class Database {
         }
       }
 
-      print("deleted:- ${_notesController.deletedNotes}");
       if (_notesController.deletedNotes!.isNotEmpty) {
-        print(_notesController.deletedNotes?.length);
         for (NoteModel note in _notesController.deletedNotes!) {
           Database.deleteNote(uid: uid, noteId: note.noteId!);
         }
       }
 
-      print("locked:- ${_notesController.lockedNotes}");
       if (_notesController.lockedNotes!.isNotEmpty) {
-        print(_notesController.lockedNotes?.length);
         for (NoteModel note in _notesController.lockedNotes!) {
-          Database.deleteNote(uid: uid, noteId: note.noteId!);
+          Database.deleteNote(uid: uid, noteId: note.noteId!, collectionName: 'locked');
         }
       }
       await _firestore.collection("users").doc(uid).delete();

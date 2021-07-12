@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:notes_app/src/controllers/notes_controller.dart';
 import 'package:notes_app/src/controllers/user_controller.dart';
 import 'package:notes_app/src/ui/screens/app/home_screen.dart';
 import 'package:notes_app/src/ui/screens/auth/start_screen.dart';
@@ -52,17 +53,16 @@ class FirebaseAuthController extends GetxController {
 
       // Obtain the auth details from the request
       if (googleUser != null) {
+        final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+        // Create a new credential
+        final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
+        );
 
-      // Create a new credential
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      // Once signed in, return the UserCredential
-      await FirebaseAuth.instance.signInWithCredential(credential);
+        // Once signed in, return the UserCredential
+        await FirebaseAuth.instance.signInWithCredential(credential);
       }
     } catch (e) {
       print(e);
@@ -105,6 +105,8 @@ class FirebaseAuthController extends GetxController {
   void signOutUser() async {
     try {
       print("User ${_firebaseUser.value?.email}");
+      // Get.find<UserController>().dispose();
+      Get.find<NotesController>().onClose();
       await _auth.signOut();
 
       print("Signed out user");

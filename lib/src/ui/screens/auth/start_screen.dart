@@ -49,8 +49,6 @@ class StartScreen extends StatelessWidget {
                   'assets/start.svg',
                   height: 0.92 * Get.height / 3,
                   semanticsLabel: "start_image",
-                  // color: Colors.grey,
-                  // colorBlendMode: BlendMode.color,
                 ),
                 Spacer(),
                 Text(
@@ -70,11 +68,6 @@ class StartScreen extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 40) + EdgeInsets.only(bottom: 18),
                   child: ElevatedButton(
-                    style: ButtonStyle(
-                      foregroundColor: Get.isDarkMode ? MaterialStateProperty.all(kElevatedForegroundDark) : null,
-                      backgroundColor: Get.isDarkMode ? MaterialStateProperty.all(kElevatedBackgroundDark) : null,
-                      shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
-                    ),
                     onPressed: () {
                       Get.toNamed(RegisterScreen.id);
                     },
@@ -83,7 +76,7 @@ class StartScreen extends StatelessWidget {
                       child: Center(
                         child: Text(
                           "I'm in",
-                          style: TextStyle(fontSize: 18),
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
@@ -151,7 +144,7 @@ class SocialSignInButton extends StatelessWidget {
         elevation: 2,
         clipBehavior: Clip.hardEdge,
         shape: CircleBorder(),
-        color: Get.isDarkMode ? Color(0xFF383838) : kLightBackground,
+        color: Get.isDarkMode ? socialButtonColorDark : kLightBackground,
         child: IconButton(
           icon: FaIcon(
             icon,

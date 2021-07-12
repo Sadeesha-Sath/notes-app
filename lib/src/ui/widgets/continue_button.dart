@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:notes_app/src/ui/ui_constants.dart';
 
 class ContinueButton extends StatelessWidget {
   final VoidCallback onPressed;
@@ -14,8 +13,6 @@ class ContinueButton extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: paddingVal + Get.width / 60),
       child: ElevatedButton(
         style: ButtonStyle(
-          backgroundColor: Get.isDarkMode ? MaterialStateProperty.all(kElevatedBackgroundDark) : null,
-          foregroundColor: Get.isDarkMode ? MaterialStateProperty.all(kElevatedForegroundDark) : null,
           shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(30))),
         ),
         onPressed: onPressed,
@@ -24,17 +21,19 @@ class ContinueButton extends StatelessWidget {
           child: Row(
             children: [
               Spacer(
-                flex: 5,
+                flex: 3,
               ),
               Text(
                 "Continue",
-                style: TextStyle(fontSize: 17),
+                style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
               ),
               Icon(
                 Icons.arrow_forward_ios_rounded,
                 size: 22,
               ),
-              Spacer(),
+              Spacer(
+                flex: 1,
+              ),
             ],
           ),
         ),

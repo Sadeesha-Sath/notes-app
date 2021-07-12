@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:notes_app/src/controllers/notes_controller.dart';
 import 'package:notes_app/src/controllers/user_controller.dart';
+import 'package:notes_app/src/ui/screens/app/unlock_locked_notes_screen.dart';
 import 'package:notes_app/src/ui/widgets/show_custom_bottom_sheet.dart';
 import 'package:notes_app/src/models/mode_enum.dart';
 import 'package:notes_app/src/ui/widgets/profile_screen/biometric_list_tile.dart';
@@ -28,6 +29,8 @@ class PreferencesSection extends StatelessWidget {
                 if (Get.find<NotesController>().lockedNotes == null) Get.find<NotesController>().bindLocked();
                 var _textController = TextEditingController();
                 showCustomModalBottomSheet(context, textController: _textController, mode: Mode.pin);
+              } else {
+                Get.toNamed(UnlockLockedNotesScreen.id);
               }
             },
           ),

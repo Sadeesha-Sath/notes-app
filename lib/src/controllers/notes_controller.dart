@@ -17,22 +17,12 @@ class NotesController extends GetxController {
   @override
   void onInit() {
     String uid = Get.find<UserController>().user!.uid;
-    // if (uid == null) {
-    //   print("user not found");
-    //   uid = Get.find<FirebaseAuthController>().user.value!.uid;
-    // }
     noteList.bindStream(Database.noteStream(uid: uid, collectionName: "notes"));
     super.onInit();
   }
 
   void bindLocked() {
     String uid = Get.find<UserController>().user!.uid;
-
-    // if (uid == null) {
-    //   print("User again not found");
-    //   uid = Get.find<FirebaseAuthController>().user.value!.uid;
-    // }
-
     lockedNoteList.bindStream(Database.noteStream(uid: uid, collectionName: "locked"));
   }
 
@@ -40,16 +30,16 @@ class NotesController extends GetxController {
     String uid = Get.find<UserController>().user!.uid;
     deletedNoteList.bindStream(Database.noteStream(uid: uid, collectionName: "trash"));
   }
-  // void bindFavourites() {
-  //   String uid = Get.find<UserController>().user!.uid;
-  //   favouritesList.bindStream(Database.noteStream(uid: uid, favourites: true));
-  // }
 
   @override
   void onClose() {
-    noteList.close();
-    deletedNoteList.close();
-    lockedNoteList.close();
+    try {
+      noteList.close();
+      deletedNoteList.close();
+      lockedNoteList.close();
+    } catch (e) {
+      print(e);
+    }
     super.onClose();
   }
 }

@@ -69,10 +69,21 @@ class ForgotPasswordScreen extends GetView<FirebaseAuthController> {
                     paddingVal: 120,
                     onPressed: () async {
                       showSpinner(true);
+
                       var e = await controller.sendPasswordResetEmail(_textEditingController.text.trim());
                       if (e != null) {
                         showSpinner(false);
                         error(e.toString());
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            backgroundColor: Get.isDarkMode ? Colors.redAccent : Colors.red.shade200,
+                            content: Text(
+                              "Oh No! Some error occured. $e",
+                              style: TextStyle(fontSize: 12),
+                              strutStyle: StrutStyle(fontSize: 13),
+                            ),
+                          ),
+                        );
                         _textEditingController.clear();
                       } else {
                         showSpinner(false);
@@ -81,7 +92,7 @@ class ForgotPasswordScreen extends GetView<FirebaseAuthController> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
-                              "A Password reset request was sent to ${_textEditingController.text.trim()}. Please use it to reset your password.",
+                              "A Password reset request will be sent to ${_textEditingController.text.trim()} if it is verified. Please use it to reset your password.",
                               style: TextStyle(fontSize: 12),
                               strutStyle: StrutStyle(fontSize: 13),
                             ),

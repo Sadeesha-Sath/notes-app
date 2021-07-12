@@ -4,17 +4,17 @@ import 'package:notes_app/src/helpers/color_converter.dart';
 import 'package:notes_app/src/helpers/content_trimmer.dart';
 import 'package:notes_app/src/models/note_model.dart';
 
-class NoteCard extends StatelessWidget {
+class LockedNoteCard extends StatelessWidget {
   final NoteModel model;
-  final double? size;
+  final bool isSelectMode;
 
-  NoteCard(this.model, {this.size});
+  LockedNoteCard(this.model, {this.isSelectMode = false});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: size,
-      height: (size != null) ? size! + Get.width / 2 - Get.width / 3 : size,
+      // width: size,
+      // height: (size != null) ? size! + Get.width / 2 - Get.width / 3 : size,
       child: Material(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         clipBehavior: Clip.hardEdge,
@@ -25,11 +25,10 @@ class NoteCard extends StatelessWidget {
           child: Column(
             children: [
               Container(
+                margin: isSelectMode ? EdgeInsets.only(left: 25) : null,
                 alignment: Alignment.topLeft,
                 child: Text(
-                  ContentTrimmer.trimmer(model.title, size != null ? 27 : null) ??
-                      ContentTrimmer.trimmer(model.body, size != null ? 27 : null) ??
-                      "[No Content]",
+                  ContentTrimmer.trimmer(model.title) ?? ContentTrimmer.trimmer(model.body) ?? "[No Content]",
                   strutStyle: StrutStyle(fontSize: 22),
                   style: TextStyle(
                     fontSize: 21,

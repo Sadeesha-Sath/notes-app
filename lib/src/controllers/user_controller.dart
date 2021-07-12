@@ -26,31 +26,34 @@ class UserController extends GetxController {
     super.onInit();
   }
 
+  @override
+  void onClose() {
+    try {
+      _userModel.close();
+      _currentUser.close();
+    } catch (e) {
+      print(e);
+    }
+    super.onClose();
+  }
+
   void setUser(User? user) async {
     if (user != null) {
       try {
-        print("getting user data from database");
-
         _userModel.value = await Database.getUser(user.uid);
-        print("getting user data successful");
       } catch (e) {
-        print('error catched 1');
-        print(e);
+        print('error catched 1 :  $e');
         UserModel _user = UserModel(
           name: user.displayName ?? user.email!.trim().split("@")[0],
           uid: user.uid,
         );
-        print("created model");
         try {
-          print('creating a new user');
           await Database.createNewUser(_user);
           this._userModel.value = _user;
         } catch (e) {
-          print('error catched 2');
-          print(e);
+          print('error catched 2 :   $e');
         }
       }
-      print(_userModel.value?.uid);
     }
   }
 
@@ -76,13 +79,10 @@ class UserController extends GetxController {
 
   Future<bool> setPin(int pin) async {
     String hashedPin = EncrypterClass.hashGenerator(pin: pin);
-    print("got into setpin");
     if (_userModel.value?.protectedSpacePin == null) {
-      print("arrived through null check");
       _userModel.update((val) {
         val!.protectedSpacePin = hashedPin;
       });
-      print(hashedPin);
       // generating an iv when the Protected-Space is initialized
       // this iv will never change
       enc.IV iv = await EncrypterClass.getNewIv;
@@ -96,10 +96,8 @@ class UserController extends GetxController {
     });
     var _notesController = Get.find<NotesController>();
     if (_notesController.lockedNotes != null) {
-      print("Changing encrypter");
       // Changing encrypter for re-encryption
       await EncrypterClass.changePin();
-      print('re-encrypting locked notes');
       for (var note in _notesController.lockedNotes!) {
         Database.updateNote(
             uid: _userModel.value!.uid, collectionName: 'locked', oldModel: note, newModel: note, isForced: true);
@@ -110,7 +108,6 @@ class UserController extends GetxController {
   }
 
   void updatePin(String pin) async {
-    print("got in to update pin");
     await Database.updateProtectedSpacePin(uid: _userModel.value!.uid, newPin: pin);
   }
 }

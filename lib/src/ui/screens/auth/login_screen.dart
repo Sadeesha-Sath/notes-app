@@ -98,10 +98,7 @@ class LoginScreen extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 40),
                   child: ElevatedButton(
                     style: ButtonStyle(
-                      backgroundColor: Get.isDarkMode ? MaterialStateProperty.all(kElevatedBackgroundDark) : null,
-                      foregroundColor: Get.isDarkMode ? MaterialStateProperty.all(kElevatedForegroundDark) : null,
                       padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 14)),
-                      shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
                     ),
                     onPressed: () async {
                       if (_passwordField.text.length > 8) {
@@ -116,7 +113,7 @@ class LoginScreen extends StatelessWidget {
                     child: Center(
                       child: Text(
                         "Sign In",
-                        style: TextStyle(fontSize: 17),
+                        style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
                       ),
                     ),
                   ),

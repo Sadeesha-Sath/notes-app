@@ -15,7 +15,6 @@ class UnlockLockedNotesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // print(arguments);
     return Scaffold(
       backgroundColor: themeAwareBackgroundColor(),
       body: SafeArea(
@@ -129,10 +128,6 @@ class UnlockWithBiometricOrPin extends StatelessWidget {
                     ElevatedButton(
                       style: ButtonStyle(
                         padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 18, vertical: 10)),
-                        backgroundColor: Get.isDarkMode ? MaterialStateProperty.all(kElevatedBackgroundDark) : null,
-                        foregroundColor: Get.isDarkMode ? MaterialStateProperty.all(kElevatedForegroundDark) : null,
-                        shape:
-                            MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
                       ),
                       onPressed: () {
                         if (!usePin.value)

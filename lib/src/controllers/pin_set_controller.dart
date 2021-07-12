@@ -27,7 +27,6 @@ class PinSetController extends GetxController {
   void pinVisibilityToggle() => hidePin.toggle();
 
   void checkPin() {
-    print("checking pin");
     if (pin1.text == pin2.text) {
       Get.find<UserController>().setPin(int.tryParse(pin1.text)!);
       ++stage;

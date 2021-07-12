@@ -22,12 +22,12 @@ class RatingController extends GetxController {
     instance.init().then((value) {
       _rateMyApp.value = instance;
       if (_rateMyApp.value != null) {
-        var launches = _rateMyApp.value!.conditions.whereType<MinimumAppLaunchesCondition>().first;
-        print("Current Launches:    ${launches.launches}");
-        print("Minimum Launches:    ${launches.minLaunches}");
-        print(
-            "Do not Open Again Condition:    ${_rateMyApp.value!.conditions.whereType<DoNotOpenAgainCondition>().first.doNotOpenAgain}");
-        print("is conditions met :   ${_rateMyApp.value!.shouldOpenDialog}");
+        // var launches = _rateMyApp.value!.conditions.whereType<MinimumAppLaunchesCondition>().first;
+        // print("Current Launches:    ${launches.launches}");
+        // print("Minimum Launches:    ${launches.minLaunches}");
+        // print(
+        //     "Do not Open Again Condition:    ${_rateMyApp.value!.conditions.whereType<DoNotOpenAgainCondition>().first.doNotOpenAgain}");
+        // print("is conditions met :   ${_rateMyApp.value!.shouldOpenDialog}");
         showWillRateDialog();
       }
     });

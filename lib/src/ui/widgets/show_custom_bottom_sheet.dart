@@ -306,9 +306,7 @@ class BottomSheet extends GetView<UserController> {
                   ? BottomSheetButton(
                       onPressed: () async {
                         try {
-                          if (RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
-                                  caseSensitive: false)
-                              .hasMatch(textController.text)) {
+                          if (textController.text.isEmail) {
                             await controller.user!.updateEmail(textController.text);
                             error(null);
                             textController.clear();
@@ -328,11 +326,14 @@ class BottomSheet extends GetView<UserController> {
                           print(e);
                           Get.back();
                           ScaffoldMessenger.of(context).clearSnackBars();
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
                               content: Text(
-                            "Update was Unsuccessful",
-                            style: TextStyle(color: Get.isDarkMode ? kRedColorDark : Colors.redAccent),
-                          ),),);
+                                "Update was Unsuccessful",
+                                style: TextStyle(color: Get.isDarkMode ? kRedColorDark : Colors.redAccent),
+                              ),
+                            ),
+                          );
                         }
                       },
                       text: "Update Email",
@@ -400,16 +401,13 @@ class BottomSheetButton extends StatelessWidget {
         style: TextStyle(fontSize: 18),
       ),
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(color ?? (Get.isDarkMode ? kElevatedBackgroundDark : null)),
+        backgroundColor: MaterialStateProperty.all(color),
         foregroundColor: color == null
-            ? Get.isDarkMode
-                ? MaterialStateProperty.all(kElevatedForegroundDark)
-                : null
-            : null,
+            ? null
+            : MaterialStateProperty.all(Colors.white),
         padding: MaterialStateProperty.all(
-          EdgeInsets.symmetric(horizontal: 20, vertical: 12.5),
+          EdgeInsets.symmetric(horizontal: 20, vertical: 12.5)
         ),
-        shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
       ),
     );
   }
