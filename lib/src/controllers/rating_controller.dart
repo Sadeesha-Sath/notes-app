@@ -22,12 +22,6 @@ class RatingController extends GetxController {
     instance.init().then((value) {
       _rateMyApp.value = instance;
       if (_rateMyApp.value != null) {
-        // var launches = _rateMyApp.value!.conditions.whereType<MinimumAppLaunchesCondition>().first;
-        // print("Current Launches:    ${launches.launches}");
-        // print("Minimum Launches:    ${launches.minLaunches}");
-        // print(
-        //     "Do not Open Again Condition:    ${_rateMyApp.value!.conditions.whereType<DoNotOpenAgainCondition>().first.doNotOpenAgain}");
-        // print("is conditions met :   ${_rateMyApp.value!.shouldOpenDialog}");
         showWillRateDialog();
       }
     });
@@ -37,12 +31,16 @@ class RatingController extends GetxController {
 
   void showWillRateDialog() {
     if (_rateMyApp.value!.shouldOpenDialog) {
-      _rateMyApp.value!.showRateDialog(Get.context!);
+      _rateMyApp.value!.showRateDialog(Get.context!,
+        dialogTransition: DialogTransition(
+            transitionType: TransitionType.scaleAndFade, transitionDuration: Duration(milliseconds: 260)),
+      );
     }
   }
 
   void showStarRatingDialog(BuildContext context) async {
     await _rateMyApp.value!.showStarRateDialog(context,
+    dialogTransition: DialogTransition(transitionType: TransitionType.scaleAndFade, transitionDuration: Duration(milliseconds: 260)),
         title: "Leave us a Rating",
         message: "Tell us how much you enjoyed using our app.",
         starRatingOptions: StarRatingOptions(
